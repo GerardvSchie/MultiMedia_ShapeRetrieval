@@ -17,7 +17,7 @@ def main():
     if len(sys.argv) > 1:
         path = sys.argv[1]
         if os.path.exists(path):
-            w.load(path)
+            w.scene_widget.load(path)
         else:
             w.window.show_message_box("Error",
                                       "Could not open file '" + path + "'")
@@ -34,5 +34,5 @@ if __name__ == '__main__':
     print(ply_example)
 
     # Visualize both objects
-    o3d.visualization.draw_geometries([off_example, ply_example])
+    # o3d.visualization.draw_geometries([off_example, ply_example])
     main()
