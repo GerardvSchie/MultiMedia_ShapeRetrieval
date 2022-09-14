@@ -1,0 +1,3 @@
+numpy
+pymeshlab
+open3d #state of the art
