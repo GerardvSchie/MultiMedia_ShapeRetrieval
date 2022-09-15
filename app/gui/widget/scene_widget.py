@@ -1,17 +1,19 @@
 import open3d.visualization.gui as gui
 import open3d.visualization.rendering as rendering
-import numpy as np
 import open3d as o3d
+import logging
+
+from src.object.shape import Shape
+from src.pipeline.feature_extractor import FeatureExtractor
 
 
+# 3D scene widget
 class SceneWidget:
-    def __init__(self, window, on_sun_dir):
-        # 3D widget
+    def __init__(self, renderer, on_sun_dir):
         self.widget = gui.SceneWidget()
-        self.widget.scene = rendering.Open3DScene(window.renderer)
+        self.widget.scene = rendering.Open3DScene(renderer)
+        self.shape = None
 
-        # Set camera mode to arc-ball
-        # self.widget.set_view_controls(gui.SceneWidget.Controls.ROTATE_CAMERA)
         self.widget.set_on_sun_direction_changed(on_sun_dir)
 
     def apply_settings(self, settings):
@@ -44,54 +46,24 @@ class SceneWidget:
             settings.apply_material = False
 
     # Part of the scene, what is in the window
-    def load(self, path, material):
+    def load_shape(self, path, material, on_success):
         self.widget.scene.clear_geometry()
+        self.shape = Shape(path)
 
-        geometry = None
-        geometry_type = o3d.io.read_file_geometry_type(path)
+        if self.shape.mesh is None:
+            logging.error("Mesh was not loaded successfully")
+            return
 
-        mesh = None
-        if geometry_type & o3d.io.CONTAINS_TRIANGLES:
-            mesh = o3d.io.read_triangle_mesh(path)
-        if mesh is not None:
-            if len(mesh.triangles) == 0:
-                print(
-                    "[WARNING] Contains 0 triangles, will read as point cloud")
-                mesh = None
-            else:
-                mesh.compute_vertex_normals()
-                if len(mesh.vertex_colors) == 0:
-                    mesh.paint_uniform_color([1, 1, 1])
-                geometry = mesh
-            # Make sure the mesh has texture coordinates
-            if not mesh.has_triangle_uvs():
-                uv = np.array([[0.0, 0.0]] * (3 * len(mesh.triangles)))
-                mesh.triangle_uvs = o3d.utility.Vector2dVector(uv)
-        else:
-            print("[Info]", path, "appears to be a point cloud")
+        FeatureExtractor.extract_features(self.shape)
 
-        if geometry is None:
-            cloud = None
+        if self.shape.geometry is not None:
             try:
-                cloud = o3d.io.read_point_cloud(path)
-            except Exception:
-                pass
-            if cloud is not None:
-                print("[Info] Successfully read", path)
-                if not cloud.has_normals():
-                    cloud.estimate_normals()
-                cloud.normalize_normals()
-                geometry = cloud
-            else:
-                print("[WARNING] Failed to read points", path)
-
-        if geometry is not None:
-            try:
-                self.widget.scene.add_geometry("__model__", geometry, material)
-                bounds = geometry.get_axis_aligned_bounding_box()
+                self.widget.scene.add_geometry("__model__", self.shape.geometry, material)
+                bounds = self.shape.geometry.get_axis_aligned_bounding_box()
                 self.widget.setup_camera(60, bounds, bounds.get_center())
+                on_success(self.shape.features)
             except Exception as e:
-                print(e)
+                logging.error(f"Loading of shape failed with message: {e}")
 
     def export_image(self, path):
         def on_image(image):
@@ -102,8 +74,6 @@ class SceneWidget:
                 quality = 100
             o3d.io.write_image(path, img, quality)
 
-        # frame = self._scene.frame
-        # self.export_image(filename, frame.width, frame.height)
         self.widget.scene.scene.render_to_image(on_image)
 
     def set_mouse_mode_rotate(self):

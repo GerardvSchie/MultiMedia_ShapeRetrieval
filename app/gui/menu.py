@@ -1,13 +1,15 @@
-import numpy as np
-import open3d as o3d
 import open3d.visualization.gui as gui
 
-from src.gui.Utils import isMacOS
+from app.gui.utils import isMacOS
 
 
-# ---- Menu ----
 class Menu:
-    def __init__(self, AppWindow):
+    OPEN = 1
+    EXPORT = 2
+    QUIT = 3
+    ABOUT = 11
+
+    def __init__(self):
         # The menu is global (because the macOS menu is global), so only create
         # it once, no matter how many windows are created
         if gui.Application.instance.menubar is not None:
@@ -15,21 +17,17 @@ class Menu:
 
         if isMacOS:
             app_menu = gui.Menu()
-            app_menu.add_item("About", AppWindow.MENU_ABOUT)
+            app_menu.add_item("About", Menu.ABOUT)
             app_menu.add_separator()
-            app_menu.add_item("Quit", AppWindow.MENU_QUIT)
+            app_menu.add_item("Quit", Menu.QUIT)
         file_menu = gui.Menu()
-        file_menu.add_item("Open...", AppWindow.MENU_OPEN)
-        file_menu.add_item("Export Current Image...", AppWindow.MENU_EXPORT)
+        file_menu.add_item("Open...", Menu.OPEN)
+        file_menu.add_item("Export Current Image...", Menu.EXPORT)
         if not isMacOS:
             file_menu.add_separator()
-            file_menu.add_item("Quit", AppWindow.MENU_QUIT)
-        settings_menu = gui.Menu()
-        settings_menu.add_item("Lighting & Materials",
-                               AppWindow.MENU_SHOW_SETTINGS)
-        settings_menu.set_checked(AppWindow.MENU_SHOW_SETTINGS, True)
+            file_menu.add_item("Quit", Menu.QUIT)
         help_menu = gui.Menu()
-        help_menu.add_item("About", AppWindow.MENU_ABOUT)
+        help_menu.add_item("About", Menu.ABOUT)
 
         menu = gui.Menu()
         if isMacOS:
@@ -39,18 +37,17 @@ class Menu:
             # About..., Preferences..., and Quit menu items typically go.
             menu.add_menu("Example", app_menu)
             menu.add_menu("File", file_menu)
-            menu.add_menu("Settings", settings_menu)
             # Don't include help menu unless it has something more than
             # About...
         else:
             menu.add_menu("File", file_menu)
-            menu.add_menu("Settings", settings_menu)
             menu.add_menu("Help", help_menu)
         gui.Application.instance.menubar = menu
 
     def on_menu_open(self, window, on_success):
         dlg = gui.FileDialog(gui.FileDialog.OPEN, "Choose file to load",
                              window.theme)
+
         dlg.set_path("data")
         dlg.add_filter(
             ".ply .stl .fbx .obj .off .gltf .glb",
@@ -76,13 +73,9 @@ class Menu:
         dlg.add_filter("", "All files")
 
         # A file dialog MUST define on_cancel and on_done functions
-        dlg.set_on_cancel(lambda: self._on_file_dialog_cancel(window))
+        dlg.set_on_cancel(window.close_dialog)
         dlg.set_on_done(lambda filename: self._on_load_dialog_done(window, filename, on_success))
         window.show_dialog(dlg)
-
-    @staticmethod
-    def _on_file_dialog_cancel(window):
-        window.close_dialog()
 
     @staticmethod
     def _on_load_dialog_done(window, filename, on_success):
@@ -93,7 +86,7 @@ class Menu:
         dlg = gui.FileDialog(gui.FileDialog.SAVE, "Choose file to save",
                              window.theme)
         dlg.add_filter(".png", "PNG files (.png)")
-        dlg.set_on_cancel(lambda: self._on_file_dialog_cancel(window))
+        dlg.set_on_cancel(window.close_dialog)
         dlg.set_on_done(lambda filename: self._on_export_dialog_done(window, filename, on_success))
         window.show_dialog(dlg)
 
@@ -105,10 +98,6 @@ class Menu:
     @staticmethod
     def on_menu_quit():
         gui.Application.instance.quit()
-
-    def on_menu_toggle_settings_panel(self):
-        self._settings_panel.visible = not self._settings_panel.visible
-        gui.Application.instance.menubar.set_checked(AppWindow.MENU_SHOW_SETTINGS, self._settings_panel.visible)
 
     def on_menu_about(self, window):
         # Show a simple dialog. Although the Dialog is actually a widget, you can
@@ -124,7 +113,7 @@ class Menu:
         # Add the Ok button. We need to define a callback function to handle
         # the click.
         ok = gui.Button("OK")
-        ok.set_on_clicked(lambda: self._on_about_ok(window))
+        ok.set_on_clicked(window.close_dialog)
 
         # We want the Ok button to be an the right side, so we need to add
         # a stretch item to the layout, otherwise the button will be the size
@@ -138,7 +127,3 @@ class Menu:
 
         dlg.add_child(dlg_layout)
         window.show_dialog(dlg)
-
-    @staticmethod
-    def _on_about_ok(window):
-        window.close_dialog()

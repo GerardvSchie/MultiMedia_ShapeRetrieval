@@ -2,8 +2,8 @@ import glob
 import os
 import open3d.visualization.gui as gui
 
-from src.gui.Settings import Settings
-from src.gui.Utils import DEFAULT_IBL
+from app.gui.settings import Settings
+from app.gui.utils import DEFAULT_IBL
 
 
 class SettingsWidget:
@@ -12,17 +12,12 @@ class SettingsWidget:
         Settings.LIT, Settings.UNLIT, Settings.NORMALS, Settings.DEPTH, Settings.SILHOUETTE,
     ]
 
-    def __init__(self, window, update_scene):
+    def __init__(self, em, update_scene):
         self.settings = Settings()
         resource_path = gui.Application.instance.resource_path
         self.settings.new_ibl_name = resource_path + "/" + DEFAULT_IBL
 
         # ---- Settings panel ----
-        # Rather than specifying sizes in pixels, which may vary in size based
-        # on the monitor, especially on macOS which has 220 dpi monitors, use
-        # the em-size. This way sizings will be proportional to the font size,
-        # which will create a more visually consistent size across platforms.
-        em = window.theme.font_size
         separation_height = int(round(0.5 * em))
 
         # Widgets are laid out in layouts: gui.Horiz, gui.Vert,
