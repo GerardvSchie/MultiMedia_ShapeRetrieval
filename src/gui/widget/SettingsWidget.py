@@ -7,9 +7,9 @@ from src.gui.Utils import DEFAULT_IBL
 
 
 class SettingsWidget:
-    MATERIAL_NAMES = ["Lit", "Unlit", "Normals", "Depth"]
+    MATERIAL_NAMES = ["Lit", "Unlit", "Normals", "Depth", "Silhouette"]
     MATERIAL_SHADERS = [
-        Settings.LIT, Settings.UNLIT, Settings.NORMALS, Settings.DEPTH
+        Settings.LIT, Settings.UNLIT, Settings.NORMALS, Settings.DEPTH, Settings.SILHOUETTE,
     ]
 
     def __init__(self, window, update_scene):
@@ -34,7 +34,7 @@ class SettingsWidget:
         # between items in the widget, and a margins parameter, which specifies
         # the spacing of the left, top, right, bottom margins. (This acts like
         # the 'padding' property in CSS.)
-        self._settings_panel = gui.Vert(
+        self.settings_panel = gui.Vert(
             0, gui.Margins(0.25 * em, 0.25 * em, 0.25 * em, 0.25 * em))
 
         # Create a collapsable vertical widget, which takes up enough vertical
@@ -105,15 +105,15 @@ class SettingsWidget:
         view_ctrls.add_fixed(separation_height)
         view_ctrls.add_child(gui.Label("Lighting profiles"))
         view_ctrls.add_child(self._profiles)
-        self._settings_panel.add_fixed(separation_height)
-        self._settings_panel.add_child(view_ctrls)
+        self.settings_panel.add_fixed(separation_height)
+        self.settings_panel.add_child(view_ctrls)
 
         advanced = gui.CollapsableVert("Advanced lighting", 0,
                                        gui.Margins(em, 0, 0, 0))
         advanced.set_is_open(False)
 
         self._use_ibl = gui.Checkbox("HDR map")
-        self._use_ibl.set_on_checked(lambda name, index: self._on_use_ibl(name, index, update_scene))
+        self._use_ibl.set_on_checked(lambda use: self._on_use_ibl(use, update_scene))
         self._use_sun = gui.Checkbox("Sun")
         self._use_sun.set_on_checked(lambda use: self._on_use_sun(use, update_scene))
         advanced.add_child(gui.Label("Light sources"))
@@ -130,7 +130,7 @@ class SettingsWidget:
         self._ibl_map.set_on_selection_changed(lambda name, index: self._on_new_ibl(name, index, update_scene))
         self._ibl_intensity = gui.Slider(gui.Slider.INT)
         self._ibl_intensity.set_limits(0, 200000)
-        self._ibl_intensity.set_on_value_changed(lambda intensity: self._on_ibl_intensity(update_scene))
+        self._ibl_intensity.set_on_value_changed(lambda intensity: self._on_ibl_intensity(intensity, update_scene))
         grid = gui.VGrid(2, 0.25 * em)
         grid.add_child(gui.Label("HDR map"))
         grid.add_child(self._ibl_map)
@@ -158,17 +158,16 @@ class SettingsWidget:
         advanced.add_child(gui.Label("Sun (Directional light)"))
         advanced.add_child(grid)
 
-        self._settings_panel.add_fixed(separation_height)
-        self._settings_panel.add_child(advanced)
+        self.settings_panel.add_fixed(separation_height)
+        self.settings_panel.add_child(advanced)
 
         material_settings = gui.CollapsableVert("Material settings", 0,
                                                 gui.Margins(em, 0, 0, 0))
 
         self._shader = gui.Combobox()
-        self._shader.add_item(SettingsWidget.MATERIAL_NAMES[0])
-        self._shader.add_item(SettingsWidget.MATERIAL_NAMES[1])
-        self._shader.add_item(SettingsWidget.MATERIAL_NAMES[2])
-        self._shader.add_item(SettingsWidget.MATERIAL_NAMES[3])
+        for material in SettingsWidget.MATERIAL_NAMES:
+            self._shader.add_item(material)
+
         self._shader.set_on_selection_changed(lambda name, index: self._on_shader(name, index, update_scene))
         self._material_prefab = gui.Combobox()
         for prefab_name in sorted(Settings.PREFAB.keys()):
@@ -176,7 +175,7 @@ class SettingsWidget:
         self._material_prefab.selected_text = Settings.DEFAULT_MATERIAL_NAME
         self._material_prefab.set_on_selection_changed(lambda name, index: self._on_material_prefab(name, index, update_scene))
         self._material_color = gui.ColorEdit()
-        self._material_color.set_on_value_changed(lambda color: self._on_material_color(update_scene))
+        self._material_color.set_on_value_changed(lambda color: self._on_material_color(color, update_scene))
         self._point_size = gui.Slider(gui.Slider.INT)
         self._point_size.set_limits(1, 10)
         self._point_size.set_on_value_changed(lambda size: self._on_point_size(size, update_scene))
@@ -192,8 +191,8 @@ class SettingsWidget:
         grid.add_child(self._point_size)
         material_settings.add_child(grid)
 
-        self._settings_panel.add_fixed(separation_height)
-        self._settings_panel.add_child(material_settings)
+        self.settings_panel.add_fixed(separation_height)
+        self.settings_panel.add_child(material_settings)
 
     def _save_state(self):
         self._bg_color.color_value = self.settings.bg_color

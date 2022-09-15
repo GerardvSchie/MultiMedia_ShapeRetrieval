@@ -1,9 +1,7 @@
 import open3d.visualization.gui as gui
-from src.gui.Settings import Settings
 from src.gui.Menu import Menu
 from src.gui.widget.SceneWidget import SceneWidget
 from src.gui.widget.SettingsWidget import SettingsWidget
-from src.gui.Utils import DEFAULT_IBL
 
 
 class AppWindow:
@@ -21,9 +19,11 @@ class AppWindow:
         # Menu
         self.Menu = Menu(self)
         self.settings_widget = SettingsWidget(w, self._update_scene_widget)
-        self.scene_widget = SceneWidget(w, lambda dir: self.settings_widget._on_sun_dir(dir))
+        self.scene_widget = SceneWidget(w, lambda dir: self.settings_widget._on_sun_dir(dir, self._update_scene_widget))
 
-        # Click events
+        self.scene_widget2 = SceneWidget(w, lambda dir: self.settings_widget._on_sun_dir(dir, self._update_scene_widget))
+
+        # Set events
         self.set_click_events()
         self.set_menu(w)
 
@@ -36,7 +36,8 @@ class AppWindow:
         # done the window will layout the grandchildren.
         w.set_on_layout(self._on_layout)
         w.add_child(self.scene_widget.widget)
-        w.add_child(self.settings_widget._settings_panel)
+        w.add_child(self.scene_widget2.widget)
+        w.add_child(self.settings_widget.settings_panel)
 
         self._update_scene_widget()
 
@@ -70,11 +71,11 @@ class AppWindow:
         # child correctly. After the callback is done the window will layout
         # the grandchildren.
         r = self.window.content_rect
-        self.scene_widget.widget.frame = r
+
         width = 17 * layout_context.theme.font_size
         height = min(
             r.height,
-            self.settings_widget._settings_panel.calc_preferred_size(
+            self.settings_widget.settings_panel.calc_preferred_size(
                 layout_context, gui.Widget.Constraints()).height)
-        self.settings_widget._settings_panel.frame = gui.Rect(r.get_right() - width, r.y, width,
-                                              height)
+        self.settings_widget.settings_panel.frame = gui.Rect(0, r.y, width, r.height)
+        self.scene_widget.widget.frame = gui.Rect(width, r.y, r.get_right() - width, r.height)

@@ -1,6 +1,5 @@
 import open3d.visualization.gui as gui
 import open3d.visualization.rendering as rendering
-from src.gui.Utils import isMacOS
 
 
 class Settings:
@@ -8,6 +7,7 @@ class Settings:
     LIT = "defaultLit"
     NORMALS = "normals"
     DEPTH = "depth"
+    SILHOUETTE = "silhouette"
 
     DEFAULT_PROFILE_NAME = "Bright day with sun at +Y [default]"
     POINT_CLOUD_PROFILE_NAME = "Cloudy day (no direct sun)"
@@ -140,7 +140,8 @@ class Settings:
             Settings.LIT: rendering.MaterialRecord(),
             Settings.UNLIT: rendering.MaterialRecord(),
             Settings.NORMALS: rendering.MaterialRecord(),
-            Settings.DEPTH: rendering.MaterialRecord()
+            Settings.DEPTH: rendering.MaterialRecord(),
+            Settings.SILHOUETTE: rendering.MaterialRecord(),
         }
         self._materials[Settings.LIT].base_color = [0.9, 0.9, 0.9, 1.0]
         self._materials[Settings.LIT].shader = Settings.LIT
@@ -148,6 +149,7 @@ class Settings:
         self._materials[Settings.UNLIT].shader = Settings.UNLIT
         self._materials[Settings.NORMALS].shader = Settings.NORMALS
         self._materials[Settings.DEPTH].shader = Settings.DEPTH
+        self._materials[Settings.SILHOUETTE].base_color = [0.0, 0.0, 0.0, 0.0]
 
         # Conveniently, assigning from self._materials[...] assigns a reference,
         # not a copy, so if we change the property of a material, then switch
