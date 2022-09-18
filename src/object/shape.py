@@ -1,24 +1,32 @@
 import os.path
 import logging
-import numpy as np
 import open3d as o3d
 from src.object.features import Features
-from src.pipeline.feature_extractor import FeatureExtractor
 
 
 class Shape:
-    def __init__(self, shape_path):
+    def __init__(self, shape_path, features=None):
+        self.path = None
         self.mesh = None
         self.geometry = None
 
-        if shape_path is not None:
-            self.load(shape_path)
+        # If features are already provided
+        if features:
+            self.features = features
+        else:
+            # Separate path based on separator of os system
+            self.features = Features()
+            self.features.true_class = shape_path.split(os.sep)[-2]
 
-        self.features = Features()
+        # Load if shape path is provided
+        if shape_path:
+            self.path = os.path.relpath(shape_path)
+            self.load(shape_path)
 
     # Loads the file from a path
     # A big portion of this method comes from the open3d example, see license
     def load(self, path):
+        path = os.path.abspath(path)
         logging.info(f"Loading shape from path: {path}")
         geometry_type = o3d.io.read_file_geometry_type(path)
 
@@ -35,10 +43,10 @@ class Shape:
                     self.mesh.paint_uniform_color([1, 1, 1])
                 self.geometry = self.mesh
             # Make sure the mesh has texture coordinates
-            if self.mesh is not None and not self.mesh.has_triangle_uvs():
-                logging.debug("Computing uvs since they are not in the file")
-                uv = np.array([[0.0, 0.0]] * (3 * len(self.mesh.triangles)))
-                self.mesh.triangle_uvs = o3d.utility.Vector2dVector(uv)
+            # if self.mesh is not None and not self.mesh.has_triangle_uvs():
+            #     logging.debug("Computing uvs since they are not in the file")
+            #     uv = np.array([[0.0, 0.0]] * (3 * len(self.mesh.triangles)))
+            #     self.mesh.triangle_uvs = o3d.utility.Vector2dVector(uv)
         else:
             logging.info(f"Shape appears to be a point cloud")
 
