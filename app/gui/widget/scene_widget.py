@@ -9,12 +9,23 @@ from src.pipeline.feature_extractor import FeatureExtractor
 
 # 3D scene widget
 class SceneWidget:
-    def __init__(self, renderer, on_sun_dir):
+    def __init__(self, widgets_list, renderer):
+        # Widget state of main app window and the property widget corresponding to the scene
+        self.all_widgets = widgets_list
+        self.property_widget = None
+        self.settings_widget = None
+
+        # Create the scene widget
         self.widget = gui.SceneWidget()
         self.widget.scene = rendering.Open3DScene(renderer)
         self.shape = None
 
-        self.widget.set_on_sun_direction_changed(on_sun_dir)
+    def initialize(self, property_widget, settings_widget):
+        self.property_widget = property_widget
+        self.settings_widget = settings_widget
+
+        # On sun dir change is an event
+        self.widget.set_on_sun_direction_changed(self.settings_widget._on_sun_dir)
 
     def apply_settings(self, settings):
         bg_color = [
@@ -46,22 +57,22 @@ class SceneWidget:
             settings.apply_material = False
 
     # Part of the scene, what is in the window
-    def load_shape(self, path, material, on_success):
+    def load_shape(self, path):
+        # Here the widget is initialized
         self.widget.scene.clear_geometry()
-        self.shape = Shape(path)
-
-        if self.shape.mesh is None:
-            logging.error("Mesh was not loaded successfully")
-            return
-
+        self.shape = Shape(path, load_shape=True)
         FeatureExtractor.extract_features(self.shape)
 
         if self.shape.geometry is not None:
             try:
-                self.widget.scene.add_geometry("__model__", self.shape.geometry, material)
+                # material = rendering.MaterialRecord()
+                # material.base_color = [0.9, 0.9, 0.9, 1.0]
+                # material.shader = "defaultLit"
+
+                self.widget.scene.add_geometry("__model__", self.shape.geometry, self.settings_widget.settings.material)
                 bounds = self.shape.geometry.get_axis_aligned_bounding_box()
                 self.widget.setup_camera(60, bounds, bounds.get_center())
-                on_success(self.shape.features)
+                self.property_widget.update_properties(self.shape.features)
             except Exception as e:
                 logging.error(f"Loading of shape failed with message: {e}")
 

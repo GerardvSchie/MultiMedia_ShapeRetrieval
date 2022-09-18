@@ -110,6 +110,7 @@ def initialize():
     # Remove all previous handlers to prevent unexpected behaviour
     logging.root.handlers = []
 
+    logging.getLogger('matplotlib.font_manager').setLevel(logging.ERROR)
     # Setup logging
     if not _setup_logging(console_log_output="stdout", console_log_level="warning", console_log_color=True,
                           logfile_file="application.log", logfile_log_level="debug", logfile_log_color=False,

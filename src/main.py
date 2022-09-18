@@ -19,11 +19,10 @@ def main():
             if file.endswith(".off") or file.endswith(".ply"):
                 # Load shape and extract the features
                 path = os.path.join(subdir, file)
-
+                # Database depends on relative paths
                 rel_path = os.path.relpath(path)
                 if features_data.__contains__(rel_path):
-                    shape = Shape("", features_data[rel_path])
-                    shape.path = rel_path
+                    shape = Shape(path, features_data[rel_path])
                 else:
                     shape = Shape(path)
                 FeatureExtractor.extract_features(shape)

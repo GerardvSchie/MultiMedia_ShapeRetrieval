@@ -5,7 +5,10 @@ from src.object.features import Features
 class PropertiesWidget:
     PADDING = 16
 
-    def __init__(self, em):
+    def __init__(self, widgets_list, em):
+        # Widget state of main app window
+        self.all_widgets = widgets_list
+
         # Default values (_class text has spaces because widget width is not recalculated)
         self._class = gui.Label(f"{'-': <{PropertiesWidget.PADDING}}")
         self._nr_vertices = gui.Label("0")

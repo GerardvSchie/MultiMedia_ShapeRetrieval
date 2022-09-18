@@ -11,25 +11,28 @@ class FeatureExtractor:
             return
 
         if not shape.features.nr_vertices:
-            shape.features.nr_vertices = FeatureExtractor.number_of_vertices(shape.mesh)
+            shape.features.nr_vertices = FeatureExtractor.number_of_vertices(shape)
 
         if not shape.features.nr_faces:
-            shape.features.nr_faces = FeatureExtractor.number_of_faces(shape.mesh)
+            shape.features.nr_faces = FeatureExtractor.number_of_faces(shape)
 
         # Open3D reads everything into triangles and automatically converts quads
         shape.features.type_faces = "only triangles"
 
         if not shape.features.axis_aligned_bounding_box:
-            shape.features.axis_aligned_bounding_box = FeatureExtractor.axis_aligned_box(shape.geometry)
+            shape.features.axis_aligned_bounding_box = FeatureExtractor.axis_aligned_box(shape)
 
     @staticmethod
-    def number_of_vertices(mesh):
-        return len(mesh.vertices)
+    def number_of_vertices(shape: Shape):
+        shape.load_mesh()
+        return len(shape.mesh.vertices)
 
     @staticmethod
-    def number_of_faces(mesh):
-        return len(mesh.triangles)
+    def number_of_faces(shape: Shape):
+        shape.load_mesh()
+        return len(shape.mesh.triangles)
 
     @staticmethod
-    def axis_aligned_box(geometry):
-        return geometry.get_axis_aligned_bounding_box()
+    def axis_aligned_box(shape: Shape):
+        shape.load_geometry()
+        return shape.geometry.get_axis_aligned_bounding_box()

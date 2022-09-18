@@ -9,11 +9,15 @@ class Menu:
     QUIT = 3
     ABOUT = 11
 
-    def __init__(self):
+    def __init__(self, widgets_list, scene_widget):
         # The menu is global (because the macOS menu is global), so only create
         # it once, no matter how many windows are created
         if gui.Application.instance.menubar is not None:
             return
+
+        # Widget state of main app window and the scene in which the file gets loaded
+        self.all_widgets = widgets_list
+        self.scene_widget = scene_widget
 
         if isMacOS:
             app_menu = gui.Menu()
@@ -44,7 +48,7 @@ class Menu:
             menu.add_menu("Help", help_menu)
         gui.Application.instance.menubar = menu
 
-    def on_menu_open(self, window, on_success):
+    def on_menu_open(self, window):
         dlg = gui.FileDialog(gui.FileDialog.OPEN, "Choose file to load",
                              window.theme)
 
@@ -74,32 +78,31 @@ class Menu:
 
         # A file dialog MUST define on_cancel and on_done functions
         dlg.set_on_cancel(window.close_dialog)
-        dlg.set_on_done(lambda filename: self._on_load_dialog_done(window, filename, on_success))
+        dlg.set_on_done(lambda filename: self._on_load_dialog_done(window, filename))
         window.show_dialog(dlg)
 
-    @staticmethod
-    def _on_load_dialog_done(window, filename, on_success):
+    def _on_load_dialog_done(self, window, filename):
         window.close_dialog()
-        on_success(filename)
+        self.scene_widget.load_shape(filename)
 
-    def on_menu_export(self, window, on_success):
+    def on_menu_export(self, window):
         dlg = gui.FileDialog(gui.FileDialog.SAVE, "Choose file to save",
                              window.theme)
         dlg.add_filter(".png", "PNG files (.png)")
         dlg.set_on_cancel(window.close_dialog)
-        dlg.set_on_done(lambda filename: self._on_export_dialog_done(window, filename, on_success))
+        dlg.set_on_done(lambda filename: self._on_export_dialog_done(window, filename))
         window.show_dialog(dlg)
 
-    @staticmethod
-    def _on_export_dialog_done(window, filename, on_success):
+    def _on_export_dialog_done(self, window, filename):
         window.close_dialog()
-        on_success(filename)
+        self.scene_widget.export_image(filename)
 
     @staticmethod
     def on_menu_quit():
         gui.Application.instance.quit()
 
-    def on_menu_about(self, window):
+    @staticmethod
+    def on_menu_about(window):
         # Show a simple dialog. Although the Dialog is actually a widget, you can
         # treat it similar to a Window for layout and put all the widgets in a
         # layout which you make the only child of the Dialog.
