@@ -1,3 +1,4 @@
 numpy
 open3d
 matplotlib
+PyQt6

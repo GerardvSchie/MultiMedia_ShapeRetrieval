@@ -223,6 +223,7 @@ class SettingsWidget:
         self._point_size.double_value = self.settings.material.point_size
 
     def _apply_and_save(self):
+        # self.settings.mesh_show_wireframe = True
         self.scene_widget.apply_settings(self.settings)
         self._save_state()
 

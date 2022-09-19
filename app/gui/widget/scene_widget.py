@@ -68,8 +68,11 @@ class SceneWidget:
                 # material = rendering.MaterialRecord()
                 # material.base_color = [0.9, 0.9, 0.9, 1.0]
                 # material.shader = "defaultLit"
-
+                # o3d.visualization.draw_geometries([self.shape.mesh], mesh_show_wireframe=True)
+                # renderoption: o3d.visualization.RenderOption = self.widget.scene.get_render_option()
+                # renderoption.mesh_show_wireframe = True
                 self.widget.scene.add_geometry("__model__", self.shape.geometry, self.settings_widget.settings.material)
+
                 bounds = self.shape.geometry.get_axis_aligned_bounding_box()
                 self.widget.setup_camera(60, bounds, bounds.get_center())
                 self.property_widget.update_properties(self.shape.features)
