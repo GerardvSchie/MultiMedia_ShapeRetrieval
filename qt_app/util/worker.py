@@ -51,15 +51,14 @@ class MultiWorker(QRunnable):
 
 
 class Worker(QtCore.QObject):
-    @staticmethod
-    def run(scenes):
-        while True:
+    def __init__(self):
+        super(Worker, self).__init__()
+        self.stop_signal = False
+
+    def run(self, scenes):
+        while not self.stop_signal:
             for scene in scenes:
                 scene.update_vis()
 
-            # self.thread = QtCore.QThread()
-            # self.worker = Worker()
-            # self.thread.started.connect(lambda: self.worker.run([self.scene_widget.vis, self.scene_widget_2.vis]))
-            # self.thread.start()
-
-
+    def stop(self):
+        self.stop_signal = True

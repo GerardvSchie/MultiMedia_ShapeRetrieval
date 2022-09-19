@@ -82,6 +82,9 @@ class Shape:
 
     # Saves the mesh to the given file path
     def save(self, path):
+        if not self.mesh:
+            logging.warning(f"User tried to save whilst there is no mesh")
+
         if os.path.exists(path):
             logging.error(f"File at path {path} already exists, will not save")
             return
