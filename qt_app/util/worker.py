@@ -53,12 +53,25 @@ class MultiWorker(QRunnable):
 class Worker(QtCore.QObject):
     def __init__(self):
         super(Worker, self).__init__()
-        self.stop_signal = False
+        self._stop_signal = False
+        self._stopped = False
+        self._started = False
+        self._o3d_scenes = []
 
-    def run(self, scenes):
-        while not self.stop_signal:
-            for scene in scenes:
+    def set_scenes(self, scenes):
+        self._o3d_scenes = scenes
+
+    def run(self):
+        self._stopped = False
+        self._stop_signal = False
+        self._started = True
+
+        while not self._stop_signal:
+            for scene in self._o3d_scenes:
                 scene.update_vis()
 
+        self._stopped = True
+
     def stop(self):
-        self.stop_signal = True
+        self._stop_signal = True
+        self._started = False

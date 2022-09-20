@@ -1,27 +1,25 @@
-import os
 import logging
 
 from PyQt6.QtWidgets import QMenuBar, QFileDialog
-from PyQt6.QtGui import QAction, QIcon, QKeySequence
-from qt_app.widget.visualization_widget import VisualizationWidget
-from PyQt6.QtWidgets import QMainWindow, QApplication
+from PyQt6.QtGui import QAction, QKeySequence
+from PyQt6.QtWidgets import QApplication
 
 
 # Source: https://www.pythonguis.com/tutorials/pyqt6-actions-toolbars-menus/
 class MenuBar(QMenuBar):
     def __init__(self, menu_bar: QMenuBar):
         super(MenuBar, self).__init__()
-        self.visualization_widget = None
+        self.open_widget = None
+        self.save_widget = None
 
         self.menu = menu_bar
         self.file_menu = None
         self.name = "MenuBar"
-
-    def initialize(self, visualization_widget: VisualizationWidget):
-        self.visualization_widget = visualization_widget
-        # Clear menu and add buttons
-        self.menu.clear()
         self.initialize_file_menu()
+
+    def connect_widgets(self, open_widget, save_widget):
+        self.open_widget = open_widget
+        self.save_widget = save_widget
 
     def initialize_file_menu(self):
         self.file_menu = self.menu.addMenu("&File")
@@ -60,22 +58,22 @@ class MenuBar(QMenuBar):
         file_name, _ = QFileDialog.getOpenFileName(self, "Open shape", "data", file_filter)
 
         if file_name:
-            self.visualization_widget.load_shape(file_name)
+            self.open_widget.load_shape(file_name)
 
     def save_shape_action(self):
         file_filter = "Triangle mesh files (*.ply *.stl *.fbx *.obj *.off *.gltf *.glb)"
         file_name, _ = QFileDialog.getSaveFileName(self, "Save mesh file", "data", file_filter)
 
-        if file_name and self.visualization_widget.shape:
-            if not self.visualization_widget.shape:
+        if file_name and self.save_widget.shape:
+            if not self.save_widget.shape:
                 logging.warning(f"User tried to save whilst there is no mesh")
                 return
 
-            self.visualization_widget.shape.save(file_name)
+            self.save_widget.shape.save(file_name)
 
     def export_image_action(self):
         file_filter = "Image file (*.png *.jpg)"
         file_name, _ = QFileDialog.getSaveFileName(self, "Save Image", "data", file_filter)
 
         if file_name:
-            self.visualization_widget.vis.capture_screen_image(file_name)
+            self.save_widget.vis.capture_screen_image(file_name)

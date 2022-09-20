@@ -26,21 +26,9 @@ class MainWindow(QtWidgets.QMainWindow):
         layout.addWidget(self.tab_widget.widget, 0, 0)
         self.setCentralWidget(self.tab_widget.widget)
 
-        # Body of the application
-        self.active_widgets = []
-        self.thread = None
-        self.worker = None
-        # self.mesh_visualizer_mode()
-
-    def closeEvent(self, *args, **kwargs):
-        # Close each widget
-        self.worker.stop()
-        self.thread.exit()
-
-        for widget in self.active_widgets:
-            widget.closeEvent(*args, **kwargs)
-
-
+    # def closeEvent(self, *args, **kwargs):
+    #     # Close each widget
+    #     self.tab_widget.closeEvent(*args, **kwargs)
 
     # def start_vis(self):
     #     logging.info("thread start")
