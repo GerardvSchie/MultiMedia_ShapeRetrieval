@@ -2,11 +2,11 @@ import logging
 from PyQt6 import QtWidgets, QtGui, QtCore
 from PyQt6.QtCore import QThreadPool
 
-from qt_app.widget.tab_widget import TabWidget
-from qt_app.util.worker import Worker
-from qt_app.util.worker import MultiWorker
-from qt_app.widget.visualization_widget import VisualizationWidget
-from qt_app.gui.menu_bar import MenuBar
+from app.widget.tab_widget import TabWidget
+from app.util.worker import Worker
+from app.util.worker import MultiWorker
+from app.widget.visualization_widget import VisualizationWidget
+from app.gui.menu_bar import MenuBar
 from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtWidgets import QMainWindow, QApplication
 from PyQt6.QtGui import QIcon, QAction

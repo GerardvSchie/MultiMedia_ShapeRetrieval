@@ -9,10 +9,10 @@ from PyQt6 import QtWidgets, QtGui, QtCore
 from PyQt6.QtWidgets import QTabWidget, QGridLayout, QWidget, QVBoxLayout, QComboBox
 from PyQt6.QtCore import QThreadPool
 
-from qt_app.util.worker import Worker
-from qt_app.util.worker import MultiWorker
-from qt_app.widget.visualization_widget import VisualizationWidget
-from qt_app.gui.menu_bar import MenuBar
+from app.util.worker import Worker
+from app.util.worker import MultiWorker
+from app.widget.visualization_widget import VisualizationWidget
+from app.gui.menu_bar import MenuBar
 from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtWidgets import QMainWindow, QApplication
 
@@ -33,6 +33,8 @@ class SettingsWidget(QWidget):
 
         combobox = QtWidgets.QComboBox()
         combobox.addItems(SettingsWidget.MATERIAL_NAMES)
+        combobox.currentIndexChanged.connect(lambda string: print(string))
+
         layout = QVBoxLayout()
         layout.addWidget(combobox)
         self.widget.setLayout(layout)
@@ -136,14 +138,14 @@ class SettingsWidget(QWidget):
         # self.widget.add_fixed(separation_height)
         # self.widget.add_child(material_settings)
 
-    # def initialize(self, scene_widget):
-    #     self.scene_widget = scene_widget
-    #     # Button events
-    #     self._arcball_button.set_on_clicked(self.scene_widget.set_mouse_mode_rotate)
-    #     self._fly_button.set_on_clicked(self.scene_widget.set_mouse_mode_fly)
-    #     self._model_button.set_on_clicked(self.scene_widget.set_mouse_mode_model)
-    #     self._sun_button.set_on_clicked(self.scene_widget.set_mouse_mode_sun)
-    #     self._ibl_button.set_on_clicked(self.scene_widget.set_mouse_mode_ibl)
+    def initialize(self, scene_widget):
+        self.scene_widget = scene_widget
+        # Button events
+        # self._arcball_button.set_on_clicked(self.scene_widget.set_mouse_mode_rotate)
+        # self._fly_button.set_on_clicked(self.scene_widget.set_mouse_mode_fly)
+        # self._model_button.set_on_clicked(self.scene_widget.set_mouse_mode_model)
+        # self._sun_button.set_on_clicked(self.scene_widget.set_mouse_mode_sun)
+        # self._ibl_button.set_on_clicked(self.scene_widget.set_mouse_mode_ibl)
     #
     # def _save_state(self):
     #     self._bg_color.color_value = self.settings.bg_color

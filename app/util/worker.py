@@ -4,7 +4,7 @@ from PyQt6.QtCore import QRunnable, pyqtSlot
 import traceback
 import sys
 
-from qt_app.util.worker_signals import WorkerSignals
+from app.util.worker_signals import WorkerSignals
 
 
 class MultiWorker(QRunnable):

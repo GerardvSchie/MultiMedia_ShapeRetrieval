@@ -1,12 +1,12 @@
 import logging
-from qt_app.widget.settings_widget import SettingsWidget
+from app.widget.settings_widget import SettingsWidget
 
 from PyQt6 import QtWidgets, QtGui, QtCore
 from PyQt6.QtWidgets import QTabWidget, QGridLayout, QWidget
 
-from qt_app.util.worker import Worker
-from qt_app.widget.visualization_widget import VisualizationWidget
-from qt_app.gui.menu_bar import MenuBar
+from app.util.worker import Worker
+from app.widget.visualization_widget import VisualizationWidget
+from app.gui.menu_bar import MenuBar
 from PyQt6.QtGui import QAction, QIcon, QPalette, QColor
 from PyQt6.QtWidgets import QMainWindow, QApplication
 

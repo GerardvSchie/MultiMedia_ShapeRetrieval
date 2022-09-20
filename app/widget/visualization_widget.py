@@ -25,7 +25,7 @@ class VisualizationWidget(QtWidgets.QWidget):
 
     def closeEvent(self, *args, **kwargs):
         self.vis.close()
-        # self.vis.destroy_window()
+        self.vis.destroy_window()
 
     # Part of the scene, what is in the window
     def load_shape(self, path):
