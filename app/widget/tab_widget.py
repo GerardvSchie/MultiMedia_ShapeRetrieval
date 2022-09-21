@@ -63,7 +63,7 @@ class TabWidget(QTabWidget):
         window = QtGui.QWindow.fromWinId(scene_widget.hwnd)
         window_container = self.createWindowContainer(window, scene_widget)
 
-        #
+        # Connect the settings to the widget
         settings_widget.connect_visualizer(scene_widget)
 
         # Assign scene widget here since that covers entire gui
@@ -107,9 +107,6 @@ class TabWidget(QTabWidget):
     def closeEvent(self, *args, **kwargs):
         self.worker.stop()
         self.thread.exit()
-        #
-        # for widget in self.:
-        #     widget.closeEvent(*args, **kwargs)
 
     @staticmethod
     def connect_to_menu_bar(open_widget, save_widget):

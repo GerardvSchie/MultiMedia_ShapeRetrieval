@@ -1,24 +1,14 @@
-from src.object.settings import Settings
 import logging
+from src.object.settings import Settings
+from src.object.render_mode import RenderMode
 
 from PyQt6 import QtWidgets, QtGui, QtCore
 from PyQt6.QtWidgets import QTabWidget, QGridLayout, QWidget, QVBoxLayout, QComboBox
-from PyQt6.QtQml import QQmlEngine
-
-from app.widget.visualization_widget import VisualizationWidget
-from app.gui.menu_bar import MenuBar
 from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtWidgets import QMainWindow, QApplication
 
-from src.object.render_mode import RenderMode
-
 
 class SettingsWidget(QWidget):
-    RENDER_MODES = ["Lit", "Unlit", "Normals", "Depth", "Wireframe"]
-    # RENDER_SHADERS = [Settings.LIT, Settings.UNLIT, Settings.NORMALS, Settings.DEPTH, Settings.WIREFRAME]
-
-    MOUSE_MODES = ["Arc ball", "Fly"]
-
     def __init__(self, settings: Settings):
         super(SettingsWidget, self).__init__()
         # Widget state of main app window and the scene that is controlled by the settings
@@ -29,14 +19,9 @@ class SettingsWidget(QWidget):
         self.widget = QWidget()
 
         # Render mode combobox
-        combobox = QComboBox()
-        combobox.addItems(RenderMode.ALL)
-        combobox.currentIndexChanged.connect(lambda index: self._on_shader_change(index))
-
-        # Mouse mode
-        # combobox = QComboBox()
-        # combobox.addItems(SettingsWidget.RENDER_MODES)
-        # combobox.currentIndexChanged.connect(self._on_mouse_mode_change)
+        render_mode_combobox = QComboBox()
+        render_mode_combobox.addItems(RenderMode.ALL)
+        render_mode_combobox.currentIndexChanged.connect(lambda index: self._on_shader_change(index))
 
         # Show axes control
         # self._show_axes = gui.Checkbox("Show axes")
@@ -44,19 +29,9 @@ class SettingsWidget(QWidget):
 
         # Create layout
         layout = QVBoxLayout()
-        layout.addWidget(combobox)
+        layout.addWidget(render_mode_combobox)
         self.widget.setLayout(layout)
 
-        # self._arcball_button = gui.Button("Arcball")
-        # self._arcball_button.horizontal_padding_em = 0.5
-        # self._arcball_button.vertical_padding_em = 0
-        #
-        # self._fly_button = gui.Button("Fly")
-        # self._fly_button.horizontal_padding_em = 0.5
-        # self._fly_button.vertical_padding_em = 0
-        # self._model_button = gui.Button("Model")
-        # self._model_button.horizontal_padding_em = 0.5
-        # self._model_button.vertical_padding_em = 0
         # self._sun_button = gui.Button("Sun")
         # self._sun_button.horizontal_padding_em = 0.5
         # self._sun_button.vertical_padding_em = 0
@@ -169,8 +144,12 @@ class SettingsWidget(QWidget):
         # self._point_size.double_value = self.settings.material.point_size
 
     def _apply_and_save(self):
-        self.visualizer_widget.apply_settings()
+        self.visualizer_widget.visualize_shape()
         # self._save_state()
+
+    def _on_shader_change(self, index):
+        self.settings.set_render_mode(RenderMode.ALL[index])
+        self.visualizer_widget.visualize_shape()
 
     def _on_bg_color(self, new_color):
         self.settings.bg_color = new_color
@@ -187,19 +166,6 @@ class SettingsWidget(QWidget):
     def _on_sun_color(self, color):
         self.settings.sun_color = color
         self._apply_and_save()
-
-    def _on_shader_change(self, index):
-        self.settings.set_render_mode(RenderMode.ALL[index])
-        self._apply_and_save()
-
-    def _on_mouse_mode_change(self, index):
-        # self._arcball_button.set_on_clicked(self.scene_widget.set_mouse_mode_rotate)
-        # self._fly_button.set_on_clicked(self.scene_widget.set_mouse_mode_fly)
-        # self._model_button.set_on_clicked(self.scene_widget.set_mouse_mode_model)
-        # self._sun_button.set_on_clicked(self.scene_widget.set_mouse_mode_sun)
-        # self._ibl_button.set_on_clicked(self.scene_widget.set_mouse_mode_ibl)
-
-        pass
 
     def _on_material_prefab(self, name, _):
         self.settings.apply_material_prefab(name)

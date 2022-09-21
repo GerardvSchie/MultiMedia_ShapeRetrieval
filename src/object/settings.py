@@ -58,7 +58,6 @@ class Settings:
     }
 
     def __init__(self):
-        self.mouse_model = gui.SceneWidget.Controls.ROTATE_CAMERA
         self.bg_color = gui.Color(1, 1, 1)
         self.show_axes = False
         self.sun_color = gui.Color(1, 1, 1)
@@ -70,6 +69,7 @@ class Settings:
     def set_render_mode(self, name):
         self.render_mode = name
 
+        # Material record has to change for these modes
         if name == "Unlit":
             self.material_record.set_material(MaterialRecord.UNLIT)
             self.apply_material = True

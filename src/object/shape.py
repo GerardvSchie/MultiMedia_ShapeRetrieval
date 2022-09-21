@@ -18,6 +18,7 @@ class Shape:
 
         self.mesh = None
         self.point_cloud = None
+        self.convex_hull = None
 
         if pre_computed_features:
             self.features = pre_computed_features
@@ -33,6 +34,7 @@ class Shape:
     def load(self):
         self.load_mesh()
         self.load_point_cloud()
+        self.load_convex_hull()
 
     def convert_to_ply(self):
         new_file_path = self.path.split(".")[0] + ".ply"
@@ -49,7 +51,6 @@ class Shape:
         self.path = new_file_path
 
     def load_mesh(self):
-        self.convert_to_ply()
         # Mesh is already loaded
         if self.mesh:
             return
@@ -82,18 +83,28 @@ class Shape:
             self.mesh.triangle_uvs = o3d.utility.Vector2dVector(uv)
 
     def load_point_cloud(self):
-        self.convert_to_ply()
         # Point cloud already existed
         if self.point_cloud:
             return
 
         try:
-            self.point_cloud = o3d.io.read_point_cloud(self.path)
+            self.point_cloud: o3d.geometry.PointCloud = o3d.io.read_point_cloud(self.path)
         except Exception as ex:
             logging.error(ex)
 
         if self.point_cloud is None:
             logging.warning("Failed to read point cloud")
+
+    def load_convex_hull(self):
+        if self.convex_hull:
+            return
+
+        self.load_point_cloud()
+
+        if not self.point_cloud:
+            return
+
+        self.convex_hull, _ = self.point_cloud.compute_convex_hull()
 
     # Saves the mesh to the given file path
     def save(self, path):

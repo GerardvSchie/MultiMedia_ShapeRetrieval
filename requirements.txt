@@ -1,4 +1,5 @@
 numpy
-open3d
+open3d==0.15.1
 matplotlib
 PyQt6
+pywin32

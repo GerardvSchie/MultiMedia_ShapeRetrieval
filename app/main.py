@@ -1,4 +1,5 @@
 import sys
+import glfw
 import src.util.logger as logger
 from app.gui.main_window import MainWindow
 
@@ -6,6 +7,8 @@ from PyQt6 import QtWidgets
 
 
 def main():
+    glfw.init()
+
     app = QtWidgets.QApplication(sys.argv)
     form = MainWindow()
     form.setWindowTitle('o3d Embed')
