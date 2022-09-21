@@ -42,6 +42,7 @@ class VisualizationWidget(QtWidgets.QWidget):
     def load_shape(self, path):
         self.shape = Shape(path, load_shape=True)
         FeatureExtractor.extract_features(self.shape)
+        self.current_window_type = -1
         self.visualize_shape()
         # bounds = self.shape.geometry.get_axis_aligned_bounding_box()
         # self.widget.setup_camera(60, bounds, bounds.get_center())
@@ -56,6 +57,11 @@ class VisualizationWidget(QtWidgets.QWidget):
         self.vis.update_renderer()
 
     def visualize_shape(self):
+        # Set render options
+        render_option: o3d.visualization.RenderOption = self.vis.get_render_option()
+        render_option.mesh_show_wireframe = self.settings.render_mode == RenderMode.WIREFRAME
+        render_option.light_on = self.settings.render_mode != RenderMode.SILHOUETTE
+
         # Need to reset geometry only if the window type changes
         reset_geometry = self.current_window_type != RenderMode.WINDOW_TYPE[self.settings.render_mode]
         if reset_geometry:
@@ -65,6 +71,11 @@ class VisualizationWidget(QtWidgets.QWidget):
         if self.settings.render_mode == RenderMode.POINT_CLOUD:
             if reset_geometry:
                 self.vis.add_geometry(self.shape.point_cloud)
+        elif self.settings.render_mode == RenderMode.SILHOUETTE:
+            self.shape.mesh.paint_uniform_color([0, 0, 0])
+
+            if reset_geometry:
+                self.vis.add_geometry(self.shape.mesh)
         elif self.settings.render_mode == RenderMode.CONVEX_HULL:
             if reset_geometry:
                 hull_line_set = o3d.geometry.LineSet.create_from_triangle_mesh(self.shape.convex_hull)
@@ -74,6 +85,8 @@ class VisualizationWidget(QtWidgets.QWidget):
                 # self.vis.add_geometry(self.shape.point_cloud)
                 self.vis.add_geometry(hull_line_set)
         else:
+            self.shape.mesh.paint_uniform_color([1, 1, 1])
+
             if reset_geometry:
                 self.vis.add_geometry(self.shape.mesh)
 

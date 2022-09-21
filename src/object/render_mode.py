@@ -1,21 +1,17 @@
 class RenderMode:
-    UNLIT = "Unlit"
+    SILHOUETTE = "Silhouette"
     LIT = "Lit"
-    NORMALS = "Normals"
-    DEPTH = "Depth"
     WIREFRAME = "Wireframe"
     POINT_CLOUD = "Point cloud"
     CONVEX_HULL = "Convex hull"
 
-    ALL = [UNLIT, LIT, NORMALS, DEPTH, WIREFRAME, POINT_CLOUD, CONVEX_HULL]
+    ALL = [LIT, SILHOUETTE, WIREFRAME, POINT_CLOUD, CONVEX_HULL]
 
     # Elements with the same int can be rendered in the same frame
     WINDOW_TYPE = {
-        "Unlit": 0,
         "Lit": 0,
-        "Normals": 0,
-        "Depth": 0,
-        "Wireframe": 1,
-        "Point cloud": 1,
-        "Convex hull": 2,
+        "Wireframe": 0,
+        "Silhouette": 1,
+        "Point cloud": 2,
+        "Convex hull": 3,
     }
