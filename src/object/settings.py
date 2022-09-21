@@ -1,15 +1,10 @@
 import open3d.visualization.gui as gui
-import open3d.visualization.rendering as rendering
+
+from src.object.render_mode import RenderMode
+from src.object.material_record import MaterialRecord
 
 
 class Settings:
-    UNLIT = "defaultUnlit"
-    LIT = "defaultLit"
-    NORMALS = "normals"
-    DEPTH = "depth"
-    SILHOUETTE = "silhouette"
-    WIREFRAME = "wireframe"
-
     DEFAULT_MATERIAL_NAME = "Polished ceramic [default]"
     PREFAB = {
         DEFAULT_MATERIAL_NAME: {
@@ -69,34 +64,27 @@ class Settings:
         self.sun_color = gui.Color(1, 1, 1)
 
         self.apply_material = True  # clear to False after processing
-        self._materials = {
-            Settings.LIT: rendering.MaterialRecord(),
-            Settings.UNLIT: rendering.MaterialRecord(),
-            Settings.NORMALS: rendering.MaterialRecord(),
-            Settings.DEPTH: rendering.MaterialRecord(),
-            Settings.SILHOUETTE: rendering.MaterialRecord(),
-            Settings.WIREFRAME: rendering.MaterialRecord(),
-        }
-        self._materials[Settings.LIT].base_color = [0.9, 0.9, 0.9, 1.0]
-        self._materials[Settings.LIT].shader = Settings.LIT
-        self._materials[Settings.UNLIT].base_color = [0.0, 0.0, 0.0, 0.0]
-        self._materials[Settings.UNLIT].shader = Settings.UNLIT
-        self._materials[Settings.NORMALS].shader = Settings.NORMALS
-        self._materials[Settings.DEPTH].shader = Settings.DEPTH
-        self._materials[Settings.SILHOUETTE].base_color = [0.0, 0.0, 0.0, 0.0]
-        self._materials[Settings.WIREFRAME].base_color = [0.9, 0.9, 0.9, 1.0]
+        self.material_record = MaterialRecord()
+        self.render_mode = RenderMode.LIT
 
-        # Conveniently, assigning from self._materials[...] assigns a reference,
-        # not a copy, so if we change the property of a material, then switch
-        # to another one, then come back, the old setting will still be there.
-        self.material = self._materials[Settings.LIT]
+    def set_render_mode(self, name):
+        self.render_mode = name
 
-    def set_material(self, name):
-        self.material = self._materials[name]
-        self.apply_material = True
+        if name == "Unlit":
+            self.material_record.set_material(MaterialRecord.UNLIT)
+            self.apply_material = True
+        elif name == "Lit":
+            self.material_record.set_material(MaterialRecord.LIT)
+            self.apply_material = True
+        elif name == "Normals":
+            self.material_record.set_material(MaterialRecord.NORMALS)
+            self.apply_material = True
+        elif name == "Depth":
+            self.material_record.set_material(MaterialRecord.DEPTH)
+            self.apply_material = True
 
     def apply_material_prefab(self, name):
-        assert (self.material.shader == Settings.LIT)
+        assert (self.render_mode.shader == MaterialRecord.LIT)
         prefab = Settings.PREFAB[name]
         for key, val in prefab.items():
-            setattr(self.material, "base_" + key, val)
+            setattr(self.render_mode, "base_" + key, val)

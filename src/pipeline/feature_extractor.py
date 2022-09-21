@@ -34,5 +34,5 @@ class FeatureExtractor:
 
     @staticmethod
     def axis_aligned_box(shape: Shape):
-        shape.load_geometry()
-        return shape.geometry.get_axis_aligned_bounding_box()
+        shape.load_point_cloud()
+        return shape.point_cloud.get_axis_aligned_bounding_box()

@@ -16,13 +16,14 @@ def main():
     # Walk through labeledDB directory
     for subdir, dirs, files in os.walk(os.path.join("data", "LabeledDB_new")):
         for file in files:
-            if file.endswith(".off") or file.endswith(".ply"):
+            if file.endswith(".off"):
                 # Load shape and extract the features
                 path = os.path.join(subdir, file)
                 # Database depends on relative paths
                 rel_path = os.path.relpath(path)
-                if features_data.__contains__(rel_path):
-                    shape = Shape(path, features_data[rel_path])
+                feature_path = rel_path.replace(".off", ".ply")
+                if features_data.__contains__(feature_path):
+                    shape = Shape(path, features_data[feature_path])
                 else:
                     shape = Shape(path)
                 FeatureExtractor.extract_features(shape)

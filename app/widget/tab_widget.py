@@ -1,12 +1,13 @@
 import logging
 from app.widget.settings_widget import SettingsWidget
 
-from PyQt6 import QtWidgets, QtGui, QtCore
+from PyQt6 import QtWidgets, QtGui, QtCore, QtQuickWidgets, QtQuick
 from PyQt6.QtWidgets import QTabWidget, QGridLayout, QWidget
 
 from app.util.worker import Worker
 from app.widget.visualization_widget import VisualizationWidget
 from app.gui.menu_bar import MenuBar
+from src.object.settings import Settings
 from PyQt6.QtGui import QAction, QIcon, QPalette, QColor
 from PyQt6.QtWidgets import QMainWindow, QApplication
 
@@ -14,6 +15,9 @@ from PyQt6.QtWidgets import QMainWindow, QApplication
 class TabWidget(QTabWidget):
     def __init__(self):
         super(TabWidget, self).__init__()
+
+        # Central settings for the tabs
+        self.settings = Settings()
 
         # Start thread that handles the events on o3d windows
         self.thread = QtCore.QThread()
@@ -51,31 +55,33 @@ class TabWidget(QTabWidget):
         self.widget.update()
 
     def tab_1_widget(self) -> QWidget:
-        settings_widget = SettingsWidget()
+        settings_widget = SettingsWidget(self.settings)
         settings_widget.setPalette(QPalette(QColor(100, 100, 100)))
         settings_widget.widget.setFixedWidth(150)
 
-        scene_widget = VisualizationWidget(False)
+        scene_widget = VisualizationWidget(self.settings)
         window = QtGui.QWindow.fromWinId(scene_widget.hwnd)
         window_container = self.createWindowContainer(window, scene_widget)
 
+        #
+        settings_widget.connect_visualizer(scene_widget)
+
         # Assign scene widget here since that covers entire gui
         layout = QtWidgets.QHBoxLayout(scene_widget)
-
         layout.addWidget(settings_widget.widget)
         layout.addWidget(window_container)
 
-        self.tab1_widgets = [scene_widget, settings_widget]
+        self.tab1_widgets = [scene_widget]
         return scene_widget
 
     def tab_2_widget(self) -> QWidget:
         # Widget 1
-        scene_widget_1 = VisualizationWidget(False)
+        scene_widget_1 = VisualizationWidget(self.settings)
         window_1 = QtGui.QWindow.fromWinId(scene_widget_1.hwnd)
         window_container_1 = self.createWindowContainer(window_1, scene_widget_1)
 
         # Widget 2
-        scene_widget_2 = VisualizationWidget(True)
+        scene_widget_2 = VisualizationWidget(self.settings)
         window_2 = QtGui.QWindow.fromWinId(scene_widget_2.hwnd)
         window_container_2 = self.createWindowContainer(window_2, scene_widget_2)
 
@@ -92,7 +98,7 @@ class TabWidget(QTabWidget):
 
     def tab_1_select(self):
         self.worker.set_scenes([self.tab1_widgets[0]])
-        TabWidget.connect_to_menu_bar(self.tab2_widgets[0], self.tab2_widgets[0])
+        TabWidget.connect_to_menu_bar(self.tab1_widgets[0], self.tab1_widgets[0])
 
     def tab_2_select(self):
         self.worker.set_scenes(self.tab2_widgets)
@@ -108,6 +114,6 @@ class TabWidget(QTabWidget):
     @staticmethod
     def connect_to_menu_bar(open_widget, save_widget):
         # Connect menu bar to widget
-        top_level_widgets = QApplication.topLevelWidgets()
-        menu_bar = next(obj for obj in top_level_widgets if type(obj) == MenuBar)
+        all_widgets = QApplication.topLevelWidgets()
+        menu_bar = next(obj for obj in all_widgets if type(obj) == MenuBar)
         menu_bar.connect_widgets(open_widget, save_widget)

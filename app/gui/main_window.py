@@ -1,41 +1,20 @@
-import logging
-from PyQt6 import QtWidgets, QtGui, QtCore
-from PyQt6.QtCore import QThreadPool
+from PyQt6.QtWidgets import QMainWindow
 
 from app.widget.tab_widget import TabWidget
-from app.util.worker import Worker
-from app.util.worker import MultiWorker
-from app.widget.visualization_widget import VisualizationWidget
 from app.gui.menu_bar import MenuBar
-from PyQt6.QtGui import QAction, QIcon
-from PyQt6.QtWidgets import QMainWindow, QApplication
-from PyQt6.QtGui import QIcon, QAction
 
 
-class MainWindow(QtWidgets.QMainWindow):
+class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
 
-        # MenuBar()
+        # Add menu bar
         self.menu_bar = MenuBar(self.menuBar())
 
-        # Tabs
+        # Add tabs
         self.tab_widget = TabWidget()
-        layout = QtWidgets.QGridLayout()
-        self.setLayout(layout)
-        layout.addWidget(self.tab_widget.widget, 0, 0)
         self.setCentralWidget(self.tab_widget.widget)
 
-    # def closeEvent(self, *args, **kwargs):
-    #     # Close each widget
-    #     self.tab_widget.closeEvent(*args, **kwargs)
-
-    # def start_vis(self):
-    #     logging.info("thread start")
-    #     self.scene_widget.vis.run()
-    #     self.scene_widget_2.vis.run()
-    #     logging.info("thread end")
-    #
-    # def update_vis(self):
-    #     self.scene_widget.update_vis()
-    #     self.scene_widget_2.update_vis()
+    # Need to close the open3d handlers separately
+    def closeEvent(self, *args, **kwargs):
+        self.tab_widget.closeEvent(*args, **kwargs)

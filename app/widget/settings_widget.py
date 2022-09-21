@@ -1,40 +1,48 @@
-import glob
-import os
-import open3d.visualization.gui as gui
-
 from src.object.settings import Settings
 import logging
 
 from PyQt6 import QtWidgets, QtGui, QtCore
 from PyQt6.QtWidgets import QTabWidget, QGridLayout, QWidget, QVBoxLayout, QComboBox
-from PyQt6.QtCore import QThreadPool
+from PyQt6.QtQml import QQmlEngine
 
-from app.util.worker import Worker
-from app.util.worker import MultiWorker
 from app.widget.visualization_widget import VisualizationWidget
 from app.gui.menu_bar import MenuBar
 from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtWidgets import QMainWindow, QApplication
 
+from src.object.render_mode import RenderMode
+
 
 class SettingsWidget(QWidget):
-    MATERIAL_NAMES = ["Lit", "Unlit", "Normals", "Depth", "Silhouette"]
-    MATERIAL_SHADERS = [
-        Settings.LIT, Settings.UNLIT, Settings.NORMALS, Settings.DEPTH, Settings.SILHOUETTE,
-    ]
+    RENDER_MODES = ["Lit", "Unlit", "Normals", "Depth", "Wireframe"]
+    # RENDER_SHADERS = [Settings.LIT, Settings.UNLIT, Settings.NORMALS, Settings.DEPTH, Settings.WIREFRAME]
 
-    def __init__(self):
+    MOUSE_MODES = ["Arc ball", "Fly"]
+
+    def __init__(self, settings: Settings):
         super(SettingsWidget, self).__init__()
         # Widget state of main app window and the scene that is controlled by the settings
-        self.settings = Settings()
-        # self.scene_widget = None
-        # layout = QVBoxLayout()
+        self.settings = settings
+        self.visualizer_widget = None
+
+        # Widget
         self.widget = QWidget()
 
-        combobox = QtWidgets.QComboBox()
-        combobox.addItems(SettingsWidget.MATERIAL_NAMES)
-        combobox.currentIndexChanged.connect(lambda string: print(string))
+        # Render mode combobox
+        combobox = QComboBox()
+        combobox.addItems(RenderMode.ALL)
+        combobox.currentIndexChanged.connect(lambda index: self._on_shader_change(index))
 
+        # Mouse mode
+        # combobox = QComboBox()
+        # combobox.addItems(SettingsWidget.RENDER_MODES)
+        # combobox.currentIndexChanged.connect(self._on_mouse_mode_change)
+
+        # Show axes control
+        # self._show_axes = gui.Checkbox("Show axes")
+        # self._show_axes.set_on_checked(self._on_show_axes)
+
+        # Create layout
         layout = QVBoxLayout()
         layout.addWidget(combobox)
         self.widget.setLayout(layout)
@@ -75,11 +83,11 @@ class SettingsWidget(QWidget):
         # h.add_stretch()
         # view_ctrls.add_child(h)
         #
-        # self._show_skybox = gui.Checkbox("Show skymap")
-        # self._show_skybox.set_on_checked(self._on_show_skybox)
         # view_ctrls.add_fixed(separation_height)
         # view_ctrls.add_child(self._show_skybox)
         #
+        # self._show_skybox = gui.Checkbox("Show skymap")
+        # self._show_skybox.set_on_checked(self._on_show_skybox)
         # self._bg_color = gui.ColorEdit()
         # self._bg_color.set_on_value_changed(self._on_bg_color)
         #
@@ -138,29 +146,30 @@ class SettingsWidget(QWidget):
         # self.widget.add_fixed(separation_height)
         # self.widget.add_child(material_settings)
 
-    def initialize(self, scene_widget):
-        self.scene_widget = scene_widget
+    def connect_visualizer(self, visualizer_widget):
+        self.visualizer_widget = visualizer_widget
         # Button events
         # self._arcball_button.set_on_clicked(self.scene_widget.set_mouse_mode_rotate)
         # self._fly_button.set_on_clicked(self.scene_widget.set_mouse_mode_fly)
         # self._model_button.set_on_clicked(self.scene_widget.set_mouse_mode_model)
         # self._sun_button.set_on_clicked(self.scene_widget.set_mouse_mode_sun)
         # self._ibl_button.set_on_clicked(self.scene_widget.set_mouse_mode_ibl)
-    #
-    # def _save_state(self):
-    #     self._bg_color.color_value = self.settings.bg_color
-    #     self._show_axes.checked = self.settings.show_axes
-    #     self._material_prefab.enabled = (
-    #         self.settings.material.shader == Settings.LIT)
-    #     c = gui.Color(self.settings.material.base_color[0],
-    #                   self.settings.material.base_color[1],
-    #                   self.settings.material.base_color[2],
-    #                   self.settings.material.base_color[3])
-    #     self._material_color.color_value = c
-    #     self._point_size.double_value = self.settings.material.point_size
+
+    def _save_state(self):
+        pass
+        # self._bg_color.color_value = self.settings.bg_color
+        # self._show_axes.checked = self.settings.show_axes
+        # self._material_prefab.enabled = (
+        #     self.settings.render_mode.shader == Settings.LIT)
+        # c = gui.Color(self.settings.render_mode.base_color[0],
+        #               self.settings.render_mode.base_color[1],
+        #               self.settings.render_mode.base_color[2],
+        #               self.settings.render_mode.base_color[3])
+        # self._material_color.color_value = c
+        # self._point_size.double_value = self.settings.material.point_size
 
     def _apply_and_save(self):
-        self.scene_widget.apply_settings(self.settings)
+        self.visualizer_widget.apply_settings()
         # self._save_state()
 
     def _on_bg_color(self, new_color):
@@ -179,9 +188,18 @@ class SettingsWidget(QWidget):
         self.settings.sun_color = color
         self._apply_and_save()
 
-    def _on_shader(self, _, index):
-        self.settings.set_material(SettingsWidget.MATERIAL_SHADERS[index])
+    def _on_shader_change(self, index):
+        self.settings.set_render_mode(RenderMode.ALL[index])
         self._apply_and_save()
+
+    def _on_mouse_mode_change(self, index):
+        # self._arcball_button.set_on_clicked(self.scene_widget.set_mouse_mode_rotate)
+        # self._fly_button.set_on_clicked(self.scene_widget.set_mouse_mode_fly)
+        # self._model_button.set_on_clicked(self.scene_widget.set_mouse_mode_model)
+        # self._sun_button.set_on_clicked(self.scene_widget.set_mouse_mode_sun)
+        # self._ibl_button.set_on_clicked(self.scene_widget.set_mouse_mode_ibl)
+
+        pass
 
     def _on_material_prefab(self, name, _):
         self.settings.apply_material_prefab(name)
@@ -189,13 +207,13 @@ class SettingsWidget(QWidget):
         self._apply_and_save()
 
     def _on_material_color(self, color):
-        self.settings.material.base_color = [
+        self.settings.render_mode.base_color = [
             color.red, color.green, color.blue, color.alpha
         ]
         self.settings.apply_material = True
         self._apply_and_save()
 
     def _on_point_size(self, size):
-        self.settings.material.point_size = int(size)
+        self.settings.render_mode.point_size = int(size)
         self.settings.apply_material = True
         self._apply_and_save()

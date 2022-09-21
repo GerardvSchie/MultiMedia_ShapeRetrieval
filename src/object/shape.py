@@ -2,6 +2,8 @@ import os.path
 import logging
 import open3d as o3d
 import numpy as np
+import open3d.cpu.pybind.geometry
+
 from src.object.features import Features
 
 
@@ -10,9 +12,12 @@ class Shape:
         if not os.path.exists(shape_path):
             logging.error(f"Shape file at path {os.path.abspath(shape_path)} does not exist!")
 
+        # Convert shape file to .ply format, so we can extract point cloud
         self.path = os.path.relpath(shape_path)
+        self.convert_to_ply()
+
         self.mesh = None
-        self.geometry = None
+        self.point_cloud = None
 
         if pre_computed_features:
             self.features = pre_computed_features
@@ -27,9 +32,24 @@ class Shape:
     # A big portion of these two methods comes from the open3d example, see license in app folder.
     def load(self):
         self.load_mesh()
-        self.load_geometry()
+        self.load_point_cloud()
+
+    def convert_to_ply(self):
+        new_file_path = self.path.split(".")[0] + ".ply"
+
+        # Ply file already computed, set path to the ply file
+        if os.path.exists(new_file_path):
+            self.path = new_file_path
+            return
+
+        mesh = o3d.io.read_triangle_mesh(self.path)
+        # mesh.orient_triangles()
+
+        o3d.io.write_triangle_mesh(new_file_path, mesh)
+        self.path = new_file_path
 
     def load_mesh(self):
+        self.convert_to_ply()
         # Mesh is already loaded
         if self.mesh:
             return
@@ -37,11 +57,13 @@ class Shape:
         geometry_type = o3d.io.read_file_geometry_type(self.path)
 
         if geometry_type & o3d.io.CONTAINS_TRIANGLES:
-            self.mesh = o3d.io.read_triangle_mesh(self.path)
+            self.mesh: open3d.cpu.pybind.geometry.TriangleMesh = o3d.io.read_triangle_mesh(self.path)
+            self.mesh.orient_triangles()
 
         # Could not load mesh
         if self.mesh is None:
             logging.warning(f"Shape at path '{os.path.abspath(self.path)}' appears to be a point cloud, cannot load mesh")
+            return
 
         # No triangles in the mesh
         if len(self.mesh.triangles) == 0:
@@ -54,31 +76,24 @@ class Shape:
         if len(self.mesh.vertex_colors) == 0:
             self.mesh.paint_uniform_color([1, 1, 1])
 
-        self.geometry = self.mesh
-
         # Make sure the mesh has texture coordinates
-        if self.mesh is not None and not self.mesh.has_triangle_uvs():
+        if not self.mesh.has_triangle_uvs():
             uv = np.array([[0.0, 0.0]] * (3 * len(self.mesh.triangles)))
             self.mesh.triangle_uvs = o3d.utility.Vector2dVector(uv)
 
-    def load_geometry(self):
-        # Geometry is already loaded
-        if self.geometry:
+    def load_point_cloud(self):
+        self.convert_to_ply()
+        # Point cloud already existed
+        if self.point_cloud:
             return
 
-        cloud = None
         try:
-            cloud = o3d.io.read_point_cloud(self.path)
+            self.point_cloud = o3d.io.read_point_cloud(self.path)
         except Exception as ex:
             logging.error(ex)
 
-        if cloud is None:
+        if self.point_cloud is None:
             logging.warning("Failed to read point cloud")
-
-        if not cloud.has_normals():
-            cloud.estimate_normals()
-        cloud.normalize_normals()
-        self.geometry = cloud
 
     # Saves the mesh to the given file path
     def save(self, path):
