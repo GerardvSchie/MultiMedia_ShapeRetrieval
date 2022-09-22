@@ -1,3 +1,5 @@
+import logging
+
 from PyQt6 import QtCore
 from PyQt6.QtCore import QRunnable, pyqtSlot
 
@@ -60,6 +62,11 @@ class Worker(QtCore.QObject):
 
     def set_scenes(self, scenes):
         self._o3d_scenes = scenes
+        if isinstance(self._o3d_scenes, list):
+            logging.info("worker is updating new scenes")
+        else:
+            logging.critical("Has not gotten a list of scenes to render, abort")
+            raise Exception("set_scenes expects a list of scenes")
 
     def run(self):
         self._stopped = False
@@ -70,6 +77,7 @@ class Worker(QtCore.QObject):
             for scene in self._o3d_scenes:
                 scene.update_vis()
 
+        logging.info("stopped worker")
         self._stopped = True
 
     def stop(self):

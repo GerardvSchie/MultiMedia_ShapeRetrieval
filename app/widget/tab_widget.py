@@ -27,6 +27,8 @@ class TabWidget(QTabWidget):
         self.thread.started.connect(lambda: self.worker.run())
         self.thread.start()
 
+        self.currentChanged.connect(lambda index: self.custom_currentChanged(index))
+
         # Tab widget
         color_widget(self, [255, 0, 0])
 
@@ -45,7 +47,7 @@ class TabWidget(QTabWidget):
         # Select tab 1
         self.tab_1_select()
 
-    def currentChanged(self, index: int) -> None:
+    def custom_currentChanged(self, index: int):
         if index == 0:
             print("Changed to tab 1")
             self.tab_1_select()
@@ -82,7 +84,7 @@ class TabWidget(QTabWidget):
 
         # Assign scene widget here since that covers entire gui
         widget = QWidget()
-        layout = QtWidgets.QHBoxLayout(widget)
+        layout = QtWidgets.QHBoxLayout(self)
 
         left_layout = QtWidgets.QVBoxLayout()
         left_layout.addWidget(settings_widget)
@@ -109,20 +111,23 @@ class TabWidget(QTabWidget):
         btn = QtWidgets.QPushButton(text="test")
         btn.clicked.connect(lambda: print("Button pressed!"))
 
-        layout = QtWidgets.QGridLayout(scene_widget_1)
-        layout.addWidget(window_container_1, 0, 0)
+        # Assign scene widget here since that covers entire gui
+        widget = QWidget()
+        layout = QtWidgets.QVBoxLayout(self)
+        layout.addWidget(window_container_1)
         layout.addWidget(window_container_2)
         layout.addWidget(btn)
+        widget.setLayout(layout)
 
         self.tab2_widgets = [scene_widget_1, scene_widget_2]
-        return scene_widget_1
+        return widget
 
     def tab_1_select(self):
         self.worker.set_scenes([self.tab1_widgets[0]])
         TabWidget.connect_to_menu_bar(self.tab1_widgets[0], self.tab1_widgets[0])
 
     def tab_2_select(self):
-        self.worker.set_scenes(self.tab2_widgets)
+        self.worker.set_scenes([self.tab2_widgets[0], self.tab2_widgets[1]])
         TabWidget.connect_to_menu_bar(self.tab2_widgets[0], self.tab2_widgets[0])
 
     def closeEvent(self, *args, **kwargs):
