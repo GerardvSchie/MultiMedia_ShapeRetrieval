@@ -9,6 +9,7 @@ import open3d.visualization.rendering as rendering
 from open3d.visualization.gui import Application
 
 from PyQt6 import QtWidgets
+from PyQt6.QtWidgets import QWidget
 
 from src.object.render_mode import RenderMode
 from src.object.shape import Shape
@@ -16,7 +17,7 @@ from src.object.settings import Settings
 from src.pipeline.feature_extractor import FeatureExtractor
 
 
-class VisualizationWidget(QtWidgets.QWidget):
+class VisualizationWidget(QWidget):
     def __init__(self, settings: Settings):
         super(VisualizationWidget, self).__init__()
 
@@ -25,8 +26,6 @@ class VisualizationWidget(QtWidgets.QWidget):
         self.settings = settings
         self.current_window_type = -1
 
-        self.widget = QtWidgets.QWidget()
-        self.vis = None
         self.vis = o3d.visualization.VisualizerWithEditing()
 
         # Visible=False so it does not open separate window
@@ -61,6 +60,8 @@ class VisualizationWidget(QtWidgets.QWidget):
         render_option: o3d.visualization.RenderOption = self.vis.get_render_option()
         render_option.mesh_show_wireframe = self.settings.render_mode == RenderMode.WIREFRAME
         render_option.light_on = self.settings.render_mode != RenderMode.SILHOUETTE
+        render_option.show_coordinate_frame = self.settings.show_axes
+        print(f"Show coordinate frame: " + str(render_option.show_coordinate_frame))
 
         # Need to reset geometry only if the window type changes
         reset_geometry = self.current_window_type != RenderMode.WINDOW_TYPE[self.settings.render_mode]
@@ -88,7 +89,9 @@ class VisualizationWidget(QtWidgets.QWidget):
             self.shape.mesh.paint_uniform_color([1, 1, 1])
 
             if reset_geometry:
+                # self.vis.add_geometry(self.shape.mesh.create_coordinate_frame())
                 self.vis.add_geometry(self.shape.mesh)
 
         # Update the window type to the latest
         self.current_window_type = RenderMode.WINDOW_TYPE[self.settings.render_mode]
+        self.vis.update_renderer()

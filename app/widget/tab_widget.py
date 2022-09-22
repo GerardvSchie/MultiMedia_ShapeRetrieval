@@ -1,11 +1,13 @@
 import logging
 from app.widget.settings_widget import SettingsWidget
+from app.util.widget import color_widget
 
 from PyQt6 import QtWidgets, QtGui, QtCore, QtQuickWidgets, QtQuick
 from PyQt6.QtWidgets import QTabWidget, QGridLayout, QWidget
 
 from app.util.worker import Worker
 from app.widget.visualization_widget import VisualizationWidget
+from app.widget.features_widget import FeaturesWidget
 from app.gui.menu_bar import MenuBar
 from src.object.settings import Settings
 from PyQt6.QtGui import QAction, QIcon, QPalette, QColor
@@ -26,20 +28,20 @@ class TabWidget(QTabWidget):
         self.thread.start()
 
         # Tab widget
-        self.widget = QTabWidget()
-        QtWidgets.QHBoxLayout(self.widget)
+        color_widget(self, [255, 0, 0])
 
         # Tab 1
         self.tab1_widgets = []
         self.tab1_widget = self.tab_1_widget()
-        self.widget.addTab(self.tab1_widget, "Mesh inspect")
+        color_widget(self.tab1_widget, [0, 255, 0])
+        self.addTab(self.tab1_widget, "Mesh inspect")
 
-        # Tab 1
+        # Tab 2
         self.tab2_widgets = []
         self.tab2_widget = self.tab_2_widget()
-        self.widget.addTab(self.tab2_widget, "Mesh inspect 2")
+        color_widget(self.tab2_widget, [0, 255, 0])
+        self.addTab(self.tab2_widget, "Mesh inspect 2")
 
-        self.widget.currentChanged.connect(self.currentChanged)
         # Select tab 1
         self.tab_1_select()
 
@@ -47,32 +49,51 @@ class TabWidget(QTabWidget):
         if index == 0:
             print("Changed to tab 1")
             self.tab_1_select()
+            # self.tab1_widget.setVisible(True)
+            # self.tab2_widget.setVisible(False)
+            # self.setCurrentWidget(self.tab1_widget)
         if index == 1:
             print("Changed to tab 2")
             self.tab_2_select()
+            # self.tab2_widget.setVisible(True)
+            # self.tab1_widget.setVisible(False)
+            # self.setCurrentWidget(self.tab2_widget)
 
         # Try update the widget
-        self.widget.update()
+        self.update()
 
     def tab_1_widget(self) -> QWidget:
         settings_widget = SettingsWidget(self.settings)
-        settings_widget.setPalette(QPalette(QColor(100, 100, 100)))
-        settings_widget.widget.setFixedWidth(150)
+        color_widget(settings_widget, [0, 0, 255])
+        settings_widget.setFixedWidth(150)
+        features_widget = FeaturesWidget()
+        features_widget.setFixedWidth(150)
 
         scene_widget = VisualizationWidget(self.settings)
         window = QtGui.QWindow.fromWinId(scene_widget.hwnd)
         window_container = self.createWindowContainer(window, scene_widget)
 
+        color_widget(settings_widget, [0, 255, 255])
+        color_widget(features_widget, [255, 255, 0])
+
         # Connect the settings to the widget
         settings_widget.connect_visualizer(scene_widget)
+        features_widget.connect_visualizer(scene_widget)
 
         # Assign scene widget here since that covers entire gui
-        layout = QtWidgets.QHBoxLayout(scene_widget)
-        layout.addWidget(settings_widget.widget)
+        widget = QWidget()
+        layout = QtWidgets.QHBoxLayout(widget)
+
+        left_layout = QtWidgets.QVBoxLayout()
+        left_layout.addWidget(settings_widget)
+        left_layout.addWidget(features_widget)
+
+        layout.addLayout(left_layout)
         layout.addWidget(window_container)
+        widget.setLayout(layout)
 
         self.tab1_widgets = [scene_widget]
-        return scene_widget
+        return widget
 
     def tab_2_widget(self) -> QWidget:
         # Widget 1
