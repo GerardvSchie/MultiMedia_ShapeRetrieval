@@ -81,7 +81,7 @@ class VisualizationWidget(QtWidgets.QWidget):
                 hull_line_set = o3d.geometry.LineSet.create_from_triangle_mesh(self.shape.convex_hull)
                 hull_line_set.paint_uniform_color((1, 0, 0))
                 # o3d.visualization.draw_geometries_with_editing([self.shape.point_cloud])
-                # o3d.visualization.draw_geometries_with_editing([hull_line_set])
+                # o3d.visualization.draw_geometries([hull_line_set, self.shape.point_cloud])
                 # self.vis.add_geometry(self.shape.point_cloud)
                 self.vis.add_geometry(hull_line_set)
         else:

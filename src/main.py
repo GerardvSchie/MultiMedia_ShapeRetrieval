@@ -27,6 +27,7 @@ def main():
                 else:
                     shape = Shape(path)
                 FeatureExtractor.extract_features(shape)
+
                 shape_collection.append(shape)
 
     src.util.plot.plot_features([shape.features for shape in shape_collection])
@@ -41,6 +42,8 @@ def main():
     # FeatureExtractor.extract_features(ply_example)
     # print(ply_example.features.nr_vertices)
     # print(ply_example.features.nr_triangles)
+
+    logging.info("jflsdjfsldk")
 
 
 # Example loads an .off and .ply file
