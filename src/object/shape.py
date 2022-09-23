@@ -19,6 +19,7 @@ class Shape:
         self.mesh = None
         self.point_cloud = None
         self.convex_hull = None
+        self.axes = None
 
         if pre_computed_features:
             self.features = pre_computed_features
@@ -35,6 +36,7 @@ class Shape:
         self.load_mesh()
         self.load_point_cloud()
         self.load_convex_hull()
+        self.load_coordinate_axes()
 
     def convert_to_ply(self):
         new_file_path = self.path.split(".")[0] + ".ply"
@@ -50,10 +52,10 @@ class Shape:
         o3d.io.write_triangle_mesh(new_file_path, mesh)
         self.path = new_file_path
 
-    def load_mesh(self):
+    def load_mesh(self) -> bool:
         # Mesh is already loaded
         if self.mesh:
-            return
+            return True
 
         geometry_type = o3d.io.read_file_geometry_type(self.path)
 
@@ -64,13 +66,13 @@ class Shape:
         # Could not load mesh
         if self.mesh is None:
             logging.warning(f"Shape at path '{os.path.abspath(self.path)}' appears to be a point cloud, cannot load mesh")
-            return
+            return False
 
         # No triangles in the mesh
         if len(self.mesh.triangles) == 0:
-            logging.debug(f"Shape at path '{os.path.abspath(self.path)}' has 0 triangles, will read as point cloud")
+            logging.warning(f"Shape at path '{os.path.abspath(self.path)}' has 0 triangles, will read as point cloud")
             self.mesh = None
-            return
+            return False
 
         # Get the normals of the mesh
         self.mesh.compute_vertex_normals()
@@ -82,29 +84,45 @@ class Shape:
             uv = np.array([[0.0, 0.0]] * (3 * len(self.mesh.triangles)))
             self.mesh.triangle_uvs = o3d.utility.Vector2dVector(uv)
 
-    def load_point_cloud(self):
+        return True
+
+    def load_point_cloud(self) -> bool:
         # Point cloud already existed
         if self.point_cloud:
-            return
+            return True
 
         try:
             self.point_cloud: o3d.geometry.PointCloud = o3d.io.read_point_cloud(self.path)
         except Exception as ex:
             logging.error(ex)
-
-        if self.point_cloud is None:
-            logging.warning("Failed to read point cloud")
-
-    def load_convex_hull(self):
-        if self.convex_hull:
-            return
-
-        self.load_point_cloud()
+            return False
 
         if not self.point_cloud:
-            return
+            logging.warning("Failed to read point cloud")
+            return False
+
+        return True
+
+    def load_convex_hull(self) -> bool:
+        if self.convex_hull:
+            return True
+
+        if not self.load_point_cloud():
+            return False
 
         self.convex_hull, _ = self.point_cloud.compute_convex_hull()
+        return True
+
+    def load_coordinate_axes(self) -> bool:
+        if self.axes:
+            return True
+
+        if not self.load_mesh():
+            logging.error("Cannot compute coordinate axes of ")
+            return False
+
+        self.axes = self.mesh.create_coordinate_frame(0.1)
+        return True
 
     # Saves the mesh to the given file path
     def save(self, path):

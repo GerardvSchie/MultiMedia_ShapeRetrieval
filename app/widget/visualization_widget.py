@@ -1,9 +1,10 @@
+import logging
 import open3d as o3d
+import open3d.visualization.gui as gui
 import win32gui
 
 from PyQt6.QtWidgets import QWidget
 
-from src.object.render_mode import RenderMode
 from src.object.shape import Shape
 from src.object.settings import Settings
 from src.pipeline.feature_extractor import FeatureExtractor
@@ -13,12 +14,21 @@ from app.widget.features_widget import FeaturesWidget
 class VisualizationWidget(QWidget):
     def __init__(self, settings: Settings):
         super(VisualizationWidget, self).__init__()
-
-        # Settings
         self.shape = None
         self.features_widget = None
+        self.hull_line_set = None
+
+        # Settings and state
         self.settings = settings
-        self.current_window_type = -1
+        self._background_color = gui.Color(1, 1, 1)
+        self._mesh_color = gui.Color(1, 1, 1)
+        self._convex_hull_color = gui.Color(1, 0, 0)
+        self._light_on = True
+        self._show_mesh = False
+        self._show_wireframe = False
+        self._show_point_cloud = False
+        self._show_convex_hull = False
+        self._show_axes = False
 
         self.vis = o3d.visualization.Visualizer()
 
@@ -36,14 +46,23 @@ class VisualizationWidget(QWidget):
 
     # Part of the scene, what is in the window
     def load_shape(self, path):
+        # Clear geometries and update state
+        self.vis.clear_geometries()
+        self.clear_geometries_state()
+
+        # Load shape
         self.shape = Shape(path, load_shape=True)
+        # TODO Put hull line set in shape
+        self.hull_line_set = o3d.geometry.LineSet.create_from_triangle_mesh(self.shape.convex_hull)
+        self.hull_line_set.paint_uniform_color((1, 0, 0))
+
         FeatureExtractor.extract_features(self.shape)
-        self.current_window_type = -1
         self.visualize_shape()
 
         # Only update features if there is one connected
         if self.features_widget:
             self.features_widget.update_values(self.shape.features)
+
         # bounds = self.shape.geometry.get_axis_aligned_bounding_box()
         # self.widget.setup_camera(60, bounds, bounds.get_center())
         # self.property_widget.update_properties(self.shape.features)
@@ -52,46 +71,57 @@ class VisualizationWidget(QWidget):
         self.vis.run()
 
     def update_vis(self):
-        # self.vis.update_geometry(self.shape.geometry)
         self.vis.poll_events()
         self.vis.update_renderer()
+
+    def clear_geometries_state(self):
+        self._show_mesh = False
+        self._show_wireframe = False
+        self._show_point_cloud = False
+        self._show_convex_hull = False
+        self._show_axes = False
+
+    def update_state(self):
+        self._background_color = self.settings.background_color
+        self._mesh_color = self.settings.mesh_color
+        self._convex_hull_color = self.settings.convex_hull_color
+
+        # Render settings
+        self._light_on = self.settings.light_on
+        self._show_mesh = self.settings.show_mesh
+        self._show_wireframe = self.settings.show_wireframe
+        self._show_point_cloud = self.settings.show_point_cloud
+        self._show_convex_hull = self.settings.show_convex_hull
+        self._show_axes = self.settings.show_axes
 
     def visualize_shape(self):
         # Set render options
         render_option: o3d.visualization.RenderOption = self.vis.get_render_option()
-        render_option.mesh_show_wireframe = self.settings.render_mode == RenderMode.WIREFRAME
-        render_option.light_on = self.settings.render_mode != RenderMode.SILHOUETTE
-        render_option.show_coordinate_frame = self.settings.show_axes
-        print(f"TODO: show coordinate frame: " + str(render_option.show_coordinate_frame))
-
-        # Need to reset geometry only if the window type changes
-        reset_geometry = self.current_window_type != RenderMode.WINDOW_TYPE[self.settings.render_mode]
-        if reset_geometry:
-            self.vis.clear_geometries()
+        render_option.mesh_show_wireframe = self.settings.show_wireframe
+        render_option.light_on = self.settings.light_on
 
         # Handle each different type of visualization
-        if self.settings.render_mode == RenderMode.POINT_CLOUD:
-            if reset_geometry:
-                self.vis.add_geometry(self.shape.point_cloud)
-        elif self.settings.render_mode == RenderMode.SILHOUETTE:
-            self.shape.mesh.paint_uniform_color([0, 0, 0])
+        self._resolve_geometry_state_difference(self._show_mesh, self.settings.show_mesh, self.shape.mesh)
+        self._resolve_geometry_state_difference(self._show_point_cloud, self.settings.show_point_cloud, self.shape.point_cloud)
+        self._resolve_geometry_state_difference(self._show_convex_hull, self.settings.show_convex_hull, self.hull_line_set)
+        self._resolve_geometry_state_difference(self._show_axes, self.settings.show_axes, self.shape.axes)
+        # TODO: self.shape.mesh.paint_uniform_color([1, 1, 1])
 
-            if reset_geometry:
-                self.vis.add_geometry(self.shape.mesh)
-        elif self.settings.render_mode == RenderMode.CONVEX_HULL:
-            if reset_geometry:
-                hull_line_set = o3d.geometry.LineSet.create_from_triangle_mesh(self.shape.convex_hull)
-                hull_line_set.paint_uniform_color((1, 0, 0))
-                self.vis.add_geometry(self.shape.mesh.create_coordinate_frame(0.1))
-                self.vis.add_geometry(self.shape.point_cloud)
-                self.vis.add_geometry(hull_line_set)
-        else:
-            self.shape.mesh.paint_uniform_color([1, 1, 1])
-
-            if reset_geometry:
-                # self.vis.add_geometry(self.shape.mesh.create_coordinate_frame())
-                self.vis.add_geometry(self.shape.mesh)
-
-        # Update the window type to the latest
-        self.current_window_type = RenderMode.WINDOW_TYPE[self.settings.render_mode]
+        # Update the state of the widget
+        self.update_state()
         self.vis.update_renderer()
+
+    def _resolve_geometry_state_difference(self, old_state, new_state, geometry):
+        if not geometry:
+            logging.warning("Trying to update a geometry that is not present")
+
+        # No difference of state to resolve
+        if old_state == new_state:
+            return
+
+        # New state adds geometry
+        if not old_state and new_state:
+            self.vis.add_geometry(geometry)
+        # Geometry was present, remove it
+        else:
+            self.vis.remove_geometry(geometry)
