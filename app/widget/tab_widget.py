@@ -34,8 +34,8 @@ class TabWidget(QTabWidget):
         self.addTab(self.tab1_widget, "Mesh inspect")
 
         # Tab 2
-        self.tab2_widget = MultiViewerWidget(self.settings)
-        self.addTab(self.tab2_widget, "Mesh inspect 2")
+        # self.tab2_widget = MultiViewerWidget(self.settings)
+        # self.addTab(self.tab2_widget, "Mesh inspect 2")
 
         # Select tab 1
         self.tab_1_select()
@@ -44,7 +44,8 @@ class TabWidget(QTabWidget):
         if index == 0:
             self.tab_1_select()
         if index == 1:
-            self.tab_2_select()
+            pass
+            # self.tab_2_select()
 
         # Try update the widget
         self.update()
@@ -53,9 +54,9 @@ class TabWidget(QTabWidget):
         self.worker.set_scenes(self.tab1_widget.scene_widgets)
         TabWidget.connect_to_menu_bar(self.tab1_widget.scene_widgets[0], self.tab1_widget.scene_widgets[0])
 
-    def tab_2_select(self):
-        self.worker.set_scenes(self.tab2_widget.scene_widgets)
-        TabWidget.connect_to_menu_bar(self.tab2_widget.scene_widgets[0], self.tab2_widget.scene_widgets[0])
+    # def tab_2_select(self):
+    #     self.worker.set_scenes(self.tab2_widget.scene_widgets)
+    #     TabWidget.connect_to_menu_bar(self.tab2_widget.scene_widgets[0], self.tab2_widget.scene_widgets[0])
 
     def closeEvent(self, *args, **kwargs):
         self.worker.stop()

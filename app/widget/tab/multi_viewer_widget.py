@@ -5,6 +5,7 @@ from app.widget.util import color_widget
 from app.widget.visualization_widget import VisualizationWidget
 
 from src.object.settings import Settings
+from app.util.os import IsMacOS
 
 
 class MultiViewerWidget(QWidget):
@@ -14,21 +15,24 @@ class MultiViewerWidget(QWidget):
 
         # Widget 1
         scene_widget_1 = VisualizationWidget(settings)
-        window_1 = QWindow.fromWinId(scene_widget_1.hwnd)
-        window_container_1 = self.createWindowContainer(window_1, scene_widget_1)
+        if not IsMacOS:
+            window_1 = QWindow.fromWinId(scene_widget_1.hwnd)
+            window_container_1 = self.createWindowContainer(window_1, scene_widget_1)
 
         # Widget 2
         scene_widget_2 = VisualizationWidget(settings)
-        window_2 = QWindow.fromWinId(scene_widget_2.hwnd)
-        window_container_2 = self.createWindowContainer(window_2, scene_widget_2)
+        if not IsMacOS:
+            window_2 = QWindow.fromWinId(scene_widget_2.hwnd)
+            window_container_2 = self.createWindowContainer(window_2, scene_widget_2)
 
         btn = QPushButton(text="test")
         btn.clicked.connect(lambda: print("Button pressed!"))
 
         # Assign scene widget here since that covers entire gui
         layout = QVBoxLayout(self)
-        layout.addWidget(window_container_1)
-        layout.addWidget(window_container_2)
+        if not IsMacOS:
+            layout.addWidget(window_container_1)
+            layout.addWidget(window_container_2)
         layout.addWidget(btn)
         self.setLayout(layout)
 

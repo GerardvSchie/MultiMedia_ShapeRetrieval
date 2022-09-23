@@ -8,6 +8,7 @@ from app.widget.features_widget import FeaturesWidget
 from app.widget.visualization_widget import VisualizationWidget
 
 from src.object.settings import Settings
+from app.util.os import IsMacOS
 
 
 class ViewerWidget(QWidget):
@@ -21,8 +22,9 @@ class ViewerWidget(QWidget):
         features_widget.setFixedWidth(150)
 
         visualization_widget = VisualizationWidget(settings)
-        window = QWindow.fromWinId(visualization_widget.hwnd)
-        window_container = self.createWindowContainer(window, visualization_widget)
+        if not IsMacOS:
+            window = QWindow.fromWinId(visualization_widget.hwnd)
+            window_container = self.createWindowContainer(window, visualization_widget)
 
         # Connect the settings to the widget
         settings_widget.connect_visualizer(visualization_widget)
@@ -37,7 +39,8 @@ class ViewerWidget(QWidget):
         left_layout.addWidget(features_widget)
 
         layout.addLayout(left_layout)
-        layout.addWidget(window_container)
+        if not IsMacOS:
+            layout.addWidget(window_container)
         self.setLayout(layout)
 
     # def __init__(self, settings: Settings):
