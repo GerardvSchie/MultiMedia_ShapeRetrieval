@@ -24,15 +24,15 @@ class FeatureExtractor:
 
     @staticmethod
     def number_of_vertices(shape: Shape):
-        shape.load_mesh()
-        return len(shape.mesh.vertices)
+        shape.geometries.load_mesh()
+        return len(shape.geometries.mesh.vertices)
 
     @staticmethod
     def number_of_faces(shape: Shape):
-        shape.load_mesh()
-        return len(shape.mesh.triangles)
+        shape.geometries.load_mesh()
+        return len(shape.geometries.mesh.triangles)
 
     @staticmethod
     def axis_aligned_box(shape: Shape):
-        shape.load_point_cloud()
-        return shape.point_cloud.get_axis_aligned_bounding_box()
+        shape.geometries.load_point_cloud()
+        return shape.geometries.point_cloud.get_axis_aligned_bounding_box()

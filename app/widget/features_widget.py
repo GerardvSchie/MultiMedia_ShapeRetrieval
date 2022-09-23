@@ -35,7 +35,7 @@ class FeaturesWidget(QWidget):
         # Create layout
         layout: QGridLayout = QGridLayout()
         layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        layout.addWidget(header_label, 0, 0, 1, 2)
+        layout.addWidget(header_label, 0, 0, 1, -1)
         layout.addWidget(class_label, 1, 0)
         layout.addWidget(self.class_value_label, 1, 1)
         layout.addWidget(nr_vertices_label, 2, 0)

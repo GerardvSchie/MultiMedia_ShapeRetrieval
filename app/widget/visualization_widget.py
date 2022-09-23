@@ -51,11 +51,7 @@ class VisualizationWidget(QWidget):
         self.clear_geometries_state()
 
         # Load shape
-        self.shape = Shape(path, load_shape=True)
-        # TODO Put hull line set in shape
-        self.hull_line_set = o3d.geometry.LineSet.create_from_triangle_mesh(self.shape.convex_hull)
-        self.hull_line_set.paint_uniform_color((1, 0, 0))
-
+        self.shape = Shape(path, load_geometries=True)
         FeatureExtractor.extract_features(self.shape)
         self.visualize_shape()
 
@@ -101,19 +97,20 @@ class VisualizationWidget(QWidget):
         render_option.light_on = self.settings.light_on
 
         # Handle each different type of visualization
-        self._resolve_geometry_state_difference(self._show_mesh, self.settings.show_mesh, self.shape.mesh)
-        self._resolve_geometry_state_difference(self._show_point_cloud, self.settings.show_point_cloud, self.shape.point_cloud)
-        self._resolve_geometry_state_difference(self._show_convex_hull, self.settings.show_convex_hull, self.hull_line_set)
-        self._resolve_geometry_state_difference(self._show_axes, self.settings.show_axes, self.shape.axes)
+        self._resolve_geometry_state_difference(self._show_mesh, self.settings.show_mesh, self.shape.geometries.mesh)
+        self._resolve_geometry_state_difference(self._show_point_cloud, self.settings.show_point_cloud, self.shape.geometries.point_cloud)
+        self._resolve_geometry_state_difference(self._show_convex_hull, self.settings.show_convex_hull, self.shape.geometries.convex_hull_line_set)
+        self._resolve_geometry_state_difference(self._show_axes, self.settings.show_axes, self.shape.geometries.axes)
         # TODO: self.shape.mesh.paint_uniform_color([1, 1, 1])
 
-        # Update the state of the widget
+        # Update the state of the widget to the current state
         self.update_state()
         self.vis.update_renderer()
 
     def _resolve_geometry_state_difference(self, old_state, new_state, geometry):
         if not geometry:
             logging.warning("Trying to update a geometry that is not present")
+            return
 
         # No difference of state to resolve
         if old_state == new_state:

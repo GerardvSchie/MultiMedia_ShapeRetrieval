@@ -1,7 +1,7 @@
 from src.object.settings import Settings
 from app.widget.util import color_widget
 
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QComboBox, QLabel, QCheckBox, QGridLayout
+from PyQt6.QtWidgets import QWidget, QLabel, QCheckBox, QGridLayout
 from PyQt6.QtCore import Qt
 from app.util.font import BOLD_FONT
 
@@ -19,12 +19,6 @@ class SettingsWidget(QWidget):
         header_label = QLabel("Settings")
         header_label.setFont(BOLD_FONT)
         header_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        # Render mode combobox
-        # render_mode_label = QLabel("Render type:")
-        # render_mode_combobox = QComboBox(self)
-        # render_mode_combobox.addItems(RenderMode.ALL)
-        # render_mode_combobox.currentIndexChanged.connect(lambda index: self._on_shader_change(index))
 
         # Show mesh
         show_mesh_label = QLabel("Mesh:")
