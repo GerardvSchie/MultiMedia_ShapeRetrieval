@@ -1,18 +1,17 @@
-import logging
-
-from PyQt6.QtGui import QFont
-
 from src.object.settings import Settings
 from src.object.render_mode import RenderMode
+from app.widget.util import color_widget
 
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QComboBox, QLabel, QCheckBox
 from PyQt6.QtCore import Qt
-from app.util.general import BOLD_FONT
+from app.util.font import BOLD_FONT
 
 
 class SettingsWidget(QWidget):
     def __init__(self, settings: Settings):
         super(SettingsWidget, self).__init__()
+        color_widget(self, [0, 255, 255])
+
         # Widget state of main app window and the scene that is controlled by the settings
         self.settings = settings
         self.visualizer_widget = None
@@ -29,9 +28,9 @@ class SettingsWidget(QWidget):
         render_mode_combobox.currentIndexChanged.connect(lambda index: self._on_shader_change(index))
 
         # Show axes control
-        # show_axes_label = QLabel("Show axes:")
-        # show_axes_checkbox = QCheckBox(self)
-        # show_axes_checkbox.stateChanged.connect(lambda state: self._on_show_axes(state))
+        show_axes_label = QLabel("Show axes:")
+        show_axes_checkbox = QCheckBox(self)
+        show_axes_checkbox.stateChanged.connect(lambda state: self._on_show_axes(state))
 
         # Create layout
         layout = QVBoxLayout()
@@ -39,8 +38,8 @@ class SettingsWidget(QWidget):
         layout.addWidget(header_label)
         layout.addWidget(render_mode_label)
         layout.addWidget(render_mode_combobox)
-        # layout.addWidget(show_axes_label)
-        # layout.addWidget(show_axes_checkbox)
+        layout.addWidget(show_axes_label)
+        layout.addWidget(show_axes_checkbox)
 
         self.setLayout(layout)
 

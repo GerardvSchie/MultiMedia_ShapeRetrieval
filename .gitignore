@@ -2,9 +2,9 @@
 # Python
 #
 
-sandbox.py
-.idea/*
-plots/*
+sandbox/
+.idea/
+plots/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

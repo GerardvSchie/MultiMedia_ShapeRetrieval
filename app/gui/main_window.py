@@ -3,7 +3,7 @@ from PyQt6.QtGui import QFont
 
 from app.widget.tab_widget import TabWidget
 from app.gui.menu_bar import MenuBar
-from app.util.general import FONT
+from app.util.font import FONT
 
 
 class MainWindow(QMainWindow):
