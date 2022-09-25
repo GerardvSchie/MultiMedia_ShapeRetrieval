@@ -1,4 +1,16 @@
 import sys
+import glfw
+
+import os
+
+# Needed to fix ModuleNotFoundError when importing src.util.logger.
+directoryContainingCurrentFile = os.path.dirname(__file__)
+repoDirectory = os.path.dirname(directoryContainingCurrentFile)
+
+# Add repo to list of possible paths
+import sys
+sys.path.append(repoDirectory)
+
 import src.util.logger as logger
 from src.util.io import check_working_dir
 from app.gui.main_window import MainWindow
