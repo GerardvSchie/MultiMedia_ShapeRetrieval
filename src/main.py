@@ -6,6 +6,7 @@ from src.pipeline.feature_extractor import FeatureExtractor
 import src.util.plot
 import src.database.writer
 import src.database.reader
+from src.util.io import check_working_dir
 
 
 def main():
@@ -49,4 +50,5 @@ def main():
 # Example loads an .off and .ply file
 if __name__ == '__main__':
     logger.initialize()
+    check_working_dir()
     main()

@@ -21,7 +21,7 @@ def read_from_file() -> dict[str, Features]:
         # Read the lines from the file
         for features in reader:
             data = Features()
-            data.path, data.true_class, data.nr_vertices, data.nr_faces, data.mesh_area, data.convex_hull_area, data.bounding_box_area, _ = features
+            data.path, data.true_class, data.nr_vertices, data.nr_faces, data.mesh_area, data.convex_hull_area, data.bounding_box_area = features
 
             # Cast to types
             data.nr_vertices = int(data.nr_vertices)

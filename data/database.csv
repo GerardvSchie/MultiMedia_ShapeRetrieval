@@ -1,381 +1,381 @@
-path,class,nr_of_vertices,nr_of_faces,bounding_box
-data\LabeledDB_new\Airplane\61.ply,Airplane,5400,10796,"AxisAlignedBoundingBox: min: (-0.474662, -0.975239, -0.211997), max: (0.60201, 0.989709, 0.119239)"
-data\LabeledDB_new\Airplane\62.ply,Airplane,5619,11234,"AxisAlignedBoundingBox: min: (-0.80098, -0.153854, -0.930961), max: (0.811478, 0.291557, 0.998526)"
-data\LabeledDB_new\Airplane\63.ply,Airplane,5519,11034,"AxisAlignedBoundingBox: min: (-0.994716, -0.124181, -0.845371), max: (0.999786, 0.277948, 0.852728)"
-data\LabeledDB_new\Airplane\64.ply,Airplane,6797,13590,"AxisAlignedBoundingBox: min: (-0.768211, -0.839622, -0.145948), max: (0.771705, 0.999999, 0.344887)"
-data\LabeledDB_new\Airplane\65.ply,Airplane,6448,12892,"AxisAlignedBoundingBox: min: (-0.999663, -0.856102, -0.148949), max: (0.694503, 0.86812, 0.213338)"
-data\LabeledDB_new\Airplane\66.ply,Airplane,7739,15474,"AxisAlignedBoundingBox: min: (-0.996823, -0.738003, -0.10352), max: (0.686182, 0.738188, 0.21937)"
-data\LabeledDB_new\Airplane\67.ply,Airplane,7651,15298,"AxisAlignedBoundingBox: min: (-0.998391, -0.812341, -0.108847), max: (0.769229, 0.812138, 0.361909)"
-data\LabeledDB_new\Airplane\68.ply,Airplane,5583,11162,"AxisAlignedBoundingBox: min: (-0.848046, -0.878466, -0.098027), max: (0.557457, 0.896592, 0.300253)"
-data\LabeledDB_new\Airplane\69.ply,Airplane,6701,13398,"AxisAlignedBoundingBox: min: (-0.619228, -0.943391, -0.109835), max: (0.801149, 0.955314, 0.267849)"
-data\LabeledDB_new\Airplane\70.ply,Airplane,5631,11258,"AxisAlignedBoundingBox: min: (-0.627547, -0.985593, -0.172914), max: (0.560331, 0.998846, 0.249105)"
-data\LabeledDB_new\Airplane\71.ply,Airplane,5849,11694,"AxisAlignedBoundingBox: min: (-0.837649, -0.981945, -0.123477), max: (0.772863, 0.996448, 0.312948)"
-data\LabeledDB_new\Airplane\72.ply,Airplane,5228,10452,"AxisAlignedBoundingBox: min: (-0.80012, -0.984225, -0.0927), max: (0.647983, 0.994715, 0.285447)"
-data\LabeledDB_new\Airplane\73.ply,Airplane,5109,10214,"AxisAlignedBoundingBox: min: (-0.893653, -0.972319, -0.121931), max: (0.685518, 0.984913, 0.273367)"
-data\LabeledDB_new\Airplane\74.ply,Airplane,5044,10084,"AxisAlignedBoundingBox: min: (-0.761723, -0.974584, -0.128179), max: (0.600973, 0.983564, 0.265496)"
-data\LabeledDB_new\Airplane\75.ply,Airplane,8679,17354,"AxisAlignedBoundingBox: min: (-0.999113, -0.831949, -0.126864), max: (0.749629, 0.841249, 0.156793)"
-data\LabeledDB_new\Airplane\76.ply,Airplane,5923,11842,"AxisAlignedBoundingBox: min: (-0.997913, -0.731944, -0.126016), max: (0.835326, 0.74372, 0.328565)"
-data\LabeledDB_new\Airplane\77.ply,Airplane,6587,13170,"AxisAlignedBoundingBox: min: (-0.872611, -0.112446, -0.999263), max: (0.874968, 0.338923, 0.787391)"
-data\LabeledDB_new\Airplane\78.ply,Airplane,7470,14936,"AxisAlignedBoundingBox: min: (-0.997793, -0.903584, -0.121189), max: (0.826732, 0.904432, 0.482449)"
-data\LabeledDB_new\Airplane\79.ply,Airplane,6689,13374,"AxisAlignedBoundingBox: min: (-0.897625, -0.966108, -0.103375), max: (0.679039, 0.986011, 0.464878)"
-data\LabeledDB_new\Airplane\80.ply,Airplane,7351,14698,"AxisAlignedBoundingBox: min: (-0.915754, -0.975754, -0.113978), max: (0.632621, 0.946888, 0.423782)"
-data\LabeledDB_new\Ant\100.ply,Ant,8064,16124,"AxisAlignedBoundingBox: min: (-0.377489, -0.812319, -0.529768), max: (0.3787, 0.869013, 0.541718)"
-data\LabeledDB_new\Ant\81.ply,Ant,6370,12736,"AxisAlignedBoundingBox: min: (-0.48686, -0.977877, -0.484288), max: (0.417165, 0.845361, 0.241441)"
-data\LabeledDB_new\Ant\82.ply,Ant,8299,16594,"AxisAlignedBoundingBox: min: (-0.487613, -0.860302, -0.579611), max: (0.618473, 0.922078, 0.394064)"
-data\LabeledDB_new\Ant\83.ply,Ant,6376,12748,"AxisAlignedBoundingBox: min: (-0.611593, -0.942824, -0.314417), max: (0.487833, 0.927874, 0.299502)"
-data\LabeledDB_new\Ant\84.ply,Ant,6850,13696,"AxisAlignedBoundingBox: min: (-0.43863, -0.822991, -0.459985), max: (0.42824, 0.927339, 0.487656)"
-data\LabeledDB_new\Ant\85.ply,Ant,8388,16772,"AxisAlignedBoundingBox: min: (-0.630332, -0.814198, -0.201516), max: (0.462543, 0.935331, 0.408109)"
-data\LabeledDB_new\Ant\86.ply,Ant,7038,14072,"AxisAlignedBoundingBox: min: (-0.330663, -0.925771, -0.480266), max: (0.310102, 0.900537, 0.355275)"
-data\LabeledDB_new\Ant\87.ply,Ant,7470,14936,"AxisAlignedBoundingBox: min: (-0.565668, -0.875761, -0.548266), max: (0.662331, 0.962997, 0.307246)"
-data\LabeledDB_new\Ant\88.ply,Ant,8210,16416,"AxisAlignedBoundingBox: min: (-0.760446, -0.844331, -0.638264), max: (0.750407, 0.981235, 0.374887)"
-data\LabeledDB_new\Ant\89.ply,Ant,7654,15304,"AxisAlignedBoundingBox: min: (-0.546172, -0.888764, -0.209979), max: (0.480063, 0.919898, 0.428371)"
-data\LabeledDB_new\Ant\90.ply,Ant,7877,15750,"AxisAlignedBoundingBox: min: (-0.514921, -0.889206, -0.45636), max: (0.606259, 0.916304, 0.385974)"
-data\LabeledDB_new\Ant\91.ply,Ant,8640,17276,"AxisAlignedBoundingBox: min: (-0.567598, -0.802261, -0.492147), max: (0.596869, 0.970994, 0.406603)"
-data\LabeledDB_new\Ant\92.ply,Ant,5867,11730,"AxisAlignedBoundingBox: min: (-0.456019, -0.910711, -0.312308), max: (0.502694, 0.998207, 0.262275)"
-data\LabeledDB_new\Ant\93.ply,Ant,8216,16432,"AxisAlignedBoundingBox: min: (-0.789443, -0.886703, -0.224755), max: (0.752337, 0.95123, 0.491097)"
-data\LabeledDB_new\Ant\94.ply,Ant,7236,14468,"AxisAlignedBoundingBox: min: (-0.9297, -0.290205, -0.777123), max: (0.79455, 0.330704, 0.716456)"
-data\LabeledDB_new\Ant\95.ply,Ant,7355,14706,"AxisAlignedBoundingBox: min: (-0.666332, -0.82165, -0.229448), max: (0.514417, 0.95625, 0.253013)"
-data\LabeledDB_new\Ant\96.ply,Ant,8504,17004,"AxisAlignedBoundingBox: min: (-0.760462, -0.965739, -0.332062), max: (0.623121, 0.730517, 0.402383)"
-data\LabeledDB_new\Ant\97.ply,Ant,8167,16330,"AxisAlignedBoundingBox: min: (-0.562256, -0.883007, -0.184666), max: (0.490104, 0.829995, 0.211496)"
-data\LabeledDB_new\Ant\98.ply,Ant,6154,12304,"AxisAlignedBoundingBox: min: (-0.445653, -0.958272, -0.428723), max: (0.392499, 0.938639, 0.381281)"
-data\LabeledDB_new\Ant\99.ply,Ant,6881,13758,"AxisAlignedBoundingBox: min: (-0.58799, -0.936403, -0.479503), max: (0.673112, 0.816047, 0.285208)"
-data\LabeledDB_new\Armadillo\281.ply,Armadillo,25273,50542,"AxisAlignedBoundingBox: min: (-0.706117, -0.684591, -0.471506), max: (0.543287, 0.642828, 0.658752)"
-data\LabeledDB_new\Armadillo\282.ply,Armadillo,24473,48942,"AxisAlignedBoundingBox: min: (-0.40091, -0.892775, -0.490459), max: (0.448975, 0.727284, 0.487339)"
-data\LabeledDB_new\Armadillo\283.ply,Armadillo,24484,48964,"AxisAlignedBoundingBox: min: (-0.47476, -0.951002, -0.473004), max: (0.413383, 0.927686, 0.460674)"
-data\LabeledDB_new\Armadillo\284.ply,Armadillo,25494,50984,"AxisAlignedBoundingBox: min: (-0.560302, -0.842525, -0.701549), max: (0.597502, 0.596627, 0.695852)"
-data\LabeledDB_new\Armadillo\285.ply,Armadillo,25193,50382,"AxisAlignedBoundingBox: min: (-0.477105, -0.86975, -0.787469), max: (0.556668, 0.680658, 0.642696)"
-data\LabeledDB_new\Armadillo\286.ply,Armadillo,25108,50212,"AxisAlignedBoundingBox: min: (-0.627113, -0.657124, -0.762355), max: (0.712486, 0.664345, 0.553417)"
-data\LabeledDB_new\Armadillo\287.ply,Armadillo,25491,50978,"AxisAlignedBoundingBox: min: (-0.630165, -0.647007, -0.729643), max: (0.685147, 0.839888, 0.715232)"
-data\LabeledDB_new\Armadillo\288.ply,Armadillo,20000,39996,"AxisAlignedBoundingBox: min: (-0.665666, -0.778812, -0.628892), max: (0.79735, 0.687606, 0.770497)"
-data\LabeledDB_new\Armadillo\289.ply,Armadillo,25211,50418,"AxisAlignedBoundingBox: min: (-0.928195, -0.88401, -0.566932), max: (0.867028, 0.629458, 0.897409)"
-data\LabeledDB_new\Armadillo\290.ply,Armadillo,25431,50858,"AxisAlignedBoundingBox: min: (-0.683127, -0.748136, -0.592389), max: (0.39191, 0.706428, 0.609401)"
-data\LabeledDB_new\Armadillo\291.ply,Armadillo,24615,49226,"AxisAlignedBoundingBox: min: (-0.473435, -0.9804, -0.472746), max: (0.461244, 0.906847, 0.433274)"
-data\LabeledDB_new\Armadillo\292.ply,Armadillo,21774,43544,"AxisAlignedBoundingBox: min: (-0.698511, -0.679818, -0.487378), max: (0.582126, 0.645493, 0.678569)"
-data\LabeledDB_new\Armadillo\293.ply,Armadillo,15000,29996,"AxisAlignedBoundingBox: min: (-0.405906, -0.890564, -0.487903), max: (0.447672, 0.736436, 0.493896)"
-data\LabeledDB_new\Armadillo\294.ply,Armadillo,16501,32998,"AxisAlignedBoundingBox: min: (-0.31574, -0.946287, -0.475999), max: (0.374745, 0.90487, 0.443987)"
-data\LabeledDB_new\Armadillo\295.ply,Armadillo,16780,33556,"AxisAlignedBoundingBox: min: (-0.577011, -0.888275, -0.502637), max: (0.551512, 0.514481, 0.628186)"
-data\LabeledDB_new\Armadillo\296.ply,Armadillo,15832,31660,"AxisAlignedBoundingBox: min: (-0.453337, -0.866525, -0.661382), max: (0.422973, 0.730381, 0.616184)"
-data\LabeledDB_new\Armadillo\297.ply,Armadillo,15315,30626,"AxisAlignedBoundingBox: min: (-0.611833, -0.544669, -0.798315), max: (0.759547, 0.592409, 0.512679)"
-data\LabeledDB_new\Armadillo\298.ply,Armadillo,15000,29996,"AxisAlignedBoundingBox: min: (-0.63471, -0.66606, -0.677813), max: (0.686633, 0.826428, 0.709801)"
-data\LabeledDB_new\Armadillo\299.ply,Armadillo,17117,34230,"AxisAlignedBoundingBox: min: (-0.684075, -0.772894, -0.623182), max: (0.785519, 0.706352, 0.789196)"
-data\LabeledDB_new\Armadillo\300.ply,Armadillo,17453,34902,"AxisAlignedBoundingBox: min: (-0.917825, -0.858887, -0.568889), max: (0.860955, 0.579938, 0.88204)"
-data\LabeledDB_new\Bearing\341.ply,Bearing,1663,3322,"AxisAlignedBoundingBox: min: (-0.231885, -0.231494, -0.99838), max: (0.231652, 0.231261, 0.542383)"
-data\LabeledDB_new\Bearing\342.ply,Bearing,1663,3322,"AxisAlignedBoundingBox: min: (-0.285383, -0.286987, -0.941667), max: (0.288797, 0.286222, 0.966859)"
-data\LabeledDB_new\Bearing\343.ply,Bearing,1663,3322,"AxisAlignedBoundingBox: min: (-0.276699, -0.276398, -0.840792), max: (0.276405, 0.275771, 0.997682)"
-data\LabeledDB_new\Bearing\344.ply,Bearing,3182,6360,"AxisAlignedBoundingBox: min: (-0.262406, -0.824967, -0.262549), max: (0.264029, 0.399877, 0.259591)"
-data\LabeledDB_new\Bearing\345.ply,Bearing,3614,7224,"AxisAlignedBoundingBox: min: (-0.266991, -0.819012, -0.263469), max: (0.26615, 0.401818, 0.264304)"
-data\LabeledDB_new\Bearing\346.ply,Bearing,3587,7170,"AxisAlignedBoundingBox: min: (-0.267444, -0.402186, -0.266745), max: (0.265877, 0.817879, 0.265049)"
-data\LabeledDB_new\Bearing\347.ply,Bearing,2623,5242,"AxisAlignedBoundingBox: min: (-0.340364, -0.342209, -0.882126), max: (0.339575, 0.341917, 0.940831)"
-data\LabeledDB_new\Bearing\348.ply,Bearing,2568,5132,"AxisAlignedBoundingBox: min: (-0.077731, -0.504169, 0.716162), max: (0.0773, 0.50374, 0.871193)"
-data\LabeledDB_new\Bearing\349.ply,Bearing,2568,5132,"AxisAlignedBoundingBox: min: (-0.145886, -0.996599, -0.145886), max: (0.124, 0.75802, 0.124)"
-data\LabeledDB_new\Bearing\350.ply,Bearing,8759,17514,"AxisAlignedBoundingBox: min: (-0.141916, -0.141449, -0.856961), max: (0.143134, 0.143601, 0.997773)"
-data\LabeledDB_new\Bearing\351.ply,Bearing,5192,10380,"AxisAlignedBoundingBox: min: (-0.261503, -0.261587, -0.991175), max: (0.261133, 0.263057, 0.850596)"
-data\LabeledDB_new\Bearing\352.ply,Bearing,10400,20796,"AxisAlignedBoundingBox: min: (-0.233216, -0.231485, -0.99319), max: (0.232391, 0.231397, 0.636527)"
-data\LabeledDB_new\Bearing\353.ply,Bearing,1512,3020,"AxisAlignedBoundingBox: min: (-0.826823, -0.190733, -0.190732), max: (0.998541, 0.191648, 0.191649)"
-data\LabeledDB_new\Bearing\354.ply,Bearing,2910,5816,"AxisAlignedBoundingBox: min: (-0.172872, -0.222799, -0.172553), max: (0.172716, 0.995455, 0.172466)"
-data\LabeledDB_new\Bearing\355.ply,Bearing,14994,29984,"AxisAlignedBoundingBox: min: (-0.124472, -0.994143, -0.123083), max: (0.12416, 0.994918, 0.125549)"
-data\LabeledDB_new\Bearing\356.ply,Bearing,14992,29980,"AxisAlignedBoundingBox: min: (-0.124505, -0.994273, -0.123108), max: (0.124144, 0.994918, 0.125541)"
-data\LabeledDB_new\Bearing\357.ply,Bearing,14872,29764,"AxisAlignedBoundingBox: min: (-0.988626, -0.06511, -0.132705), max: (0.98104, 0.065125, 0.135563)"
-data\LabeledDB_new\Bearing\358.ply,Bearing,14127,28266,"AxisAlignedBoundingBox: min: (-0.47443, -0.999126, -0.473974), max: (0.474808, 0.246267, 0.475264)"
-data\LabeledDB_new\Bearing\359.ply,Bearing,14956,29924,"AxisAlignedBoundingBox: min: (-0.476469, -0.250227, -0.474857), max: (0.475753, 0.999094, 0.477366)"
-data\LabeledDB_new\Bearing\360.ply,Bearing,2200,4396,"AxisAlignedBoundingBox: min: (-0.019954, -0.018536, 0.808332), max: (0.018022, 0.019193, 0.999886)"
-data\LabeledDB_new\Bird\241.ply,Bird,3478,6952,"AxisAlignedBoundingBox: min: (-0.817241, -0.19001, -0.991542), max: (0.572893, 0.096359, 0.996323)"
-data\LabeledDB_new\Bird\242.ply,Bird,7849,15694,"AxisAlignedBoundingBox: min: (-0.908609, -0.375195, -0.661338), max: (0.909242, 0.427749, 0.637271)"
-data\LabeledDB_new\Bird\243.ply,Bird,3158,6312,"AxisAlignedBoundingBox: min: (-0.994221, -0.251224, -0.283915), max: (0.998279, 0.260431, 0.279869)"
-data\LabeledDB_new\Bird\244.ply,Bird,4501,8998,"AxisAlignedBoundingBox: min: (-0.979481, -0.196637, -0.541803), max: (0.987675, 0.082153, 0.380353)"
-data\LabeledDB_new\Bird\245.ply,Bird,6475,12946,"AxisAlignedBoundingBox: min: (-0.905726, -0.360399, -0.66175), max: (0.909522, 0.411998, 0.594742)"
-data\LabeledDB_new\Bird\246.ply,Bird,4219,8434,"AxisAlignedBoundingBox: min: (-0.972137, -0.35037, -0.349167), max: (0.977143, 0.193331, 0.300813)"
-data\LabeledDB_new\Bird\247.ply,Bird,5519,11034,"AxisAlignedBoundingBox: min: (-0.912034, -0.343769, -0.59118), max: (0.939714, 0.384718, 0.413943)"
-data\LabeledDB_new\Bird\248.ply,Bird,11790,23576,"AxisAlignedBoundingBox: min: (-0.769412, -0.505852, -0.724197), max: (0.684537, 0.687331, 0.517258)"
-data\LabeledDB_new\Bird\249.ply,Bird,3714,7424,"AxisAlignedBoundingBox: min: (-0.995464, -0.31703, -0.515943), max: (0.968477, 0.076347, 0.445595)"
-data\LabeledDB_new\Bird\250.ply,Bird,4280,8556,"AxisAlignedBoundingBox: min: (-0.596978, -0.943793, -0.115959), max: (0.75775, 0.970807, 0.068393)"
-data\LabeledDB_new\Bird\251.ply,Bird,3158,6312,"AxisAlignedBoundingBox: min: (-0.994221, -0.251224, -0.283915), max: (0.998279, 0.260431, 0.279869)"
-data\LabeledDB_new\Bird\252.ply,Bird,6351,12698,"AxisAlignedBoundingBox: min: (-0.873199, -0.483389, -0.622096), max: (0.863273, 0.286749, 0.444213)"
-data\LabeledDB_new\Bird\253.ply,Bird,6164,12324,"AxisAlignedBoundingBox: min: (-0.920349, -0.17476, -0.690524), max: (0.913236, 0.317059, 0.899329)"
-data\LabeledDB_new\Bird\254.ply,Bird,3638,7272,"AxisAlignedBoundingBox: min: (-0.134714, -0.997037, -0.535184), max: (0.075077, 0.997805, 0.416893)"
-data\LabeledDB_new\Bird\255.ply,Bird,5054,10104,"AxisAlignedBoundingBox: min: (-0.96463, -0.30213, -0.511554), max: (0.976911, 0.22517, 0.55328)"
-data\LabeledDB_new\Bird\256.ply,Bird,5970,11936,"AxisAlignedBoundingBox: min: (-0.769096, -0.587246, -0.77253), max: (0.941027, 0.456183, 0.863964)"
-data\LabeledDB_new\Bird\257.ply,Bird,2135,4266,"AxisAlignedBoundingBox: min: (-0.961106, -0.190417, -0.570424), max: (0.952787, 0.082656, 0.384807)"
-data\LabeledDB_new\Bird\258.ply,Bird,8946,17888,"AxisAlignedBoundingBox: min: (-0.654389, -0.65958, -0.627187), max: (0.742536, 0.745679, 0.630926)"
-data\LabeledDB_new\Bird\259.ply,Bird,9015,18026,"AxisAlignedBoundingBox: min: (-0.89837, -0.314132, -0.739547), max: (0.903926, 0.287996, 0.883729)"
-data\LabeledDB_new\Bird\260.ply,Bird,2497,4990,"AxisAlignedBoundingBox: min: (-0.487526, -0.451159, -0.661174), max: (0.450508, 0.659252, 0.661503)"
-data\LabeledDB_new\Bust\301.ply,Bust,9252,18500,"AxisAlignedBoundingBox: min: (-0.50411, -0.943762, -0.42413), max: (0.469789, 0.941315, 0.414572)"
-data\LabeledDB_new\Bust\302.ply,Bust,25125,50246,"AxisAlignedBoundingBox: min: (-0.702436, -0.764881, -0.507199), max: (0.700089, 0.9798, 0.498003)"
-data\LabeledDB_new\Bust\303.ply,Bust,15516,31028,"AxisAlignedBoundingBox: min: (-0.673445, -0.804114, -0.538), max: (0.492645, 0.542163, 0.433348)"
-data\LabeledDB_new\Bust\304.ply,Bust,25467,50930,"AxisAlignedBoundingBox: min: (-0.957968, -0.531792, -0.371623), max: (0.975228, 0.507017, 0.398172)"
-data\LabeledDB_new\Bust\305.ply,Bust,27824,55644,"AxisAlignedBoundingBox: min: (-0.768354, -0.904408, -0.660783), max: (0.84122, 0.80999, 0.572598)"
-data\LabeledDB_new\Bust\306.ply,Bust,26798,53592,"AxisAlignedBoundingBox: min: (-0.555583, -0.682752, -0.508109), max: (0.690609, 0.99804, 0.504535)"
-data\LabeledDB_new\Bust\307.ply,Bust,27439,54874,"AxisAlignedBoundingBox: min: (-0.912588, -0.851247, -0.838986), max: (0.901272, 0.812482, 0.865703)"
-data\LabeledDB_new\Bust\308.ply,Bust,23976,47948,"AxisAlignedBoundingBox: min: (-0.956582, -0.9225, -0.770538), max: (0.767926, 0.918834, 0.753754)"
-data\LabeledDB_new\Bust\309.ply,Bust,5197,10390,"AxisAlignedBoundingBox: min: (-0.558342, -0.572663, -0.875816), max: (0.577043, 0.577494, 0.535348)"
-data\LabeledDB_new\Bust\310.ply,Bust,8263,16522,"AxisAlignedBoundingBox: min: (-0.998695, -0.921899, -0.628841), max: (0.843467, 0.924618, 0.655525)"
-data\LabeledDB_new\Bust\311.ply,Bust,25230,50456,"AxisAlignedBoundingBox: min: (-0.573191, -0.789055, -0.681581), max: (0.506864, 0.985292, 0.621898)"
-data\LabeledDB_new\Bust\312.ply,Bust,26985,53966,"AxisAlignedBoundingBox: min: (-0.720048, -0.71213, -0.593811), max: (0.932582, 0.782271, 0.53192)"
-data\LabeledDB_new\Bust\313.ply,Bust,10852,21700,"AxisAlignedBoundingBox: min: (-0.600833, -0.88162, -0.644978), max: (0.733413, 0.79335, 0.70034)"
-data\LabeledDB_new\Bust\314.ply,Bust,26437,52870,"AxisAlignedBoundingBox: min: (-0.736188, -0.578504, -0.398961), max: (0.731317, 0.992582, 0.411304)"
-data\LabeledDB_new\Bust\315.ply,Bust,25768,51532,"AxisAlignedBoundingBox: min: (-0.530406, -0.865507, -0.681001), max: (0.61504, 0.718204, 0.694789)"
-data\LabeledDB_new\Bust\316.ply,Bust,23395,46786,"AxisAlignedBoundingBox: min: (-0.514321, -0.894649, -0.636235), max: (0.654632, 0.724172, 0.766385)"
-data\LabeledDB_new\Bust\317.ply,Bust,27726,55448,"AxisAlignedBoundingBox: min: (-0.516673, -0.986374, -0.725424), max: (0.544574, 0.813392, 0.623639)"
-data\LabeledDB_new\Bust\318.ply,Bust,25145,50286,"AxisAlignedBoundingBox: min: (-0.520655, -0.747323, -0.760535), max: (0.519813, 0.684717, 0.716309)"
-data\LabeledDB_new\Bust\319.ply,Bust,26558,53112,"AxisAlignedBoundingBox: min: (-0.984869, -0.527599, -0.55985), max: (0.957168, 0.552901, 0.636884)"
-data\LabeledDB_new\Bust\320.ply,Bust,27118,54232,"AxisAlignedBoundingBox: min: (-0.890795, -0.774668, -0.695207), max: (0.858232, 0.955581, 0.622633)"
-data\LabeledDB_new\Chair\101.ply,Chair,8499,16998,"AxisAlignedBoundingBox: min: (-0.493519, -0.821996, -0.374858), max: (0.307603, 0.8274, 0.388485)"
-data\LabeledDB_new\Chair\102.ply,Chair,15724,31456,"AxisAlignedBoundingBox: min: (-0.609792, -0.759604, -0.677108), max: (0.588386, 0.810961, 0.569081)"
-data\LabeledDB_new\Chair\103.ply,Chair,9652,19304,"AxisAlignedBoundingBox: min: (-0.489907, -0.81743, -0.447536), max: (0.347921, 0.842901, 0.419289)"
-data\LabeledDB_new\Chair\104.ply,Chair,8653,17306,"AxisAlignedBoundingBox: min: (-0.334679, -0.391158, -0.877679), max: (0.347536, 0.273033, 0.831891)"
-data\LabeledDB_new\Chair\105.ply,Chair,9261,18530,"AxisAlignedBoundingBox: min: (-0.327021, -0.396165, -0.878967), max: (0.335791, 0.248718, 0.781982)"
-data\LabeledDB_new\Chair\106.ply,Chair,14052,28104,"AxisAlignedBoundingBox: min: (-0.611847, -0.469905, -0.859216), max: (0.441864, 0.475525, 0.683096)"
-data\LabeledDB_new\Chair\107.ply,Chair,11421,22854,"AxisAlignedBoundingBox: min: (-0.580726, -0.896565, -0.485087), max: (0.497275, 0.877841, 0.621226)"
-data\LabeledDB_new\Chair\108.ply,Chair,10500,21008,"AxisAlignedBoundingBox: min: (-0.608087, -0.894292, -0.586326), max: (0.502543, 0.889588, 0.502049)"
-data\LabeledDB_new\Chair\109.ply,Chair,10301,20602,"AxisAlignedBoundingBox: min: (-0.428741, -0.767079, -0.371233), max: (0.428097, 0.622377, 0.504622)"
-data\LabeledDB_new\Chair\110.ply,Chair,8456,16920,"AxisAlignedBoundingBox: min: (-0.325901, -0.876349, -0.420497), max: (0.34473, 0.764138, 0.31437)"
-data\LabeledDB_new\Chair\111.ply,Chair,8050,16100,"AxisAlignedBoundingBox: min: (-0.33046, -0.876523, -0.417811), max: (0.351096, 0.790689, 0.329557)"
-data\LabeledDB_new\Chair\112.ply,Chair,13628,27256,"AxisAlignedBoundingBox: min: (-0.392046, -0.781521, -0.54687), max: (0.393354, 0.646043, 0.449151)"
-data\LabeledDB_new\Chair\113.ply,Chair,10748,21500,"AxisAlignedBoundingBox: min: (-0.461941, -0.857196, -0.451694), max: (0.351039, 0.61956, 0.474219)"
-data\LabeledDB_new\Chair\114.ply,Chair,5794,11588,"AxisAlignedBoundingBox: min: (-0.30764, -0.868515, -0.300276), max: (0.302145, 0.556769, 0.397898)"
-data\LabeledDB_new\Chair\115.ply,Chair,10043,20086,"AxisAlignedBoundingBox: min: (-0.451947, -0.859943, -0.457296), max: (0.375666, 0.643392, 0.483736)"
-data\LabeledDB_new\Chair\116.ply,Chair,13463,26926,"AxisAlignedBoundingBox: min: (-0.488181, -0.791665, -0.439567), max: (0.487429, 0.848201, 0.606391)"
-data\LabeledDB_new\Chair\117.ply,Chair,14372,28744,"AxisAlignedBoundingBox: min: (-0.467754, -0.852238, -0.410997), max: (0.47415, 0.744206, 0.558457)"
-data\LabeledDB_new\Chair\118.ply,Chair,9153,18306,"AxisAlignedBoundingBox: min: (-0.313631, -0.831827, -0.390666), max: (0.46566, 0.805727, 0.398381)"
-data\LabeledDB_new\Chair\119.ply,Chair,12326,24652,"AxisAlignedBoundingBox: min: (-0.443812, -0.875904, -0.37965), max: (0.4447, 0.744655, 0.541549)"
-data\LabeledDB_new\Chair\120.ply,Chair,10121,20242,"AxisAlignedBoundingBox: min: (-0.380856, -0.919726, -0.309749), max: (0.390663, 0.778459, 0.440598)"
-data\LabeledDB_new\Cup\21.ply,Cup,15198,30396,"AxisAlignedBoundingBox: min: (-0.958498, -0.565449, -0.614474), max: (0.704164, 0.523527, 0.620392)"
-data\LabeledDB_new\Cup\22.ply,Cup,15002,30004,"AxisAlignedBoundingBox: min: (-0.820897, -0.598363, -0.687758), max: (0.939458, 0.710098, 0.693897)"
-data\LabeledDB_new\Cup\23.ply,Cup,15037,30074,"AxisAlignedBoundingBox: min: (-0.988173, -0.577739, -0.714207), max: (0.786336, 0.44876, 0.716959)"
-data\LabeledDB_new\Cup\24.ply,Cup,15246,30492,"AxisAlignedBoundingBox: min: (-0.838958, -0.631289, -0.700982), max: (0.943793, 0.699648, 0.70249)"
-data\LabeledDB_new\Cup\25.ply,Cup,15087,30170,"AxisAlignedBoundingBox: min: (-0.585517, -0.885707, -0.571351), max: (0.579172, 0.821075, 0.576458)"
-data\LabeledDB_new\Cup\26.ply,Cup,15209,30418,"AxisAlignedBoundingBox: min: (-0.643368, -0.520257, -0.771033), max: (0.912592, 0.523004, 0.715781)"
-data\LabeledDB_new\Cup\27.ply,Cup,15137,30274,"AxisAlignedBoundingBox: min: (-0.642404, -0.549153, -0.662109), max: (0.86371, 0.554481, 0.703455)"
-data\LabeledDB_new\Cup\28.ply,Cup,15070,30140,"AxisAlignedBoundingBox: min: (-0.959558, -0.582282, -0.621327), max: (0.727063, 0.519904, 0.6294)"
-data\LabeledDB_new\Cup\29.ply,Cup,15127,30254,"AxisAlignedBoundingBox: min: (-0.624264, -0.500294, -0.650657), max: (0.935906, 0.490971, 0.640459)"
-data\LabeledDB_new\Cup\30.ply,Cup,15006,30008,"AxisAlignedBoundingBox: min: (-0.542379, -0.928333, -0.541002), max: (0.549027, 0.518388, 0.550698)"
-data\LabeledDB_new\Cup\31.ply,Cup,15227,30454,"AxisAlignedBoundingBox: min: (-0.963292, -0.89607, -0.643759), max: (0.793415, 0.6695, 0.648166)"
-data\LabeledDB_new\Cup\32.ply,Cup,14751,29502,"AxisAlignedBoundingBox: min: (-0.619332, -0.628529, -0.531993), max: (0.85331, 0.704408, 0.534948)"
-data\LabeledDB_new\Cup\33.ply,Cup,7349,14698,"AxisAlignedBoundingBox: min: (-0.741236, -0.615942, -0.674574), max: (0.971166, 0.650718, 0.6727)"
-data\LabeledDB_new\Cup\34.ply,Cup,9602,19204,"AxisAlignedBoundingBox: min: (-0.626253, -0.872109, -0.793881), max: (0.629673, 0.701449, 0.764418)"
-data\LabeledDB_new\Cup\35.ply,Cup,15136,30268,"AxisAlignedBoundingBox: min: (-0.498578, -0.881755, -0.475519), max: (0.500886, 0.653413, 0.478736)"
-data\LabeledDB_new\Cup\36.ply,Cup,9076,18152,"AxisAlignedBoundingBox: min: (-0.763991, -0.753795, -0.631095), max: (0.653126, 0.86456, 0.717949)"
-data\LabeledDB_new\Cup\37.ply,Cup,6270,12540,"AxisAlignedBoundingBox: min: (-0.687798, -0.671802, -0.723183), max: (0.661577, 0.676916, 0.999318)"
-data\LabeledDB_new\Cup\38.ply,Cup,15064,30128,"AxisAlignedBoundingBox: min: (-0.90279, -0.683938, -0.608823), max: (0.807385, 0.617743, 0.62186)"
-data\LabeledDB_new\Cup\39.ply,Cup,15161,30322,"AxisAlignedBoundingBox: min: (-0.760185, -0.498521, -0.659451), max: (0.908827, 0.620315, 0.622055)"
-data\LabeledDB_new\Cup\40.ply,Cup,15165,30326,"AxisAlignedBoundingBox: min: (-0.514777, -0.924153, -0.512149), max: (0.517862, 0.921918, 0.514446)"
-data\LabeledDB_new\Fish\221.ply,Fish,7121,14238,"AxisAlignedBoundingBox: min: (-0.940084, -0.301129, -0.492031), max: (0.842687, 0.296484, 0.571906)"
-data\LabeledDB_new\Fish\222.ply,Fish,5255,10506,"AxisAlignedBoundingBox: min: (-0.859245, -0.254741, -0.24972), max: (0.952138, 0.281493, 0.43338)"
-data\LabeledDB_new\Fish\223.ply,Fish,6656,13308,"AxisAlignedBoundingBox: min: (-0.80937, -0.364122, -0.464803), max: (0.960947, 0.424418, 0.362756)"
-data\LabeledDB_new\Fish\224.ply,Fish,5061,10118,"AxisAlignedBoundingBox: min: (-0.839969, -0.228352, -0.400057), max: (0.979541, 0.290794, 0.22117)"
-data\LabeledDB_new\Fish\225.ply,Fish,6076,12148,"AxisAlignedBoundingBox: min: (-0.812895, -0.280438, -0.515638), max: (0.9768, 0.336214, 0.36526)"
-data\LabeledDB_new\Fish\226.ply,Fish,5216,10428,"AxisAlignedBoundingBox: min: (-0.91749, -0.2702, -0.237113), max: (0.926628, 0.288422, 0.379781)"
-data\LabeledDB_new\Fish\227.ply,Fish,5216,10428,"AxisAlignedBoundingBox: min: (-0.91749, -0.2702, -0.237113), max: (0.926628, 0.288422, 0.379781)"
-data\LabeledDB_new\Fish\228.ply,Fish,5592,11180,"AxisAlignedBoundingBox: min: (-0.26196, -0.835519, -0.348772), max: (0.265794, 0.956741, 0.439248)"
-data\LabeledDB_new\Fish\229.ply,Fish,5245,10486,"AxisAlignedBoundingBox: min: (-0.276698, -0.243222, -0.951464), max: (0.287678, 0.430983, 0.923361)"
-data\LabeledDB_new\Fish\230.ply,Fish,7573,15142,"AxisAlignedBoundingBox: min: (-0.94691, -0.495329, -0.312588), max: (0.843766, 0.586114, 0.314026)"
-data\LabeledDB_new\Fish\231.ply,Fish,6264,12524,"AxisAlignedBoundingBox: min: (-0.815943, -0.316728, -0.451879), max: (0.97258, 0.370739, 0.285343)"
-data\LabeledDB_new\Fish\232.ply,Fish,5440,10876,"AxisAlignedBoundingBox: min: (-0.855322, -0.276683, -0.319772), max: (0.95206, 0.304177, 0.226792)"
-data\LabeledDB_new\Fish\233.ply,Fish,10186,20368,"AxisAlignedBoundingBox: min: (-0.710256, -0.4647, -0.59573), max: (0.949375, 0.507473, 0.425047)"
-data\LabeledDB_new\Fish\234.ply,Fish,7498,14992,"AxisAlignedBoundingBox: min: (-0.831772, -0.417352, -0.364203), max: (0.975836, 0.501369, 0.438484)"
-data\LabeledDB_new\Fish\235.ply,Fish,5250,10496,"AxisAlignedBoundingBox: min: (-0.856088, -0.261006, -0.462946), max: (0.961071, 0.307066, 0.243146)"
-data\LabeledDB_new\Fish\236.ply,Fish,4845,9686,"AxisAlignedBoundingBox: min: (-0.829911, -0.228387, -0.420974), max: (0.950835, 0.311833, 0.290376)"
-data\LabeledDB_new\Fish\237.ply,Fish,4439,8874,"AxisAlignedBoundingBox: min: (-0.839837, -0.215943, -0.325913), max: (0.961633, 0.260695, 0.231417)"
-data\LabeledDB_new\Fish\238.ply,Fish,5096,10188,"AxisAlignedBoundingBox: min: (-0.825027, -0.235357, -0.395896), max: (0.938468, 0.268338, 0.295354)"
-data\LabeledDB_new\Fish\239.ply,Fish,5121,10238,"AxisAlignedBoundingBox: min: (-0.871105, -0.305752, -0.255102), max: (0.985426, 0.364282, 0.191327)"
-data\LabeledDB_new\Fish\240.ply,Fish,6833,13662,"AxisAlignedBoundingBox: min: (-0.796664, -0.337138, -0.429387), max: (0.949071, 0.442666, 0.235644)"
-data\LabeledDB_new\FourLeg\381.ply,FourLeg,6938,13872,"AxisAlignedBoundingBox: min: (-0.660265, -0.589829, -0.28568), max: (0.973864, 0.472524, 0.285379)"
-data\LabeledDB_new\FourLeg\382.ply,FourLeg,8078,16152,"AxisAlignedBoundingBox: min: (-0.435902, -0.755616, -0.690518), max: (0.272533, 0.790742, 0.588281)"
-data\LabeledDB_new\FourLeg\383.ply,FourLeg,13331,26658,"AxisAlignedBoundingBox: min: (-0.295177, -0.994827, -0.519569), max: (0.296016, 0.805897, 0.402432)"
-data\LabeledDB_new\FourLeg\384.ply,FourLeg,4712,9420,"AxisAlignedBoundingBox: min: (-0.229803, -0.99915, -0.420185), max: (0.228657, 0.992518, 0.679216)"
-data\LabeledDB_new\FourLeg\385.ply,FourLeg,10436,20868,"AxisAlignedBoundingBox: min: (-0.777083, -0.719645, -0.255539), max: (0.985057, 0.606136, 0.252773)"
-data\LabeledDB_new\FourLeg\386.ply,FourLeg,2087,4170,"AxisAlignedBoundingBox: min: (-0.753341, -0.543121, -0.581658), max: (0.873634, 0.666825, 0.555778)"
-data\LabeledDB_new\FourLeg\387.ply,FourLeg,14680,29356,"AxisAlignedBoundingBox: min: (-0.90003, -0.756033, -0.347903), max: (0.696441, 0.698056, 0.328176)"
-data\LabeledDB_new\FourLeg\388.ply,FourLeg,8411,16818,"AxisAlignedBoundingBox: min: (-0.866458, -0.604138, -0.326592), max: (0.997839, 0.433665, 0.329785)"
-data\LabeledDB_new\FourLeg\389.ply,FourLeg,9490,18976,"AxisAlignedBoundingBox: min: (-0.282428, -0.815206, -0.679687), max: (0.288643, 0.783179, 0.672609)"
-data\LabeledDB_new\FourLeg\390.ply,FourLeg,9239,18474,"AxisAlignedBoundingBox: min: (-0.246158, -0.73804, -0.49889), max: (0.245787, 0.942716, 0.572236)"
-data\LabeledDB_new\FourLeg\391.ply,FourLeg,4315,8626,"AxisAlignedBoundingBox: min: (-0.267964, -0.561109, -0.87076), max: (0.244835, 0.423509, 0.838027)"
-data\LabeledDB_new\FourLeg\392.ply,FourLeg,8618,17232,"AxisAlignedBoundingBox: min: (-0.834801, -0.58748, -0.313632), max: (0.994803, 0.443294, 0.317705)"
-data\LabeledDB_new\FourLeg\393.ply,FourLeg,9757,19510,"AxisAlignedBoundingBox: min: (-0.219315, -0.747063, -0.740852), max: (0.218893, 0.655537, 0.69255)"
-data\LabeledDB_new\FourLeg\394.ply,FourLeg,9009,18014,"AxisAlignedBoundingBox: min: (-0.724566, -0.218424, -0.693341), max: (0.800324, 0.227004, 0.575064)"
-data\LabeledDB_new\FourLeg\395.ply,FourLeg,11312,22620,"AxisAlignedBoundingBox: min: (-0.767327, -0.697755, -0.51844), max: (0.992569, 0.524252, 0.483554)"
-data\LabeledDB_new\FourLeg\396.ply,FourLeg,5538,11072,"AxisAlignedBoundingBox: min: (-0.814377, -0.74798, -0.206627), max: (0.751887, 0.700078, 0.206599)"
-data\LabeledDB_new\FourLeg\397.ply,FourLeg,7268,14532,"AxisAlignedBoundingBox: min: (-0.230511, -0.706566, -0.755574), max: (0.231012, 0.595552, 0.828304)"
-data\LabeledDB_new\FourLeg\398.ply,FourLeg,1480,2956,"AxisAlignedBoundingBox: min: (-0.999761, -0.465621, -0.165829), max: (0.433336, 0.429385, 0.166005)"
-data\LabeledDB_new\FourLeg\399.ply,FourLeg,3911,7818,"AxisAlignedBoundingBox: min: (-0.360116, -0.695146, -0.71157), max: (0.278778, 0.875483, 0.676371)"
-data\LabeledDB_new\FourLeg\400.ply,FourLeg,3703,7402,"AxisAlignedBoundingBox: min: (-0.267916, -0.653126, -0.692179), max: (0.262038, 0.372512, 0.984563)"
-data\LabeledDB_new\Glasses\41.ply,Glasses,7016,14028,"AxisAlignedBoundingBox: min: (-0.510195, -0.218681, -0.194411), max: (0.51334, 0.865405, 0.132662)"
-data\LabeledDB_new\Glasses\42.ply,Glasses,4164,8324,"AxisAlignedBoundingBox: min: (-0.829496, -0.160265, -0.174753), max: (0.421376, 0.744645, 0.132307)"
-data\LabeledDB_new\Glasses\43.ply,Glasses,3414,6824,"AxisAlignedBoundingBox: min: (-0.824487, -0.130222, -0.709116), max: (0.431369, 0.114313, 0.212587)"
-data\LabeledDB_new\Glasses\44.ply,Glasses,6288,12572,"AxisAlignedBoundingBox: min: (-0.524319, -0.177508, -0.921748), max: (0.528506, 0.161646, 0.290267)"
-data\LabeledDB_new\Glasses\45.ply,Glasses,5399,10794,"AxisAlignedBoundingBox: min: (-0.618414, -0.176785, -0.89774), max: (0.616685, 0.147591, 0.190923)"
-data\LabeledDB_new\Glasses\46.ply,Glasses,2394,4784,"AxisAlignedBoundingBox: min: (-0.996711, -0.099818, -0.158213), max: (0.832152, 0.458016, 0.120276)"
-data\LabeledDB_new\Glasses\47.ply,Glasses,2028,4052,"AxisAlignedBoundingBox: min: (-0.997563, -0.044583, -0.156803), max: (0.987167, 0.092473, 0.125978)"
-data\LabeledDB_new\Glasses\48.ply,Glasses,5176,10348,"AxisAlignedBoundingBox: min: (-0.845802, -0.21552, -0.178388), max: (0.490744, 0.751772, 0.153024)"
-data\LabeledDB_new\Glasses\49.ply,Glasses,3110,6220,"AxisAlignedBoundingBox: min: (-0.840571, -0.186472, -0.168001), max: (0.849512, 0.528058, 0.141263)"
-data\LabeledDB_new\Glasses\50.ply,Glasses,7420,14836,"AxisAlignedBoundingBox: min: (-0.517775, -0.236303, -0.197371), max: (0.52528, 0.861516, 0.135842)"
-data\LabeledDB_new\Glasses\51.ply,Glasses,2858,5712,"AxisAlignedBoundingBox: min: (-0.823867, -0.186062, -0.164938), max: (0.72596, 0.642523, 0.11183)"
-data\LabeledDB_new\Glasses\52.ply,Glasses,1554,3104,"AxisAlignedBoundingBox: min: (-0.956824, -0.10603, -0.143097), max: (0.922364, 0.370416, 0.086453)"
-data\LabeledDB_new\Glasses\53.ply,Glasses,2496,4988,"AxisAlignedBoundingBox: min: (-0.988805, -0.120865, -0.147365), max: (0.781299, 0.521698, 0.141985)"
-data\LabeledDB_new\Glasses\54.ply,Glasses,7407,14810,"AxisAlignedBoundingBox: min: (-0.518597, -0.196584, -0.861505), max: (0.523836, 0.134637, 0.236197)"
-data\LabeledDB_new\Glasses\55.ply,Glasses,2850,5696,"AxisAlignedBoundingBox: min: (-0.846442, -0.161081, -0.642186), max: (0.666502, 0.10985, 0.18396)"
-data\LabeledDB_new\Glasses\56.ply,Glasses,8771,17538,"AxisAlignedBoundingBox: min: (-0.650974, -0.286924, -0.244029), max: (0.653226, 0.985673, 0.161228)"
-data\LabeledDB_new\Glasses\57.ply,Glasses,7413,14822,"AxisAlignedBoundingBox: min: (-0.517497, -0.236141, -0.196613), max: (0.524224, 0.861312, 0.134612)"
-data\LabeledDB_new\Glasses\58.ply,Glasses,1857,3710,"AxisAlignedBoundingBox: min: (-0.952863, -0.055087, -0.136317), max: (0.990231, 0.166378, 0.120757)"
-data\LabeledDB_new\Glasses\59.ply,Glasses,2895,5786,"AxisAlignedBoundingBox: min: (-0.896606, -0.195811, -0.162405), max: (0.866931, 0.490782, 0.113191)"
-data\LabeledDB_new\Glasses\60.ply,Glasses,2375,4746,"AxisAlignedBoundingBox: min: (-0.992164, -0.123572, -0.145264), max: (0.809169, 0.493881, 0.100408)"
-data\LabeledDB_new\Hand\181.ply,Hand,7242,14480,"AxisAlignedBoundingBox: min: (-0.509681, -0.454798, -0.928548), max: (0.424679, 0.226025, 0.99185)"
-data\LabeledDB_new\Hand\182.ply,Hand,10283,20562,"AxisAlignedBoundingBox: min: (-0.471096, -0.906068, -0.478443), max: (0.401714, 0.973379, 0.532723)"
-data\LabeledDB_new\Hand\183.ply,Hand,11413,22822,"AxisAlignedBoundingBox: min: (-0.994201, -0.951055, -0.258079), max: (0.679096, 0.909497, 0.377651)"
-data\LabeledDB_new\Hand\184.ply,Hand,4685,9366,"AxisAlignedBoundingBox: min: (-0.361583, -0.511277, -0.746908), max: (0.364226, 0.391298, 0.984585)"
-data\LabeledDB_new\Hand\185.ply,Hand,2489,4974,"AxisAlignedBoundingBox: min: (-0.580888, -0.180106, -0.977884), max: (0.427228, 0.177549, 0.677286)"
-data\LabeledDB_new\Hand\186.ply,Hand,6607,13210,"AxisAlignedBoundingBox: min: (-0.461446, -0.388926, -0.976936), max: (0.587954, 0.220979, 0.851676)"
-data\LabeledDB_new\Hand\187.ply,Hand,7628,15256,"AxisAlignedBoundingBox: min: (-0.510634, -0.453623, -0.934661), max: (0.427117, 0.228519, 0.993632)"
-data\LabeledDB_new\Hand\188.ply,Hand,8603,17202,"AxisAlignedBoundingBox: min: (-0.450427, -0.798626, -0.674673), max: (0.714867, 0.978778, 0.502218)"
-data\LabeledDB_new\Hand\189.ply,Hand,14084,28164,"AxisAlignedBoundingBox: min: (-0.553877, -0.63363, -0.755693), max: (0.687941, 0.808058, 0.438209)"
-data\LabeledDB_new\Hand\190.ply,Hand,7500,14996,"AxisAlignedBoundingBox: min: (-0.448432, -0.644356, -0.143274), max: (0.714549, 0.965411, 0.369168)"
-data\LabeledDB_new\Hand\191.ply,Hand,13766,27528,"AxisAlignedBoundingBox: min: (-0.463956, -0.966084, -0.58574), max: (0.769719, 0.830228, 0.576874)"
-data\LabeledDB_new\Hand\192.ply,Hand,6991,13978,"AxisAlignedBoundingBox: min: (-0.54399, -0.812792, -0.256175), max: (0.614738, 0.989733, 0.334775)"
-data\LabeledDB_new\Hand\193.ply,Hand,7314,14624,"AxisAlignedBoundingBox: min: (-0.409487, -0.623273, -0.258065), max: (0.345461, 0.982069, 0.348208)"
-data\LabeledDB_new\Hand\194.ply,Hand,8471,16938,"AxisAlignedBoundingBox: min: (-0.438509, -0.763159, -0.282379), max: (0.357895, 0.989234, 0.378968)"
-data\LabeledDB_new\Hand\195.ply,Hand,8524,17044,"AxisAlignedBoundingBox: min: (-0.392205, -0.716188, -0.321593), max: (0.324763, 0.978171, 0.425116)"
-data\LabeledDB_new\Hand\196.ply,Hand,7112,14220,"AxisAlignedBoundingBox: min: (-0.527846, -0.584171, -0.265788), max: (0.706539, 0.991672, 0.368778)"
-data\LabeledDB_new\Hand\197.ply,Hand,7553,15102,"AxisAlignedBoundingBox: min: (-0.377837, -0.640524, -0.286368), max: (0.330785, 0.998505, 0.542368)"
-data\LabeledDB_new\Hand\198.ply,Hand,9564,19124,"AxisAlignedBoundingBox: min: (-0.363903, -0.364251, -0.942351), max: (0.310435, 0.184768, 0.999319)"
-data\LabeledDB_new\Hand\199.ply,Hand,8647,17290,"AxisAlignedBoundingBox: min: (-0.406836, -0.952064, -0.296004), max: (0.408753, 0.929475, 0.411561)"
-data\LabeledDB_new\Hand\200.ply,Hand,1515,3026,"AxisAlignedBoundingBox: min: (-0.652517, -0.956523, -0.349894), max: (0.655155, 0.768081, 0.298369)"
-data\LabeledDB_new\Human\1.ply,Human,4706,9408,"AxisAlignedBoundingBox: min: (-0.362883, -0.138176, -0.979672), max: (0.364758, 0.155597, 0.816414)"
-data\LabeledDB_new\Human\10.ply,Human,9508,19012,"AxisAlignedBoundingBox: min: (-0.211414, -0.964406, -0.518502), max: (0.140155, 0.930527, 0.527886)"
-data\LabeledDB_new\Human\11.ply,Human,10999,21994,"AxisAlignedBoundingBox: min: (-0.866401, -0.254456, -0.903089), max: (0.86519, 0.140254, 0.894066)"
-data\LabeledDB_new\Human\12.ply,Human,5614,11224,"AxisAlignedBoundingBox: min: (-0.849166, -0.25417, -0.909495), max: (0.857089, 0.139306, 0.904837)"
-data\LabeledDB_new\Human\13.ply,Human,13703,27402,"AxisAlignedBoundingBox: min: (-0.511326, -0.959201, -0.434738), max: (0.331476, 0.99959, 0.280974)"
-data\LabeledDB_new\Human\14.ply,Human,5691,11378,"AxisAlignedBoundingBox: min: (-0.667715, -0.834555, -0.666328), max: (0.421211, 0.361332, 0.310106)"
-data\LabeledDB_new\Human\15.ply,Human,5631,11258,"AxisAlignedBoundingBox: min: (-0.293474, -0.86993, -0.291992), max: (0.292222, 0.580901, 0.485891)"
-data\LabeledDB_new\Human\16.ply,Human,15223,30450,"AxisAlignedBoundingBox: min: (-0.497468, -0.841447, -0.526886), max: (0.340819, 0.896209, 0.326748)"
-data\LabeledDB_new\Human\17.ply,Human,15910,31816,"AxisAlignedBoundingBox: min: (-0.482516, -0.846853, -0.522104), max: (0.50184, 0.819366, 0.391761)"
-data\LabeledDB_new\Human\18.ply,Human,15385,30766,"AxisAlignedBoundingBox: min: (-0.560539, -0.789644, -0.569571), max: (0.434836, 0.915339, 0.443234)"
-data\LabeledDB_new\Human\19.ply,Human,15477,30950,"AxisAlignedBoundingBox: min: (-0.486375, -0.971155, -0.421719), max: (0.398089, 0.982827, 0.344684)"
-data\LabeledDB_new\Human\2.ply,Human,10050,20096,"AxisAlignedBoundingBox: min: (-0.205586, -0.959707, -0.533277), max: (0.133258, 0.916526, 0.505301)"
-data\LabeledDB_new\Human\20.ply,Human,15700,31396,"AxisAlignedBoundingBox: min: (-0.440116, -0.967757, -0.385793), max: (0.409329, 0.944012, 0.314553)"
-data\LabeledDB_new\Human\3.ply,Human,5641,11278,"AxisAlignedBoundingBox: min: (-0.268936, -0.937717, -0.267749), max: (0.280586, 0.556325, 0.426877)"
-data\LabeledDB_new\Human\4.ply,Human,5676,11348,"AxisAlignedBoundingBox: min: (-0.279213, -0.94802, -0.310635), max: (0.329107, 0.505744, 0.398614)"
-data\LabeledDB_new\Human\5.ply,Human,15154,30308,"AxisAlignedBoundingBox: min: (-0.555662, -0.931541, -0.408832), max: (0.433563, 0.999906, 0.365818)"
-data\LabeledDB_new\Human\6.ply,Human,10098,20192,"AxisAlignedBoundingBox: min: (-0.249875, -0.988545, -0.22694), max: (0.251338, 0.759861, 0.166589)"
-data\LabeledDB_new\Human\7.ply,Human,8441,16878,"AxisAlignedBoundingBox: min: (-0.150307, -0.28627, -0.98605), max: (0.188054, 0.287679, 0.874778)"
-data\LabeledDB_new\Human\8.ply,Human,11015,22026,"AxisAlignedBoundingBox: min: (-0.325783, -0.372229, -0.989051), max: (0.345327, 0.388747, 0.841066)"
-data\LabeledDB_new\Human\9.ply,Human,2639,5274,"AxisAlignedBoundingBox: min: (-0.318209, -0.343994, -0.988769), max: (0.336627, 0.37601, 0.836355)"
-data\LabeledDB_new\Mech\321.ply,Mech,14995,29986,"AxisAlignedBoundingBox: min: (-0.540315, -0.643955, -0.536181), max: (0.53753, 0.811151, 0.541664)"
-data\LabeledDB_new\Mech\322.ply,Mech,14991,29978,"AxisAlignedBoundingBox: min: (-0.539344, -0.646622, -0.539434), max: (0.538995, 0.809152, 0.538905)"
-data\LabeledDB_new\Mech\323.ply,Mech,14991,29978,"AxisAlignedBoundingBox: min: (-0.537188, -0.644915, -0.536902), max: (0.540275, 0.809676, 0.540561)"
-data\LabeledDB_new\Mech\324.ply,Mech,14812,29620,"AxisAlignedBoundingBox: min: (-0.663298, -0.714382, -0.687821), max: (0.690454, 0.63917, 0.665731)"
-data\LabeledDB_new\Mech\325.ply,Mech,14999,29994,"AxisAlignedBoundingBox: min: (-0.531933, -0.836381, -0.787772), max: (0.53053, 0.768306, 0.663571)"
-data\LabeledDB_new\Mech\326.ply,Mech,14995,29986,"AxisAlignedBoundingBox: min: (-0.770241, -0.622915, -0.571369), max: (0.765932, 0.716628, 0.580761)"
-data\LabeledDB_new\Mech\327.ply,Mech,14937,29870,"AxisAlignedBoundingBox: min: (-0.645074, -0.763935, -0.63883), max: (0.645262, 0.676109, 0.565075)"
-data\LabeledDB_new\Mech\328.ply,Mech,14994,29984,"AxisAlignedBoundingBox: min: (-0.544699, -0.634225, -0.544273), max: (0.546494, 0.838902, 0.54692)"
-data\LabeledDB_new\Mech\329.ply,Mech,14999,29994,"AxisAlignedBoundingBox: min: (-0.539618, -0.635832, -0.539271), max: (0.545599, 0.829228, 0.545947)"
-data\LabeledDB_new\Mech\330.ply,Mech,15000,29996,"AxisAlignedBoundingBox: min: (-0.541424, -0.639756, -0.540723), max: (0.543125, 0.824401, 0.543826)"
-data\LabeledDB_new\Mech\331.ply,Mech,15000,29996,"AxisAlignedBoundingBox: min: (-0.540001, -0.646778, -0.530841), max: (0.505731, 0.921852, 0.514891)"
-data\LabeledDB_new\Mech\332.ply,Mech,14997,29990,"AxisAlignedBoundingBox: min: (-0.532853, -0.664294, -0.524196), max: (0.514443, 0.906681, 0.523099)"
-data\LabeledDB_new\Mech\333.ply,Mech,14942,29880,"AxisAlignedBoundingBox: min: (-0.559792, -0.647215, -0.516053), max: (0.473721, 0.903086, 0.51746)"
-data\LabeledDB_new\Mech\334.ply,Mech,14997,29990,"AxisAlignedBoundingBox: min: (-0.65813, -0.424367, -0.660701), max: (0.65951, 0.497981, 0.656939)"
-data\LabeledDB_new\Mech\335.ply,Mech,14995,29986,"AxisAlignedBoundingBox: min: (-0.540497, -0.644177, -0.536989), max: (0.53771, 0.811418, 0.541218)"
-data\LabeledDB_new\Mech\336.ply,Mech,15505,31006,"AxisAlignedBoundingBox: min: (-0.417948, -0.47371, -0.411149), max: (0.41972, 0.991667, 0.426456)"
-data\LabeledDB_new\Mech\337.ply,Mech,11533,23062,"AxisAlignedBoundingBox: min: (-0.867829, -0.819444, -0.558777), max: (0.897719, 0.923059, 0.519908)"
-data\LabeledDB_new\Mech\338.ply,Mech,19403,38802,"AxisAlignedBoundingBox: min: (-0.568703, -0.590998, -0.60863), max: (0.564218, 0.904347, 0.587794)"
-data\LabeledDB_new\Mech\339.ply,Mech,15000,29996,"AxisAlignedBoundingBox: min: (-0.539906, -0.646675, -0.531424), max: (0.505644, 0.921683, 0.514126)"
-data\LabeledDB_new\Mech\340.ply,Mech,14997,29990,"AxisAlignedBoundingBox: min: (-0.657883, -0.42421, -0.66102), max: (0.659262, 0.497791, 0.656125)"
-data\LabeledDB_new\Octopus\121.ply,Octopus,5944,11888,"AxisAlignedBoundingBox: min: (-0.991415, -0.758653, -0.414752), max: (0.986945, 0.704903, 0.153262)"
-data\LabeledDB_new\Octopus\122.ply,Octopus,7251,14498,"AxisAlignedBoundingBox: min: (-0.901551, -0.720917, -0.423652), max: (0.940585, 0.7941, 0.242432)"
-data\LabeledDB_new\Octopus\123.ply,Octopus,15493,30982,"AxisAlignedBoundingBox: min: (-0.715574, -0.570047, -0.553041), max: (0.682964, 0.52203, 0.707908)"
-data\LabeledDB_new\Octopus\124.ply,Octopus,3101,6198,"AxisAlignedBoundingBox: min: (-0.80821, -0.909429, -0.285059), max: (0.637454, 0.869358, 0.441054)"
-data\LabeledDB_new\Octopus\125.ply,Octopus,1343,2682,"AxisAlignedBoundingBox: min: (-0.422841, -0.288558, -0.412909), max: (0.554633, 0.56855, 0.643629)"
-data\LabeledDB_new\Octopus\126.ply,Octopus,6325,12646,"AxisAlignedBoundingBox: min: (-0.354376, -0.88462, -0.872558), max: (0.560565, 0.83069, 0.800553)"
-data\LabeledDB_new\Octopus\127.ply,Octopus,11906,23808,"AxisAlignedBoundingBox: min: (-0.786409, -0.802991, -0.487148), max: (0.738896, 0.808097, 0.527044)"
-data\LabeledDB_new\Octopus\128.ply,Octopus,6164,12324,"AxisAlignedBoundingBox: min: (-0.710262, -0.33774, -0.7959), max: (0.635195, 0.28308, 0.879558)"
-data\LabeledDB_new\Octopus\129.ply,Octopus,6144,12284,"AxisAlignedBoundingBox: min: (-0.935818, -0.720373, -0.297299), max: (0.912539, 0.844827, 0.473956)"
-data\LabeledDB_new\Octopus\130.ply,Octopus,7747,15490,"AxisAlignedBoundingBox: min: (-0.694959, -0.832477, -0.316726), max: (0.763065, 0.818408, 0.527849)"
-data\LabeledDB_new\Octopus\131.ply,Octopus,11051,22098,"AxisAlignedBoundingBox: min: (-0.606634, -0.673613, -0.689212), max: (0.4777, 0.786238, 0.792964)"
-data\LabeledDB_new\Octopus\132.ply,Octopus,7812,15620,"AxisAlignedBoundingBox: min: (-0.248066, -0.287393, -0.950202), max: (0.265467, 0.289168, 0.972566)"
-data\LabeledDB_new\Octopus\133.ply,Octopus,10466,20932,"AxisAlignedBoundingBox: min: (-0.301487, -0.869005, -0.608485), max: (0.664705, 0.758491, 0.672418)"
-data\LabeledDB_new\Octopus\134.ply,Octopus,10932,21860,"AxisAlignedBoundingBox: min: (-0.622739, -0.839498, -0.562896), max: (0.687405, 0.837615, 0.499034)"
-data\LabeledDB_new\Octopus\135.ply,Octopus,15201,30398,"AxisAlignedBoundingBox: min: (-0.572248, -0.688371, -0.57186), max: (0.570204, 0.764071, 0.630861)"
-data\LabeledDB_new\Octopus\136.ply,Octopus,14126,28248,"AxisAlignedBoundingBox: min: (-0.733125, -0.689184, -0.488352), max: (0.671582, 0.662309, 0.468353)"
-data\LabeledDB_new\Octopus\137.ply,Octopus,9124,18244,"AxisAlignedBoundingBox: min: (-0.53275, -0.748394, -0.525531), max: (0.596366, 0.576087, 0.472629)"
-data\LabeledDB_new\Octopus\138.ply,Octopus,9594,19184,"AxisAlignedBoundingBox: min: (-0.793246, -0.688074, -0.535494), max: (0.806269, 0.34839, 0.577467)"
-data\LabeledDB_new\Octopus\139.ply,Octopus,8017,16030,"AxisAlignedBoundingBox: min: (-0.759774, -0.72301, -0.244031), max: (0.721309, 0.755743, 0.293564)"
-data\LabeledDB_new\Octopus\140.ply,Octopus,9200,18396,"AxisAlignedBoundingBox: min: (-0.680418, -0.805156, -0.375706), max: (0.912822, 0.793429, 0.473706)"
-data\LabeledDB_new\Plier\201.ply,Plier,4487,8970,"AxisAlignedBoundingBox: min: (-0.675742, -0.079542, -0.969787), max: (0.51606, 0.08539, 0.8659)"
-data\LabeledDB_new\Plier\202.ply,Plier,4491,8978,"AxisAlignedBoundingBox: min: (-0.690559, -0.079647, -0.975233), max: (0.51102, 0.08501, 0.856318)"
-data\LabeledDB_new\Plier\203.ply,Plier,3906,7808,"AxisAlignedBoundingBox: min: (-0.707768, -0.080493, -0.975258), max: (0.504725, 0.083869, 0.837825)"
-data\LabeledDB_new\Plier\204.ply,Plier,4407,8810,"AxisAlignedBoundingBox: min: (-0.768425, -0.075499, -0.698498), max: (0.968271, 0.0791, 0.679867)"
-data\LabeledDB_new\Plier\205.ply,Plier,4478,8952,"AxisAlignedBoundingBox: min: (-0.604776, -0.083685, -0.965804), max: (0.672128, 0.088202, 0.90787)"
-data\LabeledDB_new\Plier\206.ply,Plier,4794,9584,"AxisAlignedBoundingBox: min: (-0.741894, -0.07958, -0.960138), max: (0.513922, 0.084225, 0.854196)"
-data\LabeledDB_new\Plier\207.ply,Plier,5202,10400,"AxisAlignedBoundingBox: min: (-0.766474, -0.079161, -0.934075), max: (0.626326, 0.079515, 0.818626)"
-data\LabeledDB_new\Plier\208.ply,Plier,6104,12204,"AxisAlignedBoundingBox: min: (-0.771048, -0.078774, -0.878836), max: (0.724927, 0.082087, 0.73547)"
-data\LabeledDB_new\Plier\209.ply,Plier,5110,10216,"AxisAlignedBoundingBox: min: (-0.770495, -0.077523, -0.816737), max: (0.84498, 0.082044, 0.66265)"
-data\LabeledDB_new\Plier\210.ply,Plier,5508,11012,"AxisAlignedBoundingBox: min: (-0.760613, -0.079584, -0.762512), max: (0.911473, 0.084707, 0.669961)"
-data\LabeledDB_new\Plier\211.ply,Plier,4284,8564,"AxisAlignedBoundingBox: min: (-0.75344, -0.076081, -0.735844), max: (0.959852, 0.075916, 0.682277)"
-data\LabeledDB_new\Plier\212.ply,Plier,4298,8592,"AxisAlignedBoundingBox: min: (-0.791892, -0.077249, -0.672792), max: (0.986672, 0.082488, 0.703256)"
-data\LabeledDB_new\Plier\213.ply,Plier,3963,7922,"AxisAlignedBoundingBox: min: (-0.622121, -0.079239, -0.931854), max: (0.565481, 0.077786, 0.80838)"
-data\LabeledDB_new\Plier\214.ply,Plier,3804,7604,"AxisAlignedBoundingBox: min: (-0.6061, -0.081305, -0.962181), max: (0.587498, 0.08305, 0.841194)"
-data\LabeledDB_new\Plier\215.ply,Plier,4463,8922,"AxisAlignedBoundingBox: min: (-0.600461, -0.080424, -0.982011), max: (0.61005, 0.087098, 0.878773)"
-data\LabeledDB_new\Plier\216.ply,Plier,4478,8952,"AxisAlignedBoundingBox: min: (-0.593188, -0.08099, -0.986873), max: (0.623641, 0.087471, 0.883842)"
-data\LabeledDB_new\Plier\217.ply,Plier,5201,10398,"AxisAlignedBoundingBox: min: (-0.603615, -0.079919, -0.91933), max: (0.66807, 0.080117, 0.846507)"
-data\LabeledDB_new\Plier\218.ply,Plier,6198,12392,"AxisAlignedBoundingBox: min: (-0.578796, -0.078379, -0.824175), max: (0.685155, 0.081482, 0.7904)"
-data\LabeledDB_new\Plier\219.ply,Plier,3942,7880,"AxisAlignedBoundingBox: min: (-0.755574, -0.063137, -0.961139), max: (0.790339, 0.076423, 0.601456)"
-data\LabeledDB_new\Plier\220.ply,Plier,4457,8910,"AxisAlignedBoundingBox: min: (-0.75925, -0.065043, -0.876383), max: (0.814122, 0.078307, 0.593642)"
-data\LabeledDB_new\Table\141.ply,Table,13926,27848,"AxisAlignedBoundingBox: min: (-0.840166, -0.550088, -0.126016), max: (0.840314, 0.542058, 0.732109)"
-data\LabeledDB_new\Table\142.ply,Table,9802,19600,"AxisAlignedBoundingBox: min: (-0.982931, -0.267201, -0.493251), max: (0.999685, 0.044393, 0.511767)"
-data\LabeledDB_new\Table\143.ply,Table,9270,18536,"AxisAlignedBoundingBox: min: (-0.981753, -0.276534, -0.49315), max: (0.999881, 0.034432, 0.511519)"
-data\LabeledDB_new\Table\144.ply,Table,15082,30160,"AxisAlignedBoundingBox: min: (-0.98317, -0.400061, -0.803651), max: (0.99959, 0.048795, 0.807493)"
-data\LabeledDB_new\Table\145.ply,Table,13206,26408,"AxisAlignedBoundingBox: min: (-0.632598, -0.787751, -0.632734), max: (0.639463, 0.188248, 0.639301)"
-data\LabeledDB_new\Table\146.ply,Table,13714,27424,"AxisAlignedBoundingBox: min: (-0.718292, -0.75512, -0.718408), max: (0.717468, 0.226254, 0.717554)"
-data\LabeledDB_new\Table\147.ply,Table,13705,27406,"AxisAlignedBoundingBox: min: (-0.806625, -0.611105, -0.817646), max: (0.813267, 0.121435, 0.802281)"
-data\LabeledDB_new\Table\148.ply,Table,13375,26746,"AxisAlignedBoundingBox: min: (-0.982826, -0.483853, -0.98635), max: (0.98573, 0.116774, 0.982292)"
-data\LabeledDB_new\Table\149.ply,Table,13588,27172,"AxisAlignedBoundingBox: min: (-0.985555, -0.515457, -0.988281), max: (0.980304, 0.081562, 0.978427)"
-data\LabeledDB_new\Table\150.ply,Table,13579,27154,"AxisAlignedBoundingBox: min: (-0.465275, -0.929452, -0.456739), max: (0.46859, 0.203658, 0.476957)"
-data\LabeledDB_new\Table\151.ply,Table,12696,25388,"AxisAlignedBoundingBox: min: (-0.668661, -0.495712, -0.670125), max: (0.668657, 0.101299, 0.667809)"
-data\LabeledDB_new\Table\152.ply,Table,10543,21082,"AxisAlignedBoundingBox: min: (-0.317883, -0.609381, -0.820078), max: (0.326873, 0.099841, 0.826323)"
-data\LabeledDB_new\Table\153.ply,Table,13581,27158,"AxisAlignedBoundingBox: min: (-0.589556, -0.788715, -0.491842), max: (0.592619, 0.816631, 0.075932)"
-data\LabeledDB_new\Table\154.ply,Table,13929,27854,"AxisAlignedBoundingBox: min: (-0.767397, -0.763362, -0.65273), max: (0.762378, 0.827363, 0.295023)"
-data\LabeledDB_new\Table\155.ply,Table,14384,28764,"AxisAlignedBoundingBox: min: (-0.938033, -0.774021, -0.694798), max: (0.975495, 0.147116, 0.730715)"
-data\LabeledDB_new\Table\156.ply,Table,10100,20196,"AxisAlignedBoundingBox: min: (-0.831833, -0.602398, -0.719372), max: (0.840432, 0.069116, 0.723529)"
-data\LabeledDB_new\Table\157.ply,Table,13883,27762,"AxisAlignedBoundingBox: min: (-0.968674, -0.665926, -0.975786), max: (0.967688, 0.119652, 0.971857)"
-data\LabeledDB_new\Table\158.ply,Table,14587,29170,"AxisAlignedBoundingBox: min: (-0.646266, -0.797093, -0.685237), max: (0.645923, 0.16525, 0.684363)"
-data\LabeledDB_new\Table\159.ply,Table,13930,27856,"AxisAlignedBoundingBox: min: (-0.668285, -0.75246, -0.558866), max: (0.671536, 0.747991, 0.090932)"
-data\LabeledDB_new\Table\160.ply,Table,10082,20160,"AxisAlignedBoundingBox: min: (-0.845246, -0.761702, -0.222755), max: (0.254859, 0.781024, 0.235357)"
-data\LabeledDB_new\Teddy\161.ply,Teddy,13826,27648,"AxisAlignedBoundingBox: min: (-0.671387, -0.728133, -0.329366), max: (0.678684, 0.942907, 0.326737)"
-data\LabeledDB_new\Teddy\162.ply,Teddy,10096,20188,"AxisAlignedBoundingBox: min: (-0.618127, -0.892339, -0.373052), max: (0.412347, 0.977393, 0.565398)"
-data\LabeledDB_new\Teddy\163.ply,Teddy,10879,21758,"AxisAlignedBoundingBox: min: (-0.58393, -0.909035, -0.338993), max: (0.623852, 0.95474, 0.502105)"
-data\LabeledDB_new\Teddy\164.ply,Teddy,14509,29014,"AxisAlignedBoundingBox: min: (-0.637077, -0.696297, -0.343926), max: (0.665476, 0.977466, 0.450824)"
-data\LabeledDB_new\Teddy\165.ply,Teddy,10233,20462,"AxisAlignedBoundingBox: min: (-0.442105, -0.916217, -0.356779), max: (0.551747, 0.985951, 0.427515)"
-data\LabeledDB_new\Teddy\166.ply,Teddy,11090,22176,"AxisAlignedBoundingBox: min: (-0.650798, -0.842785, -0.383127), max: (0.624942, 0.980533, 0.509331)"
-data\LabeledDB_new\Teddy\167.ply,Teddy,12647,25290,"AxisAlignedBoundingBox: min: (-0.645426, -0.756215, -0.381702), max: (0.598574, 0.965264, 0.525836)"
-data\LabeledDB_new\Teddy\168.ply,Teddy,10752,21500,"AxisAlignedBoundingBox: min: (-0.643046, -0.871127, -0.32054), max: (0.562721, 0.974813, 0.332394)"
-data\LabeledDB_new\Teddy\169.ply,Teddy,12561,25118,"AxisAlignedBoundingBox: min: (-0.780276, -0.892198, -0.286057), max: (0.804989, 0.923285, 0.299525)"
-data\LabeledDB_new\Teddy\170.ply,Teddy,12500,24996,"AxisAlignedBoundingBox: min: (-0.773621, -0.885055, -0.275354), max: (0.74907, 0.858182, 0.281979)"
-data\LabeledDB_new\Teddy\171.ply,Teddy,14905,29806,"AxisAlignedBoundingBox: min: (-0.525316, -0.883865, -0.398818), max: (0.532718, 0.913362, 0.486311)"
-data\LabeledDB_new\Teddy\172.ply,Teddy,10141,20278,"AxisAlignedBoundingBox: min: (-0.575994, -0.94955, -0.444322), max: (0.429863, 0.973867, 0.537858)"
-data\LabeledDB_new\Teddy\173.ply,Teddy,13867,27730,"AxisAlignedBoundingBox: min: (-0.451507, -0.652676, -0.397755), max: (0.44896, 0.942607, 0.51019)"
-data\LabeledDB_new\Teddy\174.ply,Teddy,12831,25658,"AxisAlignedBoundingBox: min: (-0.613447, -0.846818, -0.330891), max: (0.691081, 0.906278, 0.402225)"
-data\LabeledDB_new\Teddy\175.ply,Teddy,9480,18956,"AxisAlignedBoundingBox: min: (-0.60858, -0.946855, -0.396378), max: (0.588985, 0.954652, 0.423982)"
-data\LabeledDB_new\Teddy\176.ply,Teddy,12500,24996,"AxisAlignedBoundingBox: min: (-0.68794, -0.691984, -0.397993), max: (0.733972, 0.940663, 0.538444)"
-data\LabeledDB_new\Teddy\177.ply,Teddy,12543,25082,"AxisAlignedBoundingBox: min: (-0.548994, -0.738777, -0.395298), max: (0.668241, 0.937811, 0.514511)"
-data\LabeledDB_new\Teddy\178.ply,Teddy,12175,24346,"AxisAlignedBoundingBox: min: (-0.593218, -0.691816, -0.36071), max: (0.506613, 0.953242, 0.538992)"
-data\LabeledDB_new\Teddy\179.ply,Teddy,13324,26644,"AxisAlignedBoundingBox: min: (-0.658921, -0.71694, -0.360366), max: (0.650144, 0.941371, 0.570984)"
-data\LabeledDB_new\Teddy\180.ply,Teddy,9548,19092,"AxisAlignedBoundingBox: min: (-0.614735, -0.856391, -0.268362), max: (0.597059, 0.958507, 0.301429)"
-data\LabeledDB_new\Vase\361.ply,Vase,14859,29734,"AxisAlignedBoundingBox: min: (-0.487363, -0.951693, -0.537682), max: (0.521498, 0.991284, 0.507211)"
-data\LabeledDB_new\Vase\362.ply,Vase,14476,28952,"AxisAlignedBoundingBox: min: (-0.348412, -0.643778, -0.368409), max: (0.390271, 0.989733, 0.368972)"
-data\LabeledDB_new\Vase\363.ply,Vase,13434,26864,"AxisAlignedBoundingBox: min: (-0.290753, -0.653612, -0.283155), max: (0.31544, 0.998324, 0.31155)"
-data\LabeledDB_new\Vase\364.ply,Vase,13548,27100,"AxisAlignedBoundingBox: min: (-0.830792, -0.581783, -0.529094), max: (0.820759, 0.648302, 0.554594)"
-data\LabeledDB_new\Vase\365.ply,Vase,13514,27028,"AxisAlignedBoundingBox: min: (-0.800453, -0.682033, -0.83284), max: (0.894325, 0.672523, 0.85725)"
-data\LabeledDB_new\Vase\366.ply,Vase,10637,21274,"AxisAlignedBoundingBox: min: (-0.470677, -0.861363, -0.460591), max: (0.444454, 0.98303, 0.480763)"
-data\LabeledDB_new\Vase\367.ply,Vase,3900,7800,"AxisAlignedBoundingBox: min: (-0.894348, -0.594694, -0.413628), max: (0.956669, 0.595022, 0.524414)"
-data\LabeledDB_new\Vase\368.ply,Vase,11202,22400,"AxisAlignedBoundingBox: min: (-0.535044, -0.553733, -0.643495), max: (0.539441, 0.785096, 0.585329)"
-data\LabeledDB_new\Vase\369.ply,Vase,13606,27212,"AxisAlignedBoundingBox: min: (-0.526398, -0.804935, -0.587743), max: (0.617932, 0.937945, 0.561901)"
-data\LabeledDB_new\Vase\370.ply,Vase,13920,27836,"AxisAlignedBoundingBox: min: (-0.550041, -0.839186, -0.547822), max: (0.562622, 0.989408, 0.562901)"
-data\LabeledDB_new\Vase\371.ply,Vase,14599,29194,"AxisAlignedBoundingBox: min: (-0.573071, -0.75023, -0.539405), max: (0.558613, 0.986991, 0.597619)"
-data\LabeledDB_new\Vase\372.ply,Vase,6684,13368,"AxisAlignedBoundingBox: min: (-0.774489, -0.480736, -0.385591), max: (0.711485, 0.68795, 0.381743)"
-data\LabeledDB_new\Vase\373.ply,Vase,10556,21112,"AxisAlignedBoundingBox: min: (-0.414793, -0.890265, -0.427344), max: (0.383883, 0.994026, 0.389596)"
-data\LabeledDB_new\Vase\374.ply,Vase,14872,29744,"AxisAlignedBoundingBox: min: (-0.35855, -0.97322, -0.331058), max: (0.320975, 0.956164, 0.344297)"
-data\LabeledDB_new\Vase\375.ply,Vase,11762,23520,"AxisAlignedBoundingBox: min: (-0.968259, -0.384965, -0.580561), max: (0.910081, 0.307637, 0.523119)"
-data\LabeledDB_new\Vase\376.ply,Vase,12568,25132,"AxisAlignedBoundingBox: min: (-0.996857, -0.482226, -0.808801), max: (0.993358, 0.312882, 0.743575)"
-data\LabeledDB_new\Vase\377.ply,Vase,15169,30342,"AxisAlignedBoundingBox: min: (-0.525305, -0.663566, -0.322591), max: (0.526046, 0.999927, 0.327969)"
-data\LabeledDB_new\Vase\378.ply,Vase,6684,13368,"AxisAlignedBoundingBox: min: (-0.781131, -0.470158, -0.379556), max: (0.703088, 0.690091, 0.374894)"
-data\LabeledDB_new\Vase\379.ply,Vase,6923,13842,"AxisAlignedBoundingBox: min: (-0.888659, -0.588771, -0.389807), max: (0.950082, 0.589652, 0.540806)"
-data\LabeledDB_new\Vase\380.ply,Vase,9356,18708,"AxisAlignedBoundingBox: min: (-0.568432, -0.999948, -0.430499), max: (0.565093, 0.597105, 0.432816)"
+path,class,nr_of_vertices,nr_of_faces,mesh_area,convex_hull_area,bounding_box_area
+data\LabeledDB_new\Airplane\61.ply,Airplane,5400,10796,1.915367707806675,3.1643194852800565,6.246197176681186
+data\LabeledDB_new\Airplane\62.ply,Airplane,5619,11234,2.0696912986251923,4.033599848153297,9.377676023201488
+data\LabeledDB_new\Airplane\63.ply,Airplane,5519,11034,2.1616274551618164,4.288945996055551,9.743527673189043
+data\LabeledDB_new\Airplane\64.ply,Airplane,6797,13590,2.2796276107723754,3.9836460419460304,8.983313515334402
+data\LabeledDB_new\Airplane\65.ply,Airplane,6448,12892,1.8603382173274319,3.8057902027118966,8.319111680786346
+data\LabeledDB_new\Airplane\66.ply,Airplane,7739,15474,2.128028830863797,3.3767349744786954,7.009019506178073
+data\LabeledDB_new\Airplane\67.ply,Airplane,7651,15298,2.477437099466306,4.156062324641135,8.936624910501877
+data\LabeledDB_new\Airplane\68.ply,Airplane,5583,11162,1.7243807773701558,3.2588004359998988,7.523206375762288
+data\LabeledDB_new\Airplane\69.ply,Airplane,6701,13398,2.2497670440764264,4.023493095652444,7.900882230309946
+data\LabeledDB_new\Airplane\70.ply,Airplane,5631,11258,2.0302425298566797,3.7596361613009264,7.392099097988051
+data\LabeledDB_new\Airplane\71.ply,Airplane,5849,11694,2.1776185195931124,4.235680546024117,9.50502659053504
+data\LabeledDB_new\Airplane\72.ply,Airplane,5228,10452,1.9216552690704776,3.9539442223068133,8.32326981988303
+data\LabeledDB_new\Airplane\73.ply,Airplane,5109,10214,1.8486577815849656,3.9370650030548933,8.97747402233991
+data\LabeledDB_new\Airplane\74.ply,Airplane,5044,10084,1.8496855665836873,3.3363816472508585,7.9513872865203385
+data\LabeledDB_new\Airplane\75.ply,Airplane,8679,17354,2.595345323446526,4.085957823983102,7.793297809240302
+data\LabeledDB_new\Airplane\76.ply,Airplane,5923,11842,1.9940273486111242,3.7162491341772945,8.418818672035945
+data\LabeledDB_new\Airplane\77.ply,Airplane,6587,13170,2.0536087594872203,4.065521302614016,9.4351244055568
+data\LabeledDB_new\Airplane\78.ply,Airplane,7470,14936,2.406254074690181,5.1681536687441145,10.983020308837688
+data\LabeledDB_new\Airplane\79.ply,Airplane,6689,13374,2.407611887052445,4.654040388648413,10.16615490208406
+data\LabeledDB_new\Airplane\80.ply,Airplane,7351,14698,2.554367551852032,4.69154880707637,9.687090013752655
+data\LabeledDB_new\Ant\100.ply,Ant,8064,16124,2.366413220615778,4.017065947129877,7.766348670618953
+data\LabeledDB_new\Ant\81.ply,Ant,6370,12736,2.1753601470501014,3.8655470623887216,7.255013327032431
+data\LabeledDB_new\Ant\82.ply,Ant,8299,16594,2.778507014538145,4.990796889331098,9.567785326463245
+data\LabeledDB_new\Ant\83.ply,Ant,6376,12748,2.3287467103518162,4.068412578796573,7.760219216226938
+data\LabeledDB_new\Ant\84.ply,Ant,6850,13696,2.215585276014107,4.389672744727351,7.994949305175121
+data\LabeledDB_new\Ant\85.ply,Ant,8388,16772,2.689455745131179,4.141284455499662,7.289634187111979
+data\LabeledDB_new\Ant\86.ply,Ant,7038,14072,2.44592358259443,3.765316705212468,6.463149760101089
+data\LabeledDB_new\Ant\87.ply,Ant,7470,14936,2.663823592982229,5.353306222205317,9.76328057234339
+data\LabeledDB_new\Ant\88.ply,Ant,8210,16416,2.8473032051671834,5.725227506523041,12.276916388599311
+data\LabeledDB_new\Ant\89.ply,Ant,7654,15304,2.581576438000114,4.111836402625652,7.331537611842453
+data\LabeledDB_new\Ant\90.ply,Ant,7877,15750,2.697030496839458,4.891267107330199,8.97910433382232
+data\LabeledDB_new\Ant\91.ply,Ant,8640,17276,2.86996493057367,5.387283166520875,9.410349036040031
+data\LabeledDB_new\Ant\92.ply,Ant,5867,11730,2.1895450863424455,3.732766589801827,6.955593198773295
+data\LabeledDB_new\Ant\93.ply,Ant,8216,16432,2.8495987624302543,5.22270647062777,10.506125343473942
+data\LabeledDB_new\Ant\94.ply,Ant,7236,14468,2.2768481760463386,4.6287710168347775,9.146565129359978
+data\LabeledDB_new\Ant\95.ply,Ant,7355,14706,2.445665083727492,3.9293454687875857,7.053373054568805
+data\LabeledDB_new\Ant\96.ply,Ant,8504,17004,2.5912935095539873,4.494811863596064,9.21776689488458
+data\LabeledDB_new\Ant\97.ply,Ant,8167,16330,2.510812250624304,3.872775698465719,5.7964519561297445
+data\LabeledDB_new\Ant\98.ply,Ant,6154,12304,2.3166809124199346,3.8794166783802893,7.610623254347708
+data\LabeledDB_new\Ant\99.ply,Ant,6881,13758,2.217973129408568,4.606933314517658,9.029028843060289
+data\LabeledDB_new\Armadillo\281.ply,Armadillo,25273,50542,3.0433605212355683,4.308608569814945,9.14191465026338
+data\LabeledDB_new\Armadillo\282.ply,Armadillo,24473,48942,3.289124930915426,4.144838603412614,7.583940200014695
+data\LabeledDB_new\Armadillo\283.ply,Armadillo,24484,48964,2.609718046875874,3.5254746585969197,8.503745603931176
+data\LabeledDB_new\Armadillo\284.ply,Armadillo,25494,50984,3.4087152962891367,4.468277457901221,10.590489660162973
+data\LabeledDB_new\Armadillo\285.ply,Armadillo,25193,50382,3.8138347887786517,5.012836760444292,10.597150449753734
+data\LabeledDB_new\Armadillo\286.ply,Armadillo,25108,50212,4.577652173358797,5.630447978851161,10.543195049664988
+data\LabeledDB_new\Armadillo\287.ply,Armadillo,25491,50978,4.267060949849468,5.669218244937494,12.009138983436529
+data\LabeledDB_new\Armadillo\288.ply,Armadillo,20000,39996,4.398618095031316,5.8425064405359635,12.48962125916561
+data\LabeledDB_new\Armadillo\289.ply,Armadillo,25211,50418,3.631510117955802,5.999340609580772,15.12412935883492
+data\LabeledDB_new\Armadillo\290.ply,Armadillo,25431,50858,2.845738920193223,4.566734505159553,9.207518226645703
+data\LabeledDB_new\Armadillo\291.ply,Armadillo,24615,49226,4.06204147804655,4.208555552307211,8.641383258185302
+data\LabeledDB_new\Armadillo\292.ply,Armadillo,21774,43544,3.0624989264750844,4.3700009322894,9.471279078334135
+data\LabeledDB_new\Armadillo\293.ply,Armadillo,15000,29996,3.14946942843368,4.094773377931725,7.6484009745565835
+data\LabeledDB_new\Armadillo\294.ply,Armadillo,16501,32998,2.3387833158605194,3.1900939217375086,7.232942287428045
+data\LabeledDB_new\Armadillo\295.ply,Armadillo,16780,33556,2.6981093109354832,3.618679026633184,8.890942045632954
+data\LabeledDB_new\Armadillo\296.ply,Armadillo,15832,31660,3.573307264813682,4.571278089662721,9.118162962204593
+data\LabeledDB_new\Armadillo\297.ply,Armadillo,15315,30626,4.105541119048082,4.856529461071045,9.69587846824924
+data\LabeledDB_new\Armadillo\298.ply,Armadillo,15000,29996,4.024037758445584,5.602406606181057,11.753199635822405
+data\LabeledDB_new\Armadillo\299.ply,Armadillo,17117,34230,4.18399403594868,5.780522998022308,12.677535780091105
+data\LabeledDB_new\Armadillo\300.ply,Armadillo,17453,34902,3.371262802950667,5.734869550300532,14.455739348479057
+data\LabeledDB_new\Bearing\341.ply,Bearing,1663,3322,1.7926201323730173,1.8763221811983588,3.28340105727999
+data\LabeledDB_new\Bearing\342.ply,Bearing,1663,3322,2.750507765858264,2.878937013902076,5.0378937458768025
+data\LabeledDB_new\Bearing\343.ply,Bearing,1663,3322,2.5522997379671124,2.671473448510902,4.674845098046005
+data\LabeledDB_new\Bearing\344.ply,Bearing,3182,6360,1.962305278727493,2.0358555176760706,3.118427265818223
+data\LabeledDB_new\Bearing\345.ply,Bearing,3614,7224,1.959582697198938,2.031514931157394,3.1531461479542795
+data\LabeledDB_new\Bearing\346.ply,Bearing,3587,7170,1.9560098989342616,2.02755668675737,3.1662530604216137
+data\LabeledDB_new\Bearing\347.ply,Bearing,2623,5242,4.270411230032487,4.290712846982886,5.903591627017487
+data\LabeledDB_new\Bearing\348.ply,Bearing,2568,5132,0.4842427732276477,0.489923863676814,0.6730976928382653
+data\LabeledDB_new\Bearing\349.ply,Bearing,2568,5132,1.467524185010188,1.4847419358122163,2.0398653380034735
+data\LabeledDB_new\Bearing\350.ply,Bearing,8759,17514,1.625176163408567,1.6493498316379125,2.2772747562457116
+data\LabeledDB_new\Bearing\351.ply,Bearing,5192,10380,2.6282443388743157,2.865767038583255,4.406095485903226
+data\LabeledDB_new\Bearing\352.ply,Bearing,10400,20796,2.0759697166511115,2.2339782702118556,3.457390798153036
+data\LabeledDB_new\Bearing\353.ply,Bearing,1512,3020,1.402993167955386,1.664903041750056,3.084368557819357
+data\LabeledDB_new\Bearing\354.ply,Bearing,2910,5816,0.9133524178859713,1.141887359389858,1.9211384091766326
+data\LabeledDB_new\Bearing\355.ply,Bearing,14994,29984,1.621179972504907,1.6210360744735652,2.10181262249803
+data\LabeledDB_new\Bearing\356.ply,Bearing,14992,29980,1.6212510351351253,1.6212481024905077,2.102094067993619
+data\LabeledDB_new\Bearing\357.ply,Bearing,14872,29764,1.8076455578896489,1.639711412805338,1.639711412805338
+data\LabeledDB_new\Bearing\358.ply,Bearing,14127,28266,2.4601354940728486,3.0228334394487013,6.530803110547591
+data\LabeledDB_new\Bearing\359.ply,Bearing,14956,29924,2.4758222419369496,3.041878516689414,6.5719817932272395
+data\LabeledDB_new\Bearing\360.ply,Bearing,2200,4396,0.02401534704587683,0.023578025366316688,0.031868776288166895
+data\LabeledDB_new\Bird\241.ply,Bird,3478,6952,1.3918080879116395,3.0964897748143283,7.4615058809234505
+data\LabeledDB_new\Bird\242.ply,Bird,7849,15694,2.830909962498331,4.090764785917267,9.726040645734592
+data\LabeledDB_new\Bird\243.ply,Bird,3158,6312,1.3908105481385993,2.0056941757389697,4.86255013801869
+data\LabeledDB_new\Bird\244.ply,Bird,4501,8998,1.7407587284487862,2.4423569446722992,5.239072038473701
+data\LabeledDB_new\Bird\245.ply,Bird,6475,12946,2.424967908102898,3.7949232442069807,9.306894920027226
+data\LabeledDB_new\Bird\246.ply,Bird,4219,8434,1.6312860199685641,2.258476979380192,5.3604263235283085
+data\LabeledDB_new\Bird\247.ply,Bird,5519,11034,2.0755688583616605,3.1346948686798806,7.884855926063096
+data\LabeledDB_new\Bird\248.ply,Bird,11790,23576,2.805618528714311,4.220736337296967,10.04224465848732
+data\LabeledDB_new\Bird\249.ply,Bird,3714,7424,1.3842948537110853,2.4823515781771355,6.07844022741506
+data\LabeledDB_new\Bird\250.ply,Bird,4280,8556,1.69193710204708,3.031118626498177,6.392938764212142
+data\LabeledDB_new\Bird\251.ply,Bird,3158,6312,1.3908105481385993,2.0056941757389697,4.86255013801869
+data\LabeledDB_new\Bird\252.ply,Bird,6351,12698,2.2128306161697835,3.513191417428728,8.020287790078397
+data\LabeledDB_new\Bird\253.ply,Bird,6164,12324,2.2341422231912462,4.072468185783127,9.197685043300725
+data\LabeledDB_new\Bird\254.ply,Bird,3638,7272,1.5161980883568122,2.2888461922036663,5.034960689660032
+data\LabeledDB_new\Bird\255.ply,Bird,5054,10104,1.9921860194040142,2.979504501429879,7.30536094888719
+data\LabeledDB_new\Bird\256.ply,Bird,5970,11936,2.0274208156526607,3.9492390822689014,12.58112666820325
+data\LabeledDB_new\Bird\257.ply,Bird,2135,4266,1.9338322453297379,2.7065340449525213,5.223380512283227
+data\LabeledDB_new\Bird\258.ply,Bird,8946,17888,3.0379914818311384,4.328730316553129,10.9770114850771
+data\LabeledDB_new\Bird\259.ply,Bird,9015,18026,3.056228952171858,4.763023460263161,9.9765134775163
+data\LabeledDB_new\Bird\260.ply,Bird,2497,4990,2.4509864524093574,3.3383681041686364,7.502068722653711
+data\LabeledDB_new\Bust\301.ply,Bust,9252,18500,4.853562981084298,5.1431317707506885,8.467406823736232
+data\LabeledDB_new\Bust\302.ply,Bust,25125,50246,5.93842411593972,5.844901172888237,11.221072659237834
+data\LabeledDB_new\Bust\303.ply,Bust,15516,31028,3.8438035346848634,3.919427377450618,8.020525462530745
+data\LabeledDB_new\Bust\304.ply,Bust,25467,50930,4.453504381369488,4.943196473985002,8.592112025862313
+data\LabeledDB_new\Bust\305.ply,Bust,27824,55644,7.408598651531967,7.188502465808851,13.718348463280556
+data\LabeledDB_new\Bust\306.ply,Bust,26798,53592,4.6723924808685675,4.9674379912442514,10.11716465401998
+data\LabeledDB_new\Bust\307.ply,Bust,27439,54874,7.6535182332104075,7.620986770354867,17.891958241961213
+data\LabeledDB_new\Bust\308.ply,Bust,23976,47948,8.530232132855419,8.43077294391525,17.22155905988153
+data\LabeledDB_new\Bust\309.ply,Bust,5197,10390,5.382422937406557,4.828836819481636,9.062291184102826
+data\LabeledDB_new\Bust\310.ply,Bust,8263,16522,8.09344624178696,8.094856620206238,16.278395017231446
+data\LabeledDB_new\Bust\311.ply,Bust,25230,50456,6.156668760342801,6.401225691913986,11.274090942456489
+data\LabeledDB_new\Bust\312.ply,Bust,26985,53966,5.794277138905737,5.799282968687731,12.024804876691768
+data\LabeledDB_new\Bust\313.ply,Bust,10852,21700,6.323545607203105,6.048685251358046,12.566348428032576
+data\LabeledDB_new\Bust\314.ply,Bust,26437,52870,4.646911955821716,5.191319754031788,9.53528114191981
+data\LabeledDB_new\Bust\315.ply,Bust,25768,51532,5.3841017829980515,5.41381150239294,11.137604834451565
+data\LabeledDB_new\Bust\316.ply,Bust,23395,46786,5.799751692409741,5.653548119235682,11.605026699413678
+data\LabeledDB_new\Bust\317.ply,Bust,27726,55448,5.638353576716769,5.683256846143689,11.539366318523655
+data\LabeledDB_new\Bust\318.ply,Bust,25145,50286,4.5475924891944866,4.729786686140117,10.283000610941883
+data\LabeledDB_new\Bust\319.ply,Bust,26558,53112,6.234701868493295,6.627609467662204,11.431087232287865
+data\LabeledDB_new\Bust\320.ply,Bust,27118,54232,7.328716403291481,6.9082640116725536,15.222762473225046
+data\LabeledDB_new\Chair\101.ply,Chair,8499,16998,2.2662722816084178,4.780086413247083,6.3839064534456895
+data\LabeledDB_new\Chair\102.ply,Chair,15724,31456,3.929325510561443,5.84967120763375,10.664386882406845
+data\LabeledDB_new\Chair\103.ply,Chair,9652,19304,2.613103711758,5.001059745619926,7.113076964342632
+data\LabeledDB_new\Chair\104.ply,Chair,8653,17306,2.3851709016173683,4.373988635282101,5.509792772668607
+data\LabeledDB_new\Chair\105.ply,Chair,9261,18530,2.3805609813201207,4.127527111635429,5.1989017721251685
+data\LabeledDB_new\Chair\106.ply,Chair,14052,28104,3.343648056144632,5.622585801753924,8.159018040851088
+data\LabeledDB_new\Chair\107.ply,Chair,11421,22854,3.689781753144609,5.210761871223943,10.136933087685524
+data\LabeledDB_new\Chair\108.ply,Chair,10500,21008,3.5910257337736406,5.283905979750112,10.263085956738514
+data\LabeledDB_new\Chair\109.ply,Chair,10301,20602,1.9375973757353482,4.776018473948519,6.31593291429159
+data\LabeledDB_new\Chair\110.ply,Chair,8456,16920,2.1142182031982006,3.9702989473159938,5.5970514421723045
+data\LabeledDB_new\Chair\111.ply,Chair,8050,16100,2.093151541315412,4.10023357107579,5.783384911308952
+data\LabeledDB_new\Chair\112.ply,Chair,13628,27256,2.7394106605897592,5.242775017288079,6.650734879180698
+data\LabeledDB_new\Chair\113.ply,Chair,10748,21500,2.317938386778334,4.376321793770963,6.641338772129057
+data\LabeledDB_new\Chair\114.ply,Chair,5794,11588,1.0076492938001078,3.4729670343526817,4.5798981682703825
+data\LabeledDB_new\Chair\115.ply,Chair,10043,20086,2.227529079056763,4.53300015140817,6.875352576754402
+data\LabeledDB_new\Chair\116.ply,Chair,13463,26926,3.6093777121465305,5.446455364806878,8.6710954060747
+data\LabeledDB_new\Chair\117.ply,Chair,14372,28744,3.451179107926827,5.7051433913079075,7.929017409682157
+data\LabeledDB_new\Chair\118.ply,Chair,9153,18306,2.259433926335363,4.725132405084435,6.366270782768634
+data\LabeledDB_new\Chair\119.ply,Chair,12326,24652,2.989903270983901,5.268300181960425,7.502479958664928
+data\LabeledDB_new\Chair\120.ply,Chair,10121,20242,2.7502821332220555,4.53632487279285,6.3266341577600045
+data\LabeledDB_new\Cup\21.ply,Cup,15198,30396,8.532710254929206,6.248269227365263,10.417006860431883
+data\LabeledDB_new\Cup\22.ply,Cup,15002,30004,11.408528863769403,8.073047575232374,13.086801940555922
+data\LabeledDB_new\Cup\23.ply,Cup,15037,30074,8.3282729238813,6.383787001799344,11.660478303377474
+data\LabeledDB_new\Cup\24.ply,Cup,15246,30492,11.531435520839333,8.298321268073494,13.48540636100897
+data\LabeledDB_new\Cup\25.ply,Cup,15087,30170,11.919530211221339,7.530822061858638,10.567541001787355
+data\LabeledDB_new\Cup\26.ply,Cup,15209,30418,10.73081162978652,6.9208235182378655,10.975660866255502
+data\LabeledDB_new\Cup\27.ply,Cup,15137,30274,9.935083355420456,6.625247600484774,10.451953042072915
+data\LabeledDB_new\Cup\28.ply,Cup,15070,30140,8.754257894662635,6.409398673671895,10.69401271100056
+data\LabeledDB_new\Cup\29.ply,Cup,15127,30254,8.964377227889232,6.483382592034221,9.681481069204207
+data\LabeledDB_new\Cup\30.ply,Cup,15006,30008,4.257558864371799,5.622001474812841,8.69966629318867
+data\LabeledDB_new\Cup\31.ply,Cup,15227,30454,10.6946500753399,7.878090909904279,14.084761122251969
+data\LabeledDB_new\Cup\32.ply,Cup,14751,29502,9.682185329609265,6.39432625901743,9.912652373311708
+data\LabeledDB_new\Cup\33.ply,Cup,7349,14698,10.44848657084975,7.43876415589878,12.365287595649662
+data\LabeledDB_new\Cup\34.ply,Cup,9602,19204,11.147574319828392,8.071488663965457,12.770908942219279
+data\LabeledDB_new\Cup\35.ply,Cup,15136,30268,6.277348325543741,6.018322749361538,7.906061036148859
+data\LabeledDB_new\Cup\36.ply,Cup,9076,18152,8.935174311733464,5.926881956052792,12.776767327923125
+data\LabeledDB_new\Cup\37.ply,Cup,6270,12540,12.477987278992194,8.524179252906345,12.934788357236236
+data\LabeledDB_new\Cup\38.ply,Cup,15064,30128,11.158973311905923,7.810242635298435,11.865485171224918
+data\LabeledDB_new\Cup\39.ply,Cup,15161,30322,11.659442345741162,7.396323331141187,10.87998944883067
+data\LabeledDB_new\Cup\40.ply,Cup,15165,30326,11.282776553574069,6.704658970600462,9.72318831484587
+data\LabeledDB_new\Fish\221.ply,Fish,7121,14238,2.451626017109049,3.558075476872864,7.195971382940153
+data\LabeledDB_new\Fish\222.ply,Fish,5255,10506,1.8406226000814068,2.6010389094523063,5.1499648462636785
+data\LabeledDB_new\Fish\223.ply,Fish,6656,13308,2.2061511621508867,2.911894375576627,7.027141832961405
+data\LabeledDB_new\Fish\224.ply,Fish,5061,10118,1.7714152132196102,2.2859414485287655,4.794854957266201
+data\LabeledDB_new\Fish\225.ply,Fish,6076,12148,2.0792301708184033,2.7681866529552246,6.446730652522092
+data\LabeledDB_new\Fish\226.ply,Fish,5216,10428,1.9114275913565495,2.5944098038191643,5.024801592883563
+data\LabeledDB_new\Fish\227.ply,Fish,5216,10428,1.9114275913565495,2.5944098038191643,5.024801592883563
+data\LabeledDB_new\Fish\228.ply,Fish,5592,11180,1.9606901860555255,2.8972092655897046,5.548179584875349
+data\LabeledDB_new\Fish\229.ply,Fish,5245,10486,2.024837233967823,2.8724571563796797,5.405255498529854
+data\LabeledDB_new\Fish\230.ply,Fish,7573,15142,2.630009973209686,3.7071368113523797,7.472447931226428
+data\LabeledDB_new\Fish\231.ply,Fish,6264,12524,2.0851376502173067,2.7742215722986185,6.10980970990366
+data\LabeledDB_new\Fish\232.ply,Fish,5440,10876,1.8773962985255723,2.455067707573609,4.710325927666466
+data\LabeledDB_new\Fish\233.ply,Fish,10186,20368,3.047128070103756,3.5637790237558553,8.599866814929152
+data\LabeledDB_new\Fish\234.ply,Fish,7498,14992,2.6287792819987987,3.2948106499807754,7.698152633831347
+data\LabeledDB_new\Fish\235.ply,Fish,5250,10496,1.845555633358345,2.4878156534366895,5.43293929755853
+data\LabeledDB_new\Fish\236.ply,Fish,4845,9686,1.6438083712910259,2.2617038840764394,5.226027428201929
+data\LabeledDB_new\Fish\237.ply,Fish,4439,8874,1.4890464535935823,2.0052258686336213,4.256614140230749
+data\LabeledDB_new\Fish\238.ply,Fish,5096,10188,1.663834974050481,2.3206506234136755,4.910917292876756
+data\LabeledDB_new\Fish\239.ply,Fish,5121,10238,1.8692753599697034,2.1646112080305526,4.743741779571387
+data\LabeledDB_new\Fish\240.ply,Fish,6833,13662,2.2338432480161865,2.9553763102601844,6.081785658416825
+data\LabeledDB_new\FourLeg\381.ply,FourLeg,6938,13872,2.834354356923868,4.068415224074669,6.551744479059323
+data\LabeledDB_new\FourLeg\382.ply,FourLeg,8078,16152,2.518692335778726,4.161098257517325,7.957842266764864
+data\LabeledDB_new\FourLeg\383.ply,FourLeg,13331,26658,3.5885058808858443,4.542643250397989,6.539850476708729
+data\LabeledDB_new\FourLeg\384.ply,FourLeg,4712,9420,3.00633389492072,4.508909393121314,7.213546676863027
+data\LabeledDB_new\FourLeg\385.ply,FourLeg,10436,20868,3.080083855079656,4.5923070102465555,7.811678107663234
+data\LabeledDB_new\FourLeg\386.ply,FourLeg,2087,4170,3.3041091063801837,5.5441807599164425,10.390735989969606
+data\LabeledDB_new\FourLeg\387.ply,FourLeg,14680,29356,2.7321644978810475,4.1725529318935,8.767660964431052
+data\LabeledDB_new\FourLeg\388.ply,FourLeg,8411,16818,3.712778225750211,4.677984694874701,7.679289379900451
+data\LabeledDB_new\FourLeg\389.ply,FourLeg,9490,18976,3.012498917355984,4.611849639297404,7.693075862597553
+data\LabeledDB_new\FourLeg\390.ply,FourLeg,9239,18474,1.5437187401965453,3.107883388343022,6.308152051225404
+data\LabeledDB_new\FourLeg\391.ply,FourLeg,4315,8626,3.077273067272319,4.081708439071516,6.12735581816268
+data\LabeledDB_new\FourLeg\392.ply,FourLeg,8618,17232,3.26326733250019,4.374117051583111,7.383541579318134
+data\LabeledDB_new\FourLeg\393.ply,FourLeg,9757,19510,2.526762995959587,3.9154282344777336,6.50649686813675
+data\LabeledDB_new\FourLeg\394.ply,FourLeg,9009,18014,2.3857973338510265,4.339846122312619,6.356779987425888
+data\LabeledDB_new\FourLeg\395.ply,FourLeg,11312,22620,2.6144222048425583,4.252140512047527,10.27690842244958
+data\LabeledDB_new\FourLeg\396.ply,FourLeg,5538,11072,2.7857647380668498,3.9042093173262455,7.027274797308827
+data\LabeledDB_new\FourLeg\397.ply,FourLeg,7268,14532,2.6987574179931437,3.9339306411915524,6.788699096127594
+data\LabeledDB_new\FourLeg\398.ply,FourLeg,1480,2956,1.5396043559475847,2.194496631337938,4.110348246858474
+data\LabeledDB_new\FourLeg\399.ply,FourLeg,3911,7818,2.7977041264426874,4.498922391970494,8.140305979143761
+data\LabeledDB_new\FourLeg\400.ply,FourLeg,3703,7402,2.360790309927715,4.200491978331081,6.303734846221262
+data\LabeledDB_new\Glasses\41.ply,Glasses,7016,14028,0.7815101511687472,2.84312160665969,3.597891824831733
+data\LabeledDB_new\Glasses\42.ply,Glasses,4164,8324,0.5733849686457274,2.2729498162734965,3.587761987771045
+data\LabeledDB_new\Glasses\43.ply,Glasses,3414,6824,0.45997686602224336,2.066416728923219,3.38003112001046
+data\LabeledDB_new\Glasses\44.ply,Glasses,6288,12572,0.8817050164168292,2.949541860077349,4.088338275664517
+data\LabeledDB_new\Glasses\45.ply,Glasses,5399,10794,0.756253775608578,2.8185204178960315,4.196758337498296
+data\LabeledDB_new\Glasses\46.ply,Glasses,2394,4784,0.6634611242391873,1.570726188143497,3.369741722565706
+data\LabeledDB_new\Glasses\47.ply,Glasses,2028,4052,0.6304832010315211,1.0804458918355726,1.7440398079026502
+data\LabeledDB_new\Glasses\48.ply,Glasses,5176,10348,0.8009241853858475,2.6469774695775454,4.112699583113597
+data\LabeledDB_new\Glasses\49.ply,Glasses,3110,6220,0.7697576496109236,2.4669266109490398,3.902550327943212
+data\LabeledDB_new\Glasses\50.ply,Glasses,7420,14836,0.8592058735597606,2.9493809316839457,3.716905292170262
+data\LabeledDB_new\Glasses\51.ply,Glasses,2858,5712,0.6154900735113208,2.471537252328277,3.8848635328910417
+data\LabeledDB_new\Glasses\52.ply,Glasses,1554,3104,0.4551948303125991,1.5463118528551814,2.8721347151308176
+data\LabeledDB_new\Glasses\53.ply,Glasses,2496,4988,0.6526535211821848,1.8379562563110663,3.6710170651079794
+data\LabeledDB_new\Glasses\54.ply,Glasses,7407,14810,0.8300554675600984,2.9366086527009263,3.706276860573828
+data\LabeledDB_new\Glasses\55.ply,Glasses,2850,5696,0.5875345095290091,2.370688658148809,3.767289177197048
+data\LabeledDB_new\Glasses\56.ply,Glasses,8771,17538,1.438253335761596,3.115336234970235,5.4079720958012345
+data\LabeledDB_new\Glasses\57.ply,Glasses,7413,14822,0.8304151551999185,2.9387280745956397,3.7035753331876746
+data\LabeledDB_new\Glasses\58.ply,Glasses,1857,3710,0.546461584524097,1.2206293864816857,1.9735582853464937
+data\LabeledDB_new\Glasses\59.ply,Glasses,2895,5786,0.7947336383380638,2.388846641026184,3.772156454124958
+data\LabeledDB_new\Glasses\60.ply,Glasses,2375,4746,0.6501226663003109,1.6970542571793497,3.4129328923503293
+data\LabeledDB_new\Hand\181.ply,Hand,7242,14480,2.8870044731514137,3.4699490585964186,7.475856014560759
+data\LabeledDB_new\Hand\182.ply,Hand,10283,20562,4.174788288246928,4.416505578096244,8.846777907599186
+data\LabeledDB_new\Hand\183.ply,Hand,11413,22822,5.2067589807638495,5.817104583291248,10.71965979757551
+data\LabeledDB_new\Hand\184.ply,Hand,4685,9366,3.375194259494556,3.437671061918286,6.949265218919351
+data\LabeledDB_new\Hand\185.ply,Hand,2489,4974,2.4991213035937374,2.807392977362017,5.242281819269622
+data\LabeledDB_new\Hand\186.ply,Hand,6607,13210,3.135112357916492,3.775563886327958,7.348518472755956
+data\LabeledDB_new\Hand\187.ply,Hand,7628,15256,3.0426864854097335,3.5577195276990867,7.526615231677059
+data\LabeledDB_new\Hand\188.ply,Hand,8603,17202,3.3728697799915137,4.716611267640598,11.068866185759411
+data\LabeledDB_new\Hand\189.ply,Hand,14084,28164,3.3662816666646447,4.358778246084153,9.988314725175648
+data\LabeledDB_new\Hand\190.ply,Hand,7500,14996,2.3815744992845103,3.2726258089204046,6.586002055696658
+data\LabeledDB_new\Hand\191.ply,Hand,13766,27528,4.930784505187036,5.251303410024211,11.477540848018776
+data\LabeledDB_new\Hand\192.ply,Hand,6991,13978,2.88952545262089,3.6963924941319433,7.677177329760141
+data\LabeledDB_new\Hand\193.ply,Hand,7314,14624,2.3732337073833376,2.9780001145072412,5.285859812882364
+data\LabeledDB_new\Hand\194.ply,Hand,8471,16938,2.8521067900292936,3.488316248986113,6.162503821142645
+data\LabeledDB_new\Hand\195.ply,Hand,8524,17044,2.7260532465392,2.893868666522509,6.030721473201488
+data\LabeledDB_new\Hand\196.ply,Hand,7112,14220,2.29184706507647,3.051191826297819,7.4569437974946915
+data\LabeledDB_new\Hand\197.ply,Hand,7553,15102,2.4540542311152476,3.050385446557487,6.21406997051589
+data\LabeledDB_new\Hand\198.ply,Hand,9564,19124,2.429211723581982,2.90824702012276,5.4911598070189935
+data\LabeledDB_new\Hand\199.ply,Hand,8647,17290,3.7693103048589007,3.8780503588717856,6.885911837705883
+data\LabeledDB_new\Hand\200.ply,Hand,1515,3026,2.5787712216669303,3.4978952148917246,8.44185741532317
+data\LabeledDB_new\Human\1.ply,Human,4706,9408,1.7687659218840017,2.503454606402183,4.0966174024425115
+data\LabeledDB_new\Human\10.ply,Human,9508,19012,1.94806793395771,3.244447042810413,6.033824677243679
+data\LabeledDB_new\Human\11.ply,Human,10999,21994,2.253485689189665,4.564172464558526,9.00953769399786
+data\LabeledDB_new\Human\12.ply,Human,5614,11224,2.1888926496689773,4.475139504783832,8.961958889735257
+data\LabeledDB_new\Human\13.ply,Human,13703,27402,2.770697179463442,3.5535776155322427,7.3120134288010945
+data\LabeledDB_new\Human\14.ply,Human,5691,11378,1.12370579396271,2.737106371445436,7.066403139181308
+data\LabeledDB_new\Human\15.ply,Human,5631,11258,1.8510007757091227,2.1021960438221994,4.867851456627001
+data\LabeledDB_new\Human\16.ply,Human,15223,30450,2.3634646961465604,2.988065022779079,7.311133892835386
+data\LabeledDB_new\Human\17.ply,Human,15910,31816,2.063910850270518,3.607979198804558,8.124840856079679
+data\LabeledDB_new\Human\18.ply,Human,15385,30766,3.193886544049614,3.6124634217601495,8.864067179879973
+data\LabeledDB_new\Human\19.ply,Human,15477,30950,2.169696661041458,3.3465140008837397,7.807240603057057
+data\LabeledDB_new\Human\2.ply,Human,10050,20096,2.187329407767109,3.3047537711518,5.8725610757113245
+data\LabeledDB_new\Human\20.ply,Human,15700,31396,2.1166317904244267,3.2639869173023968,7.115495397665157
+data\LabeledDB_new\Human\3.ply,Human,5641,11278,1.3334324414098015,2.1141169956280605,4.481043435729644
+data\LabeledDB_new\Human\4.ply,Human,5676,11348,1.286895736923369,2.2501456644222193,4.69376931055514
+data\LabeledDB_new\Human\5.ply,Human,15154,30308,2.5970196020550094,3.6246155953601256,8.346268432664676
+data\LabeledDB_new\Human\6.ply,Human,10098,20192,2.0033575160460453,2.130453004927012,3.5232283055698477
+data\LabeledDB_new\Human\7.ply,Human,8441,16878,2.08997518969946,2.335727908354065,3.7837077536834762
+data\LabeledDB_new\Human\8.ply,Human,11015,22026,1.6422313285658225,2.733908475947603,6.263167142607632
+data\LabeledDB_new\Human\9.ply,Human,2639,5274,1.587453434482102,2.6358686644107694,5.961475901678703
+data\LabeledDB_new\Mech\321.ply,Mech,14995,29986,7.7402190165071625,7.5982950739851765,8.59701445125134
+data\LabeledDB_new\Mech\322.ply,Mech,14991,29978,7.723416579258474,7.605264296665482,8.604901963478675
+data\LabeledDB_new\Mech\323.ply,Mech,14991,29978,7.683156910154509,7.592911977244139,8.590924871118254
+data\LabeledDB_new\Mech\324.ply,Mech,14812,29620,8.22780088823296,7.9386579486960205,10.993700858907658
+data\LabeledDB_new\Mech\325.ply,Mech,14999,29994,7.835606049952648,7.535568403347302,11.151740180574102
+data\LabeledDB_new\Mech\326.ply,Mech,14995,29986,8.123215874602923,7.952415006069032,10.741937439612038
+data\LabeledDB_new\Mech\327.ply,Mech,14937,29870,6.987353826482545,6.871624375915785,10.290517717616893
+data\LabeledDB_new\Mech\328.ply,Mech,14994,29984,7.853879572947577,7.787656537122351,8.811268049881711
+data\LabeledDB_new\Mech\329.ply,Mech,14999,29994,7.826574494535157,7.702597405716849,8.71502908601397
+data\LabeledDB_new\Mech\330.ply,Mech,15000,29996,7.827753616235255,7.693109605564767,8.704293098384362
+data\LabeledDB_new\Mech\331.ply,Mech,15000,29996,8.03023522340472,7.5752359693278795,8.748577008414344
+data\LabeledDB_new\Mech\332.ply,Mech,14997,29990,7.476385723024396,7.558487387511047,8.774756057444698
+data\LabeledDB_new\Mech\333.ply,Mech,14942,29880,7.880410781047185,7.399243410192665,8.545323200235146
+data\LabeledDB_new\Mech\334.ply,Mech,14997,29990,7.5974123230318,7.198598846943598,8.33364099107957
+data\LabeledDB_new\Mech\335.ply,Mech,14995,29986,7.745419845488513,7.603400673029934,8.602791473452726
+data\LabeledDB_new\Mech\336.ply,Mech,15505,31006,4.328248904512848,4.6801944921418475,6.313082771666544
+data\LabeledDB_new\Mech\337.ply,Mech,11533,23062,8.928292334643219,8.817103699733979,13.721109471025265
+data\LabeledDB_new\Mech\338.ply,Mech,19403,38802,7.437458639377177,7.370022793153498,9.67725646428238
+data\LabeledDB_new\Mech\339.ply,Mech,15000,29996,8.027443695120782,7.57260249596925,8.745536643659612
+data\LabeledDB_new\Mech\340.ply,Mech,14997,29990,7.591705143148541,7.19319194276569,8.327377863000123
+data\LabeledDB_new\Octopus\121.ply,Octopus,5944,11888,2.2686150125731532,4.590809817794071,9.700994266615375
+data\LabeledDB_new\Octopus\122.ply,Octopus,7251,14498,2.4258051335685598,5.5046780468367364,10.054026429016524
+data\LabeledDB_new\Octopus\123.ply,Octopus,15493,30982,3.180769983723266,5.1045571428976535,9.335699474120894
+data\LabeledDB_new\Octopus\124.ply,Octopus,3101,6198,0.6674130012860967,4.185463119152889,9.825688198815978
+data\LabeledDB_new\Octopus\125.ply,Octopus,1343,2682,0.9871516218054638,2.3454719697895814,5.552212938911094
+data\LabeledDB_new\Octopus\126.ply,Octopus,6325,12646,1.6985884491834289,5.842717131369819,11.94021884574152
+data\LabeledDB_new\Octopus\127.ply,Octopus,11906,23808,3.331254052847338,5.897506553591932,11.276610508853125
+data\LabeledDB_new\Octopus\128.ply,Octopus,6164,12324,1.6434715578307995,3.9619732560483687,8.2594025189914
+data\LabeledDB_new\Octopus\129.ply,Octopus,6144,12284,2.0494742605129326,5.434684777737705,11.051542419886818
+data\LabeledDB_new\Octopus\130.ply,Octopus,7747,15490,2.134360550699318,5.398049128093891,10.065473412111668
+data\LabeledDB_new\Octopus\131.ply,Octopus,11051,22098,2.949210285366412,5.0374888347746145,10.707792300750683
+data\LabeledDB_new\Octopus\132.ply,Octopus,7812,15620,2.577691527683159,3.2890314259303643,4.784161838932223
+data\LabeledDB_new\Octopus\133.ply,Octopus,10466,20932,2.747451440279872,4.417659664204761,9.789472502551952
+data\LabeledDB_new\Octopus\134.ply,Octopus,10932,21860,3.111226590888815,5.503224903675336,10.739034748477586
+data\LabeledDB_new\Octopus\135.ply,Octopus,15201,30398,3.488005832564766,5.512549655863707,9.560557510454842
+data\LabeledDB_new\Octopus\136.ply,Octopus,14126,28248,3.0557252358397533,4.836385443490313,9.070643815731309
+data\LabeledDB_new\Octopus\137.ply,Octopus,9124,18244,1.6513543164205136,4.286431766090583,7.889150201857362
+data\LabeledDB_new\Octopus\138.ply,Octopus,9594,19184,2.51812484651799,5.519042455333018,9.183163225801266
+data\LabeledDB_new\Octopus\139.ply,Octopus,8017,16030,1.7550912937241991,4.086237420185948,7.562698127747504
+data\LabeledDB_new\Octopus\140.ply,Octopus,9200,18396,2.4348514011627165,5.361733109604121,10.516208165411065
+data\LabeledDB_new\Plier\201.ply,Plier,4487,8970,1.57081141512259,2.9926529573933642,5.374210349556694
+data\LabeledDB_new\Plier\202.ply,Plier,4491,8978,1.5729639188318616,3.2100076217300737,5.400358770093909
+data\LabeledDB_new\Plier\203.ply,Plier,3906,7808,1.6046565097496834,3.4450233126102434,5.391280362857787
+data\LabeledDB_new\Plier\204.ply,Plier,4407,8810,1.4255551589128581,3.4463476522019176,5.750772736073564
+data\LabeledDB_new\Plier\205.ply,Plier,4478,8952,1.7476614805842263,3.7607560414639596,5.868090589442957
+data\LabeledDB_new\Plier\206.ply,Plier,4794,9584,1.6831028166152033,3.8030539988565946,5.562751208731049
+data\LabeledDB_new\Plier\207.ply,Plier,5202,10400,1.73598763968742,4.126144572579363,5.880555054408772
+data\LabeledDB_new\Plier\208.ply,Plier,6104,12204,1.7143214069251933,4.272507784891372,5.830568636192595
+data\LabeledDB_new\Plier\209.ply,Plier,5110,10216,1.6507899874722047,4.201115134886772,5.767501052142556
+data\LabeledDB_new\Plier\210.ply,Plier,5508,11012,1.6117598317267579,3.962764378443732,5.810538329825886
+data\LabeledDB_new\Plier\211.ply,Plier,4284,8564,1.5097906537145236,3.712249740446487,5.811241649192343
+data\LabeledDB_new\Plier\212.ply,Plier,4298,8592,1.4085682481494568,3.0487063128824907,5.902595411535962
+data\LabeledDB_new\Plier\213.ply,Plier,3963,7922,1.4569231485976162,2.1197471225586275,5.052897649201891
+data\LabeledDB_new\Plier\214.ply,Plier,3804,7604,1.508754802808914,2.4829626488913736,5.290144530304877
+data\LabeledDB_new\Plier\215.ply,Plier,4463,8922,1.612979743785896,2.832578848203702,5.534018099170925
+data\LabeledDB_new\Plier\216.ply,Plier,4478,8952,1.6347936618485668,3.0706984273063074,5.59294194373453
+data\LabeledDB_new\Plier\217.ply,Plier,5201,10398,1.7552100542500266,4.042315873412756,5.463402678733806
+data\LabeledDB_new\Plier\218.ply,Plier,6198,12392,1.7149616097976623,4.232710341043535,5.00181554569706
+data\LabeledDB_new\Plier\219.ply,Plier,3942,7880,1.293820976162499,2.953913739379993,5.698918564365922
+data\LabeledDB_new\Plier\220.ply,Plier,4457,8910,1.3908060006834708,2.9206843535684563,5.498334330700487
+data\LabeledDB_new\Table\141.ply,Table,13926,27848,4.778573724174891,6.5229076489249636,8.429178157936654
+data\LabeledDB_new\Table\142.ply,Table,9802,19600,3.7813445245054753,4.18979500559296,5.846987362200588
+data\LabeledDB_new\Table\143.ply,Table,9270,18536,3.562423910845937,3.9160934233495497,5.839049954482419
+data\LabeledDB_new\Table\144.ply,Table,15082,30160,5.779454620446431,6.511827803926222,9.615314126852706
+data\LabeledDB_new\Table\145.ply,Table,13206,26408,3.224097104895734,5.60844204898939,8.202282564852027
+data\LabeledDB_new\Table\146.ply,Table,13714,27424,5.030162091232778,6.698334058578264,9.759860020723742
+data\LabeledDB_new\Table\147.ply,Table,13705,27406,5.198517309269084,6.9358338984745025,9.99480800121647
+data\LabeledDB_new\Table\148.ply,Table,13375,26746,7.6389944145126005,8.511756072682324,12.480338901033004
+data\LabeledDB_new\Table\149.ply,Table,13588,27172,7.075222597129868,8.127139104118942,12.42817546196223
+data\LabeledDB_new\Table\150.ply,Table,13579,27154,2.0454345048246587,3.6829935758002517,5.976196054293405
+data\LabeledDB_new\Table\151.ply,Table,12696,25388,4.695736439637502,6.337264909383076,6.7727963436239715
+data\LabeledDB_new\Table\152.ply,Table,10543,21082,2.7887290825236506,4.827801114102698,5.372931889633257
+data\LabeledDB_new\Table\153.ply,Table,13581,27158,4.49830252150724,5.719927796992493,6.960963740772671
+data\LabeledDB_new\Table\154.ply,Table,13929,27854,4.9269689155939576,6.517426786730191,10.781828876423333
+data\LabeledDB_new\Table\155.ply,Table,14384,28764,5.767576295754454,6.960222337523594,11.606946397326631
+data\LabeledDB_new\Table\156.ply,Table,10100,20196,2.843290607105016,5.139157083811473,9.009580449780906
+data\LabeledDB_new\Table\157.ply,Table,13883,27762,7.223223935739954,8.606949246939875,13.645061470416838
+data\LabeledDB_new\Table\158.ply,Table,14587,29170,2.844287242855544,5.205336497375533,8.662672012870402
+data\LabeledDB_new\Table\159.ply,Table,13930,27856,4.801914119024395,5.542934074505087,7.711878053887833
+data\LabeledDB_new\Table\160.ply,Table,10082,20160,2.5410965829421506,4.6688118770532006,5.815746378378055
+data\LabeledDB_new\Teddy\161.ply,Teddy,13826,27648,4.462291630597667,5.036670619592915,8.476365233271643
+data\LabeledDB_new\Teddy\162.ply,Teddy,10096,20188,3.9240907970847236,4.53781073884885,9.296816670237032
+data\LabeledDB_new\Teddy\163.ply,Teddy,10879,21758,4.208823133793976,4.947137793997,9.66902898184776
+data\LabeledDB_new\Teddy\164.ply,Teddy,14509,29014,4.523528763408831,5.1468553942962005,9.091184240174208
+data\LabeledDB_new\Teddy\165.ply,Teddy,10233,20462,4.114574575372516,4.8690401162551025,8.323609445394169
+data\LabeledDB_new\Teddy\166.ply,Teddy,11090,22176,4.1534631827571245,5.151369932422258,10.183717738139414
+data\LabeledDB_new\Teddy\167.ply,Teddy,12647,25290,4.1505735383860705,5.122009012517611,9.665609267843259
+data\LabeledDB_new\Teddy\168.ply,Teddy,10752,21500,4.104174021056493,4.793398916451291,8.436673833460134
+data\LabeledDB_new\Teddy\169.ply,Teddy,12561,25118,4.540333511150068,5.608595207379162,9.738876919592805
+data\LabeledDB_new\Teddy\170.ply,Teddy,12500,24996,4.175813707727342,5.114678164416367,8.949241562844918
+data\LabeledDB_new\Teddy\171.ply,Teddy,14905,29806,4.039153829152278,4.837305595732876,8.857603139724475
+data\LabeledDB_new\Teddy\172.ply,Teddy,10141,20278,4.201928457970741,4.721082249166231,9.623513586692852
+data\LabeledDB_new\Teddy\173.ply,Teddy,13867,27730,3.913068450642473,4.461479406991615,7.405006837224969
+data\LabeledDB_new\Teddy\174.ply,Teddy,12831,25658,3.3666506458005974,4.599590215361758,9.057111722165551
+data\LabeledDB_new\Teddy\175.ply,Teddy,9480,18956,3.952234043778558,4.797002575843906,9.639066087978527
+data\LabeledDB_new\Teddy\176.ply,Teddy,12500,24996,4.353253569853188,5.221549076881311,10.363764708584377
+data\LabeledDB_new\Teddy\177.ply,Teddy,12543,25082,4.085609771595487,4.850717827443677,9.34725571329134
+data\LabeledDB_new\Teddy\178.ply,Teddy,12175,24346,3.8298401566965685,4.586112658846035,8.55773585415421
+data\LabeledDB_new\Teddy\179.ply,Teddy,13324,26644,4.245068541561532,4.997021458172704,9.869004971563214
+data\LabeledDB_new\Teddy\180.ply,Teddy,9548,19092,3.603679041591782,4.448607539329486,7.847728810685403
+data\LabeledDB_new\Vase\361.ply,Vase,14859,29734,5.333138258771053,5.05449233898868,10.089097576454474
+data\LabeledDB_new\Vase\362.ply,Vase,14476,28952,3.576003209672912,4.035704834204679,5.911715325025833
+data\LabeledDB_new\Vase\363.ply,Vase,13434,26864,2.1590536857189178,2.673879379593099,4.6886252424598425
+data\LabeledDB_new\Vase\364.ply,Vase,13548,27100,4.416167769240701,4.776877762070986,10.308684828364292
+data\LabeledDB_new\Vase\365.ply,Vase,13514,27028,7.696390139551253,7.612524710459115,14.898641537220549
+data\LabeledDB_new\Vase\366.ply,Vase,10637,21274,4.422464755398169,4.813017189792143,8.571100273708577
+data\LabeledDB_new\Vase\367.ply,Vase,3900,7800,4.438505552281017,4.656715636071237,10.109039924070007
+data\LabeledDB_new\Vase\368.ply,Vase,11202,22400,4.548263696239563,4.65556448750414,8.808179707786799
+data\LabeledDB_new\Vase\369.ply,Vase,13606,27212,5.650737263235297,5.9216541815561845,10.627386884801936
+data\LabeledDB_new\Vase\370.ply,Vase,13920,27836,4.920441443113887,5.287629237208067,10.603061787715234
+data\LabeledDB_new\Vase\371.ply,Vase,14599,29194,5.116790410391629,5.620775419214635,10.45599805585558
+data\LabeledDB_new\Vase\372.ply,Vase,6684,13368,3.171744705287679,3.7199837034072303,7.547295913169526
+data\LabeledDB_new\Vase\373.ply,Vase,10556,21112,3.934517749551041,4.164664206746008,7.393522064372636
+data\LabeledDB_new\Vase\374.ply,Vase,14872,29744,3.6865798571059343,3.9552758657714073,6.146008808598616
+data\LabeledDB_new\Vase\375.ply,Vase,11762,23520,3.1959846353724353,3.8164248900386126,8.276878455407637
+data\LabeledDB_new\Vase\376.ply,Vase,12568,25132,6.12440877043042,5.872211014902376,11.812608897124015
+data\LabeledDB_new\Vase\377.ply,Vase,15169,30342,3.3436517186746215,3.4662041431087802,7.030167697507608
+data\LabeledDB_new\Vase\378.ply,Vase,6684,13368,3.178567192109315,3.685388357464196,7.434365117561841
+data\LabeledDB_new\Vase\379.ply,Vase,6923,13842,4.321566458804584,4.559243926687864,9.94925329061811
+data\LabeledDB_new\Vase\380.ply,Vase,9356,18708,4.9292833160051925,3.935893134538245,8.335296799457169

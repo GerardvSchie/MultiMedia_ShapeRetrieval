@@ -47,10 +47,16 @@ class FeatureExtractor:
 
     @staticmethod
     def bounding_box_area(shape: Shape):
-        shape.geometries.load_axis_aligned_bounding_box()
-        return 0  # shape.geometries.axis_aligned_bounding_box_line_set.get_surface_area()
+        shape.geometries.load_mesh()
+        box = shape.geometries.mesh.get_axis_aligned_bounding_box()
 
-    # @staticmethod
-    # def axis_aligned_box(shape: Shape):
-    #     shape.geometries.load_mesh()
-    #     return shape.geometries.load_mesh.get_axis_aligned_bounding_box()
+        # Axes of the shape
+        x = box.max_bound[0] - box.min_bound[0]
+        y = box.max_bound[1] - box.min_bound[1]
+        z = box.max_bound[2] - box.min_bound[2]
+
+        # Ensure no axis is negative, which would mess up the calculations
+        if x < 0 or y < 0 or z < 0:
+            raise Exception(f"Cannot compute surface area of dimensions: [{x} {y} {z}]")
+
+        return 2*x*y + 2*x*z + 2*y*z
