@@ -1,6 +1,6 @@
 import logging
 import open3d as o3d
-import open3d.visualization.gui as gui
+import open3d.visualization
 import win32gui
 
 from PyQt6.QtWidgets import QWidget
@@ -20,19 +20,19 @@ class VisualizationWidget(QWidget):
 
         # Settings and state
         self.settings: Settings = settings
-        self._background_color = gui.Color(1, 1, 1)
-        self._mesh_color = gui.Color(1, 1, 1)
-        self._convex_hull_color = gui.Color(1, 0, 0)
-        self._show_mesh = False
-        self._show_point_cloud = False
-        self._show_convex_hull = False
-        self._show_axis_aligned_bounding_box = False
+        self._background_color: [float] = (1, 1, 1)
+        self._mesh_color: [float] = (1, 1, 1)
+        # self._convex_hull_color = (1, 0, 0)
+        self._show_mesh: bool = False
+        self._show_point_cloud: bool = False
+        self._show_convex_hull: bool = False
+        self._show_axis_aligned_bounding_box: bool = False
 
-        self._show_silhouette = False
-        self._show_wireframe = False
-        self._show_axes = False
+        self._show_silhouette: bool = False
+        self._show_wireframe: bool = False
+        self._show_axes: bool = False
 
-        self.vis = o3d.visualization.Visualizer()
+        self.vis: open3d.visualization.Visualizer = o3d.visualization.Visualizer()
 
         # Visible=False so it does not open separate window for a moment
         self.vis.create_window(visible=IsMacOS)
@@ -60,7 +60,7 @@ class VisualizationWidget(QWidget):
         if self.settings.show_silhouette:
             self.shape.geometries.mesh.paint_uniform_color((0, 0, 0))
         else:
-            self.shape.geometries.mesh.paint_uniform_color((1, 1, 1))
+            self.shape.geometries.mesh.paint_uniform_color(self.settings.mesh_color)
 
         FeatureExtractor.extract_features(self.shape)
         self.visualize_shape()
@@ -109,7 +109,9 @@ class VisualizationWidget(QWidget):
         render_option: o3d.visualization.RenderOption = self.vis.get_render_option()
         render_option.mesh_show_wireframe = self.settings.show_wireframe
         render_option.light_on = not self.settings.show_silhouette
+
         # render_option.background_color =
+        self._resolve_mesh_color_difference(self._mesh_color, self.settings.mesh_color)
 
         # Handle each different type of visualization
         self._resolve_geometry_state_difference(self._show_mesh, self.settings.show_mesh, self.shape.geometries.mesh)
@@ -124,6 +126,16 @@ class VisualizationWidget(QWidget):
         # Update the state of the widget to the current state
         self.update_state()
         self.vis.update_renderer()
+
+    def _resolve_mesh_color_difference(self, old_color, new_color):
+        if old_color == new_color:
+            return
+
+        if self._show_silhouette:
+            return
+
+        self.shape.geometries.mesh.paint_uniform_color(self.settings.mesh_color)
+        self.vis.update_geometry(self.shape.geometries.mesh)
 
     def _resolve_geometry_state_difference(self, old_state, new_state, geometry):
         if not geometry:
@@ -152,5 +164,5 @@ class VisualizationWidget(QWidget):
             self.vis.update_geometry(self.shape.geometries.mesh)
         # Back to normal visualization mode
         else:
-            self.shape.geometries.mesh.paint_uniform_color((1, 1, 1))
+            self.shape.geometries.mesh.paint_uniform_color(self.settings.mesh_color)
             self.vis.update_geometry(self.shape.geometries.mesh)
