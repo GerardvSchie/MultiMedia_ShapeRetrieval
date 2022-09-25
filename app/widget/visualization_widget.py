@@ -15,20 +15,21 @@ from app.util.os import IsMacOS
 class VisualizationWidget(QWidget):
     def __init__(self, settings: Settings):
         super(VisualizationWidget, self).__init__()
-        self.shape = None
+        self.shape: Shape = None
         self.features_widget = None
-        self.hull_line_set = None
 
         # Settings and state
-        self.settings = settings
+        self.settings: Settings = settings
         self._background_color = gui.Color(1, 1, 1)
         self._mesh_color = gui.Color(1, 1, 1)
         self._convex_hull_color = gui.Color(1, 0, 0)
-        self._light_on = True
         self._show_mesh = False
-        self._show_wireframe = False
         self._show_point_cloud = False
         self._show_convex_hull = False
+        self._show_axis_aligned_bounding_box = False
+
+        self._show_silhouette = False
+        self._show_wireframe = False
         self._show_axes = False
 
         self.vis = o3d.visualization.Visualizer()
@@ -56,6 +57,11 @@ class VisualizationWidget(QWidget):
 
         # Load shape
         self.shape = Shape(path, load_geometries=True)
+        if self.settings.show_silhouette:
+            self.shape.geometries.mesh.paint_uniform_color((0, 0, 0))
+        else:
+            self.shape.geometries.mesh.paint_uniform_color((1, 1, 1))
+
         FeatureExtractor.extract_features(self.shape)
         self.visualize_shape()
 
@@ -79,33 +85,41 @@ class VisualizationWidget(QWidget):
         self._show_wireframe = False
         self._show_point_cloud = False
         self._show_convex_hull = False
+        self._show_axis_aligned_bounding_box = False
         self._show_axes = False
 
     def update_state(self):
+        # Colors
         self._background_color = self.settings.background_color
         self._mesh_color = self.settings.mesh_color
-        self._convex_hull_color = self.settings.convex_hull_color
 
         # Render settings
-        self._light_on = self.settings.light_on
         self._show_mesh = self.settings.show_mesh
-        self._show_wireframe = self.settings.show_wireframe
         self._show_point_cloud = self.settings.show_point_cloud
         self._show_convex_hull = self.settings.show_convex_hull
+        self._show_axis_aligned_bounding_box = self.settings.show_axis_aligned_bounding_box
+
+        # Additional options
+        self._show_silhouette = self.settings.show_silhouette
+        self._show_wireframe = self.settings.show_wireframe
         self._show_axes = self.settings.show_axes
 
     def visualize_shape(self):
         # Set render options
         render_option: o3d.visualization.RenderOption = self.vis.get_render_option()
         render_option.mesh_show_wireframe = self.settings.show_wireframe
-        render_option.light_on = self.settings.light_on
+        render_option.light_on = not self.settings.show_silhouette
+        # render_option.background_color =
 
         # Handle each different type of visualization
         self._resolve_geometry_state_difference(self._show_mesh, self.settings.show_mesh, self.shape.geometries.mesh)
         self._resolve_geometry_state_difference(self._show_point_cloud, self.settings.show_point_cloud, self.shape.geometries.point_cloud)
         self._resolve_geometry_state_difference(self._show_convex_hull, self.settings.show_convex_hull, self.shape.geometries.convex_hull_line_set)
+        self._resolve_geometry_state_difference(self._show_axis_aligned_bounding_box, self.settings.show_axis_aligned_bounding_box, self.shape.geometries.axis_aligned_bounding_box_line_set)
         self._resolve_geometry_state_difference(self._show_axes, self.settings.show_axes, self.shape.geometries.axes)
-        # TODO: self.shape.mesh.paint_uniform_color([1, 1, 1])
+
+        # Silhouette mode
+        self._resolve_silhouette_state_difference(self._show_silhouette, self.settings.show_silhouette)
 
         # Update the state of the widget to the current state
         self.update_state()
@@ -126,3 +140,17 @@ class VisualizationWidget(QWidget):
         # Geometry was present, remove it
         else:
             self.vis.remove_geometry(geometry)
+
+    def _resolve_silhouette_state_difference(self, old_state, new_state):
+        # No difference of state to resolve
+        if old_state == new_state:
+            return
+
+        # Switch to silhouette mode
+        if not old_state and new_state:
+            self.shape.geometries.mesh.paint_uniform_color((0, 0, 0))
+            self.vis.update_geometry(self.shape.geometries.mesh)
+        # Back to normal visualization mode
+        else:
+            self.shape.geometries.mesh.paint_uniform_color((1, 1, 1))
+            self.vis.update_geometry(self.shape.geometries.mesh)

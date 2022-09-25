@@ -7,7 +7,7 @@ from src.object.geometries import Geometries
 
 
 class Shape:
-    def __init__(self, shape_path, pre_computed_features=None, load_geometries=False):
+    def __init__(self, shape_path: str, pre_computed_features: Features = None, load_geometries: bool = False):
         if not os.path.exists(shape_path):
             logging.error(f"Shape file at path {os.path.abspath(shape_path)} does not exist!")
             raise Exception("Path does not exist")
@@ -16,13 +16,13 @@ class Shape:
         path = self.convert_to_ply(os.path.relpath(shape_path))
 
         if pre_computed_features:
-            self.features = pre_computed_features
+            self.features: Features = pre_computed_features
         else:
             # Separate path based on separator of os system
-            self.features = Features()
+            self.features: Features = Features()
             self.features.true_class = os.path.split(os.path.split(shape_path)[0])[1]
 
-        self.geometries = Geometries(path)
+        self.geometries: Geometries = Geometries(path)
         if load_geometries:
             self.geometries.load()
 
@@ -36,7 +36,6 @@ class Shape:
 
         mesh = o3d.io.read_triangle_mesh(path)
         # mesh.orient_triangles()
-
         o3d.io.write_triangle_mesh(new_file_path, mesh)
         return new_file_path
 

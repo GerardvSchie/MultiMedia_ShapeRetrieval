@@ -7,14 +7,14 @@ from PyQt6.QtWidgets import QApplication
 
 # Source: https://www.pythonguis.com/tutorials/pyqt6-actions-toolbars-menus/
 class MenuBar(QMenuBar):
-    def __init__(self, menu):
+    def __init__(self, menu: QMenuBar):
         super(MenuBar, self).__init__()
         self.open_widget = None
         self.save_widget = None
 
-        self.menu = menu
-        self.file_menu = None
-        self.name = "MenuBar"
+        self.menu: QMenuBar = menu
+        self.file_menu: QAction = None
+        self.name: str = "MenuBar"
         self.initialize_file_menu()
 
     def connect_widgets(self, open_widget, save_widget):

@@ -7,10 +7,18 @@ def write_to_file(shape_list: [Shape]):
         writer = csv.writer(f)
 
         # Write row to file
-        header = ["path", "class", "nr_of_vertices", "nr_of_faces", "bounding_box"]
+        header = [
+            "path", "class",
+            "nr_of_vertices", "nr_of_faces",
+            "mesh_area", "convex_hull_area", "bounding_box_area",
+        ]
         writer.writerow(header)
 
         # Write the data to the file
         for shape in shape_list:
-            data = [shape.geometries.path, shape.features.true_class, shape.features.nr_vertices, shape.features.nr_faces, shape.features.axis_aligned_bounding_box]
+            data = [
+                shape.geometries.path, shape.features.true_class,
+                shape.features.nr_vertices, shape.features.nr_faces,
+                shape.features.mesh_area, shape.features.convex_hull_area, shape.features.bounding_box_area,
+            ]
             writer.writerow(data)

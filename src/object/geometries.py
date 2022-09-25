@@ -6,14 +6,15 @@ import open3d.cpu.pybind.geometry
 
 
 class Geometries:
-    def __init__(self, path):
-        self.path = path
+    def __init__(self, path: str):
+        self.path: str = path
 
-        self.mesh = None
-        self.point_cloud = None
-        self.convex_hull_mesh = None
-        self.convex_hull_line_set = None
-        self.axes = None
+        self.mesh: o3d.geometry.TriangleMesh = None
+        self.point_cloud: o3d.geometry.PointCloud = None
+        self.convex_hull_mesh: o3d.geometry.TriangleMesh = None
+        self.convex_hull_line_set: o3d.geometry.LineSet = None
+        self.axis_aligned_bounding_box_line_set: o3d.geometry.LineSet = None
+        self.axes: o3d.geometry.TriangleMesh = None
 
     # A big portion of these two methods comes from the open3d example, see license in app folder.
     def load(self):
@@ -21,6 +22,7 @@ class Geometries:
         self.load_point_cloud()
         self.load_convex_hull()
         self.load_coordinate_axes()
+        self.load_axis_aligned_bounding_box()
 
     def load_mesh(self) -> bool:
         # Mesh is already loaded
@@ -78,12 +80,24 @@ class Geometries:
         if self.convex_hull_mesh:
             return True
 
-        if not self.load_point_cloud():
+        if not self.load_mesh():
             return False
 
-        self.convex_hull_mesh, _ = self.point_cloud.compute_convex_hull()
+        self.convex_hull_mesh, _ = self.mesh.compute_convex_hull()
         self.convex_hull_line_set = o3d.geometry.LineSet.create_from_triangle_mesh(self.convex_hull_mesh)
         self.convex_hull_line_set.paint_uniform_color((1, 0, 0))
+        return True
+
+    def load_axis_aligned_bounding_box(self) -> bool:
+        if self.axis_aligned_bounding_box_line_set:
+            return True
+
+        if not self.load_mesh():
+            return False
+
+        axis_aligned_bounding_box = self.mesh.get_axis_aligned_bounding_box()
+        self.axis_aligned_bounding_box_line_set = o3d.geometry.LineSet.create_from_axis_aligned_bounding_box(axis_aligned_bounding_box)
+        self.axis_aligned_bounding_box_line_set.paint_uniform_color((1, 0, 1))
         return True
 
     def load_coordinate_axes(self) -> bool:

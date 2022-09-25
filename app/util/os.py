@@ -1,5 +1,5 @@
 from sys import platform
-IsMacOS = platform == "darwin"
+IsMacOS: str = platform == "darwin"
 
 # if platform == "linux" or platform == "linux2":
 #     # linux

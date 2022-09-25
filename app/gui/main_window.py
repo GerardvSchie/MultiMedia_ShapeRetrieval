@@ -12,10 +12,10 @@ class MainWindow(QMainWindow):
         self.setFont(QFont(FONT))
 
         # Add menu bar
-        self.menu_bar = MenuBar(self.menuBar())
+        self.menu_bar: MenuBar = MenuBar(self.menuBar())
 
         # Add tabs
-        self.tab_widget = TabWidget()
+        self.tab_widget: TabWidget = TabWidget()
         self.setCentralWidget(self.tab_widget)
 
     # Need to close the open3d handlers separately
