@@ -6,21 +6,60 @@ import numpy as np
 from src.object.features import Features
 
 
+
+# Python cant't convert variable names to string.
+faces = 'nr_faces'
+vertices = 'nr_vertices'
+meshArea = 'mesh_area'
+convexArea = 'convex_hull_area'
+boundingArea = 'bounding_box_area'
+
+
+
+# bins decides how many bars we see in the histogram and scatter histogram.
+# Histogram default = 10
+# Scatter histogram = 50
+histBins = 100
+scatterHistBins = 100
+
+
 def plot_features(feature_list: [Features]):
     # Choose a backend for matplotlib
     matplotlib.use('TkAgg')
     # Create folder for the plots
     src.util.io.create_dir("plots")
 
+    # A list where each element is the number of faces of a single shape.
+    # There are 380 elements/shapes.
     nr_faces = [features.nr_faces for features in feature_list]
-    hist_plot("Number of faces", nr_faces)
+    hist_plot(faces, nr_faces)
+
+    # A list where each element is the number of vertices of a single shape.
+    # There are 380 elements/shapes.
     nr_vertices = [features.nr_vertices for features in feature_list]
-    hist_plot("Number of vertices", nr_vertices)
+    hist_plot(vertices, nr_vertices)
 
-    vertices_and_faces(nr_vertices, nr_faces)
+    mesh_area = [features.mesh_area for features in feature_list]
+    hist_plot(meshArea, mesh_area)
 
+    convex_hull_area = [features.convex_hull_area for features in feature_list]
+    hist_plot(convexArea, convex_hull_area)
 
-def vertices_and_faces(x, y):
+    bounding_box_area = [features.bounding_box_area for features in feature_list]
+    hist_plot(boundingArea, bounding_box_area)
+
+    # vertices_and_faces(nr_vertices, nr_faces)
+
+    # Create images based on all feature being compared.
+    # Compare vertices with all current other features in the database for now.
+    compareFeatures(nr_vertices, vertices, nr_faces, faces)
+    compareFeatures(nr_vertices, vertices, mesh_area, meshArea)
+    compareFeatures(nr_vertices, vertices, convex_hull_area, convexArea)
+    compareFeatures(nr_vertices, vertices, bounding_box_area, boundingArea)
+
+def compareFeatures(firstFeature, firstName, secondFeature, secondName):
+    print(f'Comparing {firstName} with {secondName}')
+
     # Start with a square Figure.
     fig = plt.figure(figsize=(6, 6))
     # Add a gridspec with two rows and two columns and a ratio of 1 to 4 between
@@ -35,15 +74,21 @@ def vertices_and_faces(x, y):
     ax_histy = fig.add_subplot(gs[1, 1], sharey=ax)
 
     # Draw the scatter plot and marginals.
-    scatter_hist(x, y, ax, ax_histx, ax_histy)
+    scatter_hist(firstFeature, secondFeature, firstName, secondName, ax, ax_histx, ax_histy)
 
 
 # Source plot type: https://matplotlib.org/stable/gallery/lines_bars_and_markers/scatter_hist.html#sphx-glr-gallery-lines-bars-and-markers-scatter-hist-py
 # Source logspaces: https://stackoverflow.com/questions/6855710/how-to-have-logarithmic-bins-in-a-python-histogram
-def scatter_hist(x, y, ax, ax_histx, ax_histy):
+def scatter_hist(x, y, xName, yName, ax, ax_histx, ax_histy):
     # no labels
     ax_histx.tick_params(axis="x", labelbottom=False)
     ax_histy.tick_params(axis="y", labelleft=False)
+
+    # Add some labels to make some stuff of the scatter plot clearer.
+    ax_histx.set(ylabel = 'number of shapes', title = f'first feature = {xName}')
+    ax_histy.set(xlabel = 'number of shapes', title = f'second feature = {yName}')
+
+    ax.set(xlabel = f'samples logarithmically spread over {scatterHistBins} bins', ylabel = f'samples logarithmically spread over {scatterHistBins} bins')
 
     # the scatter plot:
     ax.scatter(x, y)
@@ -52,23 +97,56 @@ def scatter_hist(x, y, ax, ax_histx, ax_histy):
 
     # now determine nice limits by hand:
     xmin, xmax = np.min(x), np.max(x)
+
+    # print('\nIn scatter_hist:')
+    # print('x and y are the lists of the two features we have chosen.')
+    # print(f'x = {x}')
+    # print(f'y = {y}')
+
+    # print('xmin and xmax are the lowest and heighest values in the list of x.')
+    # print(f'xmin = {xmin}')
+    # print(f'xmax = {xmax}')
+
+    npLogXMin = np.log10(xmin)
+    npLogXMax = np.log10(xmax)
+
+    # print('We take the 10logs of those so they can be used in the scatter plot/histogram, which uses a logarithmic scale')
+    # print(f'np.log10(xmin) = {npLogXMin}')
+    # print(f'np.log10(xmax) = {npLogXMax}')
+
     # ax.xaxis.set_major_formatter(matplotlib.ticker.ScalarFormatter())
-    x_logspace = np.logspace(np.log10(xmin), np.log10(xmax), 50).round()
+    x_logspace = np.logspace(np.log10(xmin), np.log10(xmax), scatterHistBins).round()
     ax_histx.hist(x, bins=x_logspace)
 
     ymin, ymax = np.min(y), np.max(y)
     # ax_histy.hist(y, bins=ybins, orientation='horizontal')
-    ybins = np.logspace(np.log10(ymin), np.log10(ymax), 50)
+    ybins = np.logspace(np.log10(ymin), np.log10(ymax), scatterHistBins)
     ax_histy.hist(y, bins=ybins, orientation='horizontal')
-    save_plt("Vertices and faces of meshes")
+
+    # Disable otherwise it won't save as png. TODO fix this
+    # plt.show()
+
+    save_plt(f"{xName} and {yName} of meshes")
 
 
 def hist_plot(title: str, data):
-    hist = plt.hist(data)
+    hist = plt.hist(data, bins = histBins)
+
+    plt.title(f'Feature used = {title}\n{histBins} bins used')
+
+    # data is list of the number of faces/vertices per shape
+    plt.xlabel(f'{title} per shape')
+    plt.ylabel('amount of shapes with the same count')
+
     save_plt(title)
 
 
 def save_plt(title: str):
     file_name = (title.lower() + ".png").replace(" ", "_")
     plt.savefig(os.path.join("plots", file_name))
+
+    # Show each of the 3 plots.
+    # Needs to be placed here? because otherwise the image if not saved as a png.
+    # plt.show()
+
     plt.close()
