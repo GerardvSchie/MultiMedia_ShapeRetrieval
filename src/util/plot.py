@@ -13,6 +13,7 @@ vertices = 'nr_vertices'
 meshArea = 'mesh_area'
 convexArea = 'convex_hull_area'
 boundingArea = 'bounding_box_area'
+classes = 'classes'
 
 
 
@@ -48,7 +49,16 @@ def plot_features(feature_list: [Features]):
     bounding_box_area = [features.bounding_box_area for features in feature_list]
     hist_plot(boundingArea, bounding_box_area)
 
+    # Class is a string, which requires a special comparison.
+    # There are 19 classes.
+    true_classes = [features.true_class for features in feature_list]
+    hist_plot(classes, true_classes)
+
+    # compareFeatures(true_classes, classes, nr_vertices, vertices) TODO Figure out how to make comparisons between classes (strings) and other features (integers).
+
     # vertices_and_faces(nr_vertices, nr_faces)
+
+    # compareFeatures(, , , )
 
     # Create images based on all feature being compared.
     # Compare vertices with all current other features in the database for now.
@@ -56,6 +66,18 @@ def plot_features(feature_list: [Features]):
     compareFeatures(nr_vertices, vertices, mesh_area, meshArea)
     compareFeatures(nr_vertices, vertices, convex_hull_area, convexArea)
     compareFeatures(nr_vertices, vertices, bounding_box_area, boundingArea)
+
+    # Compare faces with remaining others
+    compareFeatures(nr_faces, faces, mesh_area, meshArea)
+    compareFeatures(nr_faces, faces, convex_hull_area, convexArea)
+    compareFeatures(nr_faces, faces, bounding_box_area, boundingArea)
+
+    # Compare mesh_area with remaining others
+    compareFeatures(mesh_area, meshArea, convex_hull_area, convexArea)
+    compareFeatures(mesh_area, meshArea, bounding_box_area, boundingArea)
+
+    # Compare convex_hull_area with remaining others
+    compareFeatures(convex_hull_area, convexArea, bounding_box_area, boundingArea)
 
 def compareFeatures(firstFeature, firstName, secondFeature, secondName):
     print(f'Comparing {firstName} with {secondName}')
@@ -98,22 +120,6 @@ def scatter_hist(x, y, xName, yName, ax, ax_histx, ax_histy):
     # now determine nice limits by hand:
     xmin, xmax = np.min(x), np.max(x)
 
-    # print('\nIn scatter_hist:')
-    # print('x and y are the lists of the two features we have chosen.')
-    # print(f'x = {x}')
-    # print(f'y = {y}')
-
-    # print('xmin and xmax are the lowest and heighest values in the list of x.')
-    # print(f'xmin = {xmin}')
-    # print(f'xmax = {xmax}')
-
-    npLogXMin = np.log10(xmin)
-    npLogXMax = np.log10(xmax)
-
-    # print('We take the 10logs of those so they can be used in the scatter plot/histogram, which uses a logarithmic scale')
-    # print(f'np.log10(xmin) = {npLogXMin}')
-    # print(f'np.log10(xmax) = {npLogXMax}')
-
     # ax.xaxis.set_major_formatter(matplotlib.ticker.ScalarFormatter())
     x_logspace = np.logspace(np.log10(xmin), np.log10(xmax), scatterHistBins).round()
     ax_histx.hist(x, bins=x_logspace)
@@ -122,6 +128,23 @@ def scatter_hist(x, y, xName, yName, ax, ax_histx, ax_histy):
     # ax_histy.hist(y, bins=ybins, orientation='horizontal')
     ybins = np.logspace(np.log10(ymin), np.log10(ymax), scatterHistBins)
     ax_histy.hist(y, bins=ybins, orientation='horizontal')
+
+
+
+    # Get the averages.
+    averageX = np.mean(x)
+    averageY = np.mean(y)
+
+    # Feature 1
+    #print(f'\n{xName} = {x}')
+    #print(f'\nAverage of {xName} = {averageX}')
+
+    # Feature 2
+    #print(f'\n{yName} = {y}')
+    #print(f'\nAverage of {yName} = {averageY}')
+
+    # Draw a dot where the average shape of both selected features lies.
+    ax.plot(averageX, averageY, 'o', color = 'red')
 
     # Disable otherwise it won't save as png. TODO fix this
     # plt.show()
@@ -137,6 +160,8 @@ def hist_plot(title: str, data):
     # data is list of the number of faces/vertices per shape
     plt.xlabel(f'{title} per shape')
     plt.ylabel('amount of shapes with the same count')
+
+    # plt.show()
 
     save_plt(title)
 
