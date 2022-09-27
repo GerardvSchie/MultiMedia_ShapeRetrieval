@@ -34,6 +34,7 @@ class Geometries:
         if geometry_type & o3d.io.CONTAINS_TRIANGLES:
             self.mesh: open3d.cpu.pybind.geometry.TriangleMesh = o3d.io.read_triangle_mesh(self.path)
             self.mesh.orient_triangles()
+            # self.mesh.fill_holes()
 
         # Could not load mesh
         if self.mesh is None:
@@ -66,6 +67,8 @@ class Geometries:
 
         try:
             self.point_cloud: o3d.geometry.PointCloud = o3d.io.read_point_cloud(self.path)
+            # self.point_cloud = self.mesh.sample_points_uniformly(number_of_points=500)
+            self.point_cloud.estimate_normals()
         except Exception as ex:
             logging.error(ex)
             return False
@@ -105,7 +108,7 @@ class Geometries:
             return True
 
         if not self.load_mesh():
-            logging.error("Cannot compute coordinate axes of ")
+            logging.error("Cannot compute coordinate axes without a mesh")
             return False
 
         self.axes = self.mesh.create_coordinate_frame(0.1)

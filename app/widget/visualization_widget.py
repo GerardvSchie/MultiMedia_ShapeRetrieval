@@ -109,9 +109,15 @@ class VisualizationWidget(QWidget):
         render_option: o3d.visualization.RenderOption = self.vis.get_render_option()
         render_option.mesh_show_wireframe = self.settings.show_wireframe
         render_option.light_on = not self.settings.show_silhouette
+        if self.settings.show_silhouette:
+            render_option.background_color = [255] * 3
+        else:
+            render_option.background_color = self.settings.background_color
+        render_option.point_show_normal = True
 
-        # render_option.background_color =
         self._resolve_mesh_color_difference(self._mesh_color, self.settings.mesh_color)
+
+        # self.vis.add_geometry(self.shape.geometries.mesh.triangle_normals)
 
         # Handle each different type of visualization
         self._resolve_geometry_state_difference(self._show_mesh, self.settings.show_mesh, self.shape.geometries.mesh)

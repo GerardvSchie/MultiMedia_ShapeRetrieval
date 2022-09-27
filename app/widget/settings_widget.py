@@ -34,13 +34,17 @@ class SettingsWidget(QWidget):
         show_axes_checkbox = QCheckBox(self)
         show_axes_checkbox.stateChanged.connect(lambda state: self._on_show_axes(state))
 
-        color_button = ColorButton()
-        color_button.connect_settings(self)
+        mesh_color_button = ColorButton(True)
+        mesh_color_button.connect_settings(self)
+
+        background_color_button = ColorButton(False)
+        background_color_button.connect_settings(self)
 
         # Create layout
         layout: GridLayout = GridLayout()
         layout.add_header("Settings")
         layout.add_row("Mesh:", show_mesh_checkbox)
+        layout.addWidget(mesh_color_button, 1, 3)
         layout.add_row("Point cloud:", show_point_cloud_checkbox)
         layout.add_row("Convex hull:", show_convex_hull_checkbox)
         layout.add_row("Box:", show_axis_aligned_bounding_box_checkbox)
@@ -48,7 +52,7 @@ class SettingsWidget(QWidget):
         layout.add_row("Silhouette:", silhouette_checkbox)
         layout.add_row("Wireframe:", show_wireframe_checkbox)
         layout.add_row("Axes:", show_axes_checkbox)
-        layout.addWidget(color_button, 1, 3)
+        layout.add_row("Background:", background_color_button)
         self.setLayout(layout)
 
     def connect_visualizer(self, visualizer_widget):

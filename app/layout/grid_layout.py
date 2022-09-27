@@ -31,5 +31,5 @@ class GridLayout(QGridLayout):
         row_label.setFont(ITALIC_FONT)
 
         self.addWidget(row_label, self._current_row_index, 0)
-        self.addWidget(widget, self._current_row_index, 1)
+        self.addWidget(widget, self._current_row_index, 1, 1, -1)
         self._current_row_index += 1
