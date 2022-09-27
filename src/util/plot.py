@@ -79,6 +79,7 @@ def plot_features(feature_list: [Features]):
     # Compare convex_hull_area with remaining others
     compareFeatures(convex_hull_area, convexArea, bounding_box_area, boundingArea)
 
+
 def compareFeatures(firstFeature, firstName, secondFeature, secondName):
     print(f'Comparing {firstName} with {secondName}')
 
@@ -145,11 +146,25 @@ def scatter_hist(x, y, xName, yName, ax, ax_histx, ax_histy):
 
     # Draw a dot where the average shape of both selected features lies.
     ax.plot(averageX, averageY, 'o', color = 'red')
+    ax.annotate(f'average:\n {averageX}\n{averageY}', (averageX, averageY), color = 'purple')
+    # ax.text(100, 200, 'test')
+
+    print(f'{ax.bbox.width}')
+    print(f'{ax.bbox.height}')
 
     # Disable otherwise it won't save as png. TODO fix this
-    # plt.show()
+    #plt.show()
 
     save_plt(f"{xName} and {yName} of meshes")
+
+
+
+    # Detecting outliers.
+    detectOutliers(xName, x)
+    plt.figure()
+    detectOutliers(yName, y)
+
+    # plt.show()
 
 
 def hist_plot(title: str, data):
@@ -175,3 +190,34 @@ def save_plt(title: str):
     # plt.show()
 
     plt.close()
+
+
+# Source = https://www.geeksforgeeks.org/finding-the-outlier-points-from-matplotlib/
+def detectOutliers(featureName, featureData):
+    plt.title(f'\nDetecting outliers in feature = {featureName}')
+    plt.boxplot(featureData)
+
+    firstQuartile = np.quantile(featureData, 0.25)
+    thirdQuartile = np.quantile(featureData, 0.75)
+    median = np.median(featureData)
+
+    interQuartile = thirdQuartile - firstQuartile
+
+    upper_bound = thirdQuartile + (1.5 * interQuartile)
+    lower_bound = firstQuartile - (1.5 * interQuartile)
+
+    numpyX = np.array(featureData)
+    # print(numpyX)
+
+    outliers = numpyX[(numpyX <= lower_bound) | (numpyX >= upper_bound)]
+
+    # print(f'firstQuartile = {firstQuartile}')
+    # print(f'thirdQuartile = {thirdQuartile}')
+    # print(f'median = {median}')
+
+    # print(f'interQuartile = {interQuartile}')
+
+    print(f'upper_bound = {upper_bound}')
+    print(f'lower_bound = {lower_bound}')
+
+    print(f'Detected {len(outliers)} outliers in {featureName} = {outliers}\n')
