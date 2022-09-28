@@ -29,7 +29,6 @@ class VisualizationWidget(QWidget):
         self._show_axis_aligned_bounding_box: bool = False
 
         self._show_silhouette: bool = False
-        self._show_wireframe: bool = False
         self._show_axes: bool = False
 
         self.vis: open3d.visualization.Visualizer = o3d.visualization.Visualizer()
@@ -82,7 +81,6 @@ class VisualizationWidget(QWidget):
 
     def clear_geometries_state(self):
         self._show_mesh = False
-        self._show_wireframe = False
         self._show_point_cloud = False
         self._show_convex_hull = False
         self._show_axis_aligned_bounding_box = False
@@ -101,23 +99,20 @@ class VisualizationWidget(QWidget):
 
         # Additional options
         self._show_silhouette = self.settings.show_silhouette
-        self._show_wireframe = self.settings.show_wireframe
         self._show_axes = self.settings.show_axes
 
     def visualize_shape(self):
         # Set render options
         render_option: o3d.visualization.RenderOption = self.vis.get_render_option()
-        render_option.mesh_show_wireframe = self.settings.show_wireframe
+        render_option.mesh_show_wireframe = self.settings.show_wireframe and not self.settings.show_silhouette
+        render_option.point_show_normal = self.settings.show_normals
         render_option.light_on = not self.settings.show_silhouette
         if self.settings.show_silhouette:
             render_option.background_color = [255] * 3
         else:
             render_option.background_color = self.settings.background_color
-        render_option.point_show_normal = True
 
         self._resolve_mesh_color_difference(self._mesh_color, self.settings.mesh_color)
-
-        # self.vis.add_geometry(self.shape.geometries.mesh.triangle_normals)
 
         # Handle each different type of visualization
         self._resolve_geometry_state_difference(self._show_mesh, self.settings.show_mesh, self.shape.geometries.mesh)

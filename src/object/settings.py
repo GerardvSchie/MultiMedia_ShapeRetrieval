@@ -18,4 +18,5 @@ class Settings:
 
         self.show_silhouette: bool = False
         self.show_wireframe: bool = False
+        self.show_normals: bool = False
         self.show_axes: bool = False

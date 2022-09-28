@@ -26,10 +26,20 @@ class GridLayout(QGridLayout):
         self.addWidget(section_label, self._current_row_index, 0, 1, -1)
         self._current_row_index += 1
 
-    def add_row(self, label_text: str, widget: QWidget):
+    def add_row(self, label_text: str, widgets: [QWidget]):
         row_label = QLabel(label_text)
         row_label.setFont(ITALIC_FONT)
 
         self.addWidget(row_label, self._current_row_index, 0)
-        self.addWidget(widget, self._current_row_index, 1, 1, -1)
+
+        # if len(widgets) == 1:
+        #     self.addWidget(widgets[0], self._current_row_index, 1, 1, -1)
+        # else:
+        #     first_widgets, last_widget = widgets[0:-2], widgets[-1]
+        for widget_index in range(len(widgets)):
+            if widget_index == len(widgets) - 1:
+                self.addWidget(widgets[widget_index], self._current_row_index, widget_index + 1, 1, -1)
+            else:
+                self.addWidget(widgets[widget_index], self._current_row_index, widget_index + 1, 1, 1)
+
         self._current_row_index += 1

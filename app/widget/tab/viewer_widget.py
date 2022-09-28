@@ -17,9 +17,9 @@ class ViewerWidget(QWidget):
         color_widget(self, [0, 255, 0])
 
         settings_widget = SettingsWidget(settings)
-        settings_widget.setFixedWidth(150)
+        settings_widget.setFixedWidth(165)
         features_widget = FeaturesWidget()
-        features_widget.setFixedWidth(150)
+        features_widget.setFixedWidth(165)
 
         visualization_widget = VisualizationWidget(settings)
         if not IsMacOS:

@@ -22,14 +22,14 @@ class FeaturesWidget(QWidget):
         # Create layout
         layout: GridLayout = GridLayout()
         layout.add_header("Properties")
-        layout.add_row("Class:", self.class_value_label)
-        layout.add_row("Nr. Vertices:", self.nr_vertices_value_label)
-        layout.add_row("Nr. Faces:", self.nr_faces_value_label)
-        layout.add_row("Faces type:", self.type_faces_value_label)
+        layout.add_row("Class:", [self.class_value_label])
+        layout.add_row("Nr. Vertices:", [self.nr_vertices_value_label])
+        layout.add_row("Nr. Faces:", [self.nr_faces_value_label])
+        layout.add_row("Faces type:", [self.type_faces_value_label])
         layout.add_section("Surface area")
-        layout.add_row("Mesh:", self.mesh_area_value_label)
-        layout.add_row("Convex hull:", self.convex_hull_area_value_label)
-        layout.add_row("Box:", self.bounding_box_area_value_label)
+        layout.add_row("Mesh:", [self.mesh_area_value_label])
+        layout.add_row("Convex hull:", [self.convex_hull_area_value_label])
+        layout.add_row("Box:", [self.bounding_box_area_value_label])
         self.setLayout(layout)
 
     def update_values(self, features: Features):

@@ -33,7 +33,7 @@ class Geometries:
 
         if geometry_type & o3d.io.CONTAINS_TRIANGLES:
             self.mesh: open3d.cpu.pybind.geometry.TriangleMesh = o3d.io.read_triangle_mesh(self.path)
-            self.mesh.orient_triangles()
+            # self.mesh.orient_triangles()
             # self.mesh.fill_holes()
 
         # Could not load mesh
@@ -49,6 +49,7 @@ class Geometries:
             return False
 
         # Get the normals of the mesh
+        self.mesh.compute_triangle_normals(True)
         self.mesh.compute_vertex_normals()
         if len(self.mesh.vertex_colors) == 0:
             self.mesh.paint_uniform_color([1, 1, 1])
@@ -69,6 +70,7 @@ class Geometries:
             self.point_cloud: o3d.geometry.PointCloud = o3d.io.read_point_cloud(self.path)
             # self.point_cloud = self.mesh.sample_points_uniformly(number_of_points=500)
             self.point_cloud.estimate_normals()
+            self.point_cloud.orient_normals_consistent_tangent_plane(10)
         except Exception as ex:
             logging.error(ex)
             return False
