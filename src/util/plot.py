@@ -81,7 +81,7 @@ def plot_features(feature_list: [Features]):
 
 
 def compareFeatures(firstFeature, firstName, secondFeature, secondName):
-    print(f'Comparing {firstName} with {secondName}')
+    print(f'================================= Comparing {firstName} with {secondName} ====================================')
 
     # Start with a square Figure.
     fig = plt.figure(figsize=(6, 6))
@@ -136,28 +136,32 @@ def scatter_hist(x, y, xName, yName, ax, ax_histx, ax_histy):
     averageX = np.mean(x)
     averageY = np.mean(y)
 
-    # Feature 1
-    #print(f'\n{xName} = {x}')
-    #print(f'\nAverage of {xName} = {averageX}')
+    averagePosition = (averageX, averageY)
 
-    # Feature 2
-    #print(f'\n{yName} = {y}')
-    #print(f'\nAverage of {yName} = {averageY}')
+    # Draw a dot where the average 'Shape' is based on the mathematical average of the features.
+    # This doesn't need the dot draw function below because we don't try to draw on top of an existing Shape.
+    averageDotColor = 'red'
+    ax.plot(averageX, averageY, 'o', color = averageDotColor)
+    ax.annotate(f'Mathematical average:\n {averageX}\n{averageY}', averagePosition, color = averageDotColor)
 
-    # Draw a dot where the average shape of both selected features lies.
-    ax.plot(averageX, averageY, 'o', color = 'red')
-    ax.annotate(f'average:\n {averageX}\n{averageY}', (averageX, averageY), color = 'purple')
+    # drawShapeDotOfBothFeaturesOnPlot(ax, xName, x, averageX, yName, y, averageY, 'Shape closest to the mathematical average', 'green')
+
+    # print('\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+
+    drawShapeDotOfSingleFeatureOnPlot(ax, 0, xName, x, yName, y, averageX, f'Shape closest to {xName} average', 'green')
+    drawShapeDotOfSingleFeatureOnPlot(ax, 1, yName, y, xName, x, averageY, f'Shape closest to {yName} average', 'purple')
+
+    # print('\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+
     # ax.text(100, 200, 'test')
 
-    print(f'{ax.bbox.width}')
-    print(f'{ax.bbox.height}')
+    # print(f'bbox.width = {ax.bbox.width}')
+    # print(f'bbox.height = {ax.bbox.height}')
 
     # Disable otherwise it won't save as png. TODO fix this
     #plt.show()
 
     save_plt(f"{xName} and {yName} of meshes")
-
-
 
     # Detecting outliers.
     detectOutliers(xName, x)
@@ -194,7 +198,7 @@ def save_plt(title: str):
 
 # Source = https://www.geeksforgeeks.org/finding-the-outlier-points-from-matplotlib/
 def detectOutliers(featureName, featureData):
-    plt.title(f'\nDetecting outliers in feature = {featureName}')
+    plt.title(f'Detecting outliers in feature = {featureName}')
     plt.boxplot(featureData)
 
     firstQuartile = np.quantile(featureData, 0.25)
@@ -217,7 +221,73 @@ def detectOutliers(featureName, featureData):
 
     # print(f'interQuartile = {interQuartile}')
 
-    print(f'upper_bound = {upper_bound}')
-    print(f'lower_bound = {lower_bound}')
+    # print(f'\nupper_bound = {upper_bound}')
+    # print(f'lower_bound = {lower_bound}')
 
-    print(f'Detected {len(outliers)} outliers in {featureName} = {outliers}\n')
+    print(f'\nDetected {len(outliers)} outliers in {featureName}:')
+
+    for elem in outliers:
+       print(f'{elem} has element id {featureData.index(elem)} in the {featureName} data.')
+
+
+def drawShapeDotOfSingleFeatureOnPlot(ax, featureID, featureName, featureData, otherFeatureName, otherFeatureData, value, dotText, givenColor):
+    # print(f'\nDraw a dot for {dotText}')
+
+    closestToFeatureAverage = closestValue(featureData, value)
+    otherFeatureValue = otherFeatureData[featureData.index(closestToFeatureAverage)]
+
+    # print(f'\nclosestToFeatureAverage ({featureName}) = {closestToFeatureAverage}')
+    # print(f'\notherFeatureValue ({otherFeatureName}) = {otherFeatureValue}')
+
+    # The coordinates have to be flipped depending on the feature being looked at.
+    if (featureID == 0):
+        coordX = closestToFeatureAverage
+        coordY = otherFeatureValue
+        closestPosition = (closestToFeatureAverage, otherFeatureValue)
+    else:
+        coordX = otherFeatureValue
+        coordY = closestToFeatureAverage
+        closestPosition = (otherFeatureValue, closestToFeatureAverage)
+
+    # print(f'closestPosition = {closestPosition}')
+
+    # Draw a dot where the average shape based on the mathematical average of the features lies.
+    ax.plot(coordX, coordY, 'o', color = givenColor, alpha = 0.2)
+    ax.annotate(dotText, closestPosition, color = givenColor)
+    
+
+def drawShapeDotOfBothFeaturesOnPlot(ax, firstName, firstFeatureData, firstValue, secondName, secondFeatureData, secondValue, dotText, givenColor):
+    print(f'\nDraw a dot for {dotText}')
+
+    closestToFirstFeature = closestValue(firstFeatureData, firstValue)
+    closestToSecondFeature = closestValue(secondFeatureData, secondValue)
+
+    print(f'\nclosestToFirstFeature ({firstName}) = {closestToFirstFeature}')
+    print(f'closestToSecondFeature ({secondName}) = {closestToSecondFeature}')
+
+    closestPosition = (closestToFirstFeature, closestToSecondFeature)
+
+    print(f'closestPosition = {closestPosition}')
+
+    # Draw a dot where the average shape based on the mathematical average of the features lies.
+    ax.plot(closestToFirstFeature, closestToSecondFeature, 'o', color = givenColor, alpha = 0.5)
+    ax.annotate(dotText, closestPosition, color = givenColor)
+
+
+# Source = https://www.entechin.com/find-nearest-value-list-python/#:~:text=We%20can%20find%20the%20nearest,value%20to%20the%20given%20value.
+def closestValue(listOfValues, value):
+    # print(f'listOfValues:\n{listOfValues}')
+    # print(f'Need value closest to {value}')
+
+    arr = np.asarray(listOfValues)
+    
+    a = np.abs(arr - value)
+    # print(f'a:\n{a}')
+
+    index = a.argmin()
+    # print(f'index = {index}')
+
+    result = arr[index]
+    # print(f'result = {result}')
+
+    return result
