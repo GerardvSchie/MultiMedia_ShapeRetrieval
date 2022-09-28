@@ -7,6 +7,7 @@ from app.util.worker import Worker
 from app.gui.menu_bar import MenuBar
 from app.widget.tab.viewer_widget import ViewerWidget
 from app.widget.tab.multi_viewer_widget import MultiViewerWidget
+from app.widget.tab.normalization_tab_widget import NormalizationTabWidget
 from app.util.os import IsMacOS
 
 from src.object.settings import Settings
@@ -17,6 +18,11 @@ class TabWidget(QTabWidget):
     def __init__(self):
         super(TabWidget, self).__init__()
 
+        # Connect tab to menu bar
+        all_widgets = QApplication.topLevelWidgets()
+        menu_bar = next(obj for obj in all_widgets if type(obj) == MenuBar)
+        menu_bar.connect_tab_widget(self)
+
         # Central settings for the tabs
         self.settings = Settings()
 
@@ -26,7 +32,7 @@ class TabWidget(QTabWidget):
         self.thread.started.connect(lambda: self.worker.run())
         self.thread.start()
 
-        self.currentChanged.connect(lambda index: self.current_tab_changed(index))
+        self.currentChanged.connect(lambda _: self.current_tab_changed())
 
         # Tab widget
         color_widget(self, [255, 0, 0])
@@ -37,36 +43,23 @@ class TabWidget(QTabWidget):
 
         # Tab 2
         if not IsMacOS:
-            self.tab2_widget = MultiViewerWidget(self.settings)
-            self.addTab(self.tab2_widget, "Mesh inspect 2")
-
-        # Select tab 1
-        self.tab_1_select()
-
-    def current_tab_changed(self, index: int):
-        if index == 0:
-            self.tab_1_select()
-        if index == 1:
-            self.tab_2_select()
-
-        # Try update the widget
-        self.update()
-
-    def tab_1_select(self):
-        self.worker.set_scenes(self.tab1_widget.scene_widgets)
-        TabWidget.connect_to_menu_bar(self.tab1_widget.scene_widgets[0], self.tab1_widget.scene_widgets[0])
-
-    def tab_2_select(self):
-        self.worker.set_scenes(self.tab2_widget.scene_widgets)
-        TabWidget.connect_to_menu_bar(self.tab2_widget.scene_widgets[0], self.tab2_widget.scene_widgets[0])
+            self.tab2_widget = NormalizationTabWidget(self.settings)
+            self.addTab(self.tab2_widget, "Normalize mesh")
 
     def closeEvent(self, *args, **kwargs):
         self.worker.stop()
         self.thread.exit()
 
-    @staticmethod
-    def connect_to_menu_bar(open_widget, save_widget):
-        # Connect menu bar to widget
-        all_widgets = QApplication.topLevelWidgets()
-        menu_bar = next(obj for obj in all_widgets if type(obj) == MenuBar)
-        menu_bar.connect_widgets(open_widget, save_widget)
+    def current_tab_changed(self):
+        # Set new scenes for the worker to render
+        self.worker.set_scenes(self.currentWidget().scene_widgets)
+        self.update()
+
+    def load_shape(self, file_path):
+        self.currentWidget().load_shape(file_path)
+
+    def save_shape(self, file_path):
+        self.currentWidget().save_shape(file_path)
+
+    def export_image_action(self, file_path: str):
+        self.currentWidget().export_image_action(file_path)

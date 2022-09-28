@@ -115,3 +115,13 @@ class Geometries:
 
         self.axes = self.mesh.create_coordinate_frame(0.1)
         return True
+
+    def reconstruct_mesh(self):
+        radii = [0.005, 0.01, 0.02, 0.04]
+        self.mesh = o3d.geometry.TriangleMesh.create_from_point_cloud_ball_pivoting(self.point_cloud, o3d.utility.DoubleVector(radii))
+
+        self.convex_hull_mesh = None
+        self.convex_hull_line_set = None
+        self.axis_aligned_bounding_box_line_set = None
+
+        self.load()

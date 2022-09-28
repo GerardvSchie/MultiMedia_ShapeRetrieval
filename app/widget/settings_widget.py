@@ -1,3 +1,5 @@
+import logging
+
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QWidget, QCheckBox, QPushButton
 
@@ -12,10 +14,11 @@ class SettingsWidget(QWidget):
     def __init__(self, settings: Settings):
         super(SettingsWidget, self).__init__()
         color_widget(self, [0, 255, 255])
+        self.setFixedWidth(165)
 
         # Widget state of main app window and the scene that is controlled by the settings
         self.settings = settings
-        self.visualizer_widget = None
+        self.visualizer_widgets = []
 
         # Geometries checkboxes
         show_mesh_checkbox = QCheckBox(self)
@@ -59,14 +62,16 @@ class SettingsWidget(QWidget):
         layout.add_row("Background:", [background_color_button])
         self.setLayout(layout)
 
-        # method called by button
-
-    def connect_visualizer(self, visualizer_widget):
-        self.visualizer_widget = visualizer_widget
+    def connect_visualizers(self, visualizer_widgets):
+        self.visualizer_widgets = visualizer_widgets
+        if len(self.visualizer_widgets) < 1:
+            logging.warning("List of visualizers attached to the settings is empty")
 
     def apply_settings(self):
-        self.visualizer_widget.visualize_shape()
+        for visualizer_widget in self.visualizer_widgets:
+            visualizer_widget.visualize_shape()
 
+    # Method called by color button
     def _on_background_color(self, new_color):
         self.settings.background_color = new_color
         self.apply_settings()

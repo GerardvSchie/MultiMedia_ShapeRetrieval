@@ -9,17 +9,15 @@ from PyQt6.QtWidgets import QApplication
 class MenuBar(QMenuBar):
     def __init__(self, menu: QMenuBar):
         super(MenuBar, self).__init__()
-        self.open_widget = None
-        self.save_widget = None
+        self.tab_widget = None
 
         self.menu: QMenuBar = menu
         self.file_menu: QAction = None
         self.name: str = "MenuBar"
         self.initialize_file_menu()
 
-    def connect_widgets(self, open_widget, save_widget):
-        self.open_widget = open_widget
-        self.save_widget = save_widget
+    def connect_tab_widget(self, tab_widget):
+        self.tab_widget = tab_widget
 
     def initialize_file_menu(self):
         self.file_menu = self.menu.addMenu("&File")
@@ -58,22 +56,18 @@ class MenuBar(QMenuBar):
         file_name, _ = QFileDialog.getOpenFileName(self, "Open shape", "data", file_filter)
 
         if file_name:
-            self.open_widget.load_shape(file_name)
+            self.tab_widget.load_shape(file_name)
 
     def save_shape_action(self):
         file_filter = "Triangle mesh files (*.ply *.stl *.fbx *.obj *.off *.gltf *.glb)"
         file_name, _ = QFileDialog.getSaveFileName(self, "Save mesh file", "data", file_filter)
 
-        if file_name and self.save_widget.shape:
-            if not self.save_widget.shape:
-                logging.warning(f"User tried to save whilst there is no mesh")
-                return
-
-            self.save_widget.shape.save(file_name)
+        if file_name:
+            self.tab_widget.save_shape(file_name)
 
     def export_image_action(self):
         file_filter = "Image file (*.png *.jpg)"
         file_name, _ = QFileDialog.getSaveFileName(self, "Save Image", "data", file_filter)
 
         if file_name:
-            self.save_widget.vis.capture_screen_image(file_name)
+            self.tab_widget.export_shape_image(file_name)

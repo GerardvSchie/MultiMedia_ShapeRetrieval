@@ -10,6 +10,7 @@ class FeaturesWidget(QWidget):
     def __init__(self):
         super(FeaturesWidget, self).__init__()
         color_widget(self, [255, 255, 0])
+        self.setFixedWidth(165)
 
         self.class_value_label = QLabel("-")
         self.nr_vertices_value_label = QLabel("0")

@@ -3,7 +3,7 @@ import open3d as o3d
 import open3d.visualization
 import win32gui
 
-from PyQt6.QtWidgets import QWidget
+from PyQt6.QtWidgets import QWidget, QSizePolicy
 
 from src.object.shape import Shape
 from src.object.settings import Settings
@@ -15,6 +15,14 @@ from app.util.os import IsMacOS
 class VisualizationWidget(QWidget):
     def __init__(self, settings: Settings):
         super(VisualizationWidget, self).__init__()
+        # Trying to set aspect ratio
+        self.setMinimumSize(400, 400)
+
+        # Trying to set aspect ratio through size policy
+        # size_policy = QSizePolicy()
+        # size_policy.setWidthForHeight(True)
+        # self.setSizePolicy(size_policy)
+
         self.shape: Shape = None
         self.features_widget = None
 

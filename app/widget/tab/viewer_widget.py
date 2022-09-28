@@ -1,11 +1,11 @@
 from app.widget.settings_widget import SettingsWidget
+from app.widget.features_widget import FeaturesWidget
+from app.widget.visualization_widget import VisualizationWidget
 from app.widget.util import color_widget
 
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout
 from PyQt6.QtGui import QWindow
 
-from app.widget.features_widget import FeaturesWidget
-from app.widget.visualization_widget import VisualizationWidget
 
 from src.object.settings import Settings
 from app.util.os import IsMacOS
@@ -17,9 +17,7 @@ class ViewerWidget(QWidget):
         color_widget(self, [0, 255, 0])
 
         settings_widget = SettingsWidget(settings)
-        settings_widget.setFixedWidth(165)
         features_widget = FeaturesWidget()
-        features_widget.setFixedWidth(165)
 
         visualization_widget = VisualizationWidget(settings)
         if not IsMacOS:
@@ -27,9 +25,9 @@ class ViewerWidget(QWidget):
             window_container = self.createWindowContainer(window, visualization_widget)
 
         # Connect the settings to the widget
-        settings_widget.connect_visualizer(visualization_widget)
         visualization_widget.connect_features(features_widget)
         self.scene_widgets = [visualization_widget]
+        settings_widget.connect_visualizers(self.scene_widgets)
 
         # Set the layout of the widget
         layout = QHBoxLayout(self)
@@ -42,6 +40,15 @@ class ViewerWidget(QWidget):
         if not IsMacOS:
             layout.addWidget(window_container)
         self.setLayout(layout)
+
+    def load_shape(self, file_path: str):
+        self.scene_widgets[0].load_shape(file_path)
+
+    def save_shape(self, file_path: str):
+        self.scene_widgets[0].shape.save(file_path)
+
+    def export_image_action(self, file_path: str):
+        self.scene_widgets[0].vis.capture_screen_image(file_path)
 
     # def __init__(self, settings: Settings):
     #     super(ViewerWidget, self).__init__()

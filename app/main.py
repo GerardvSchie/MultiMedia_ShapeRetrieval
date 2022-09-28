@@ -18,7 +18,7 @@ from PyQt6 import QtWidgets
 def main():
     app = QtWidgets.QApplication(sys.argv)
     form = MainWindow()
-    form.setWindowTitle('o3d Embed')
+    form.setWindowTitle('Multimedia Retrieval')
     form.setGeometry(100, 100, 600, 500)
     form.show()
     sys.exit(app.exec())
