@@ -7,11 +7,11 @@ def normalize_shape(shape: Shape):
     shape.geometries.load_mesh()
 
     # Translate to center
-    shape.geometries.mesh.vertices = shape.geometries.mesh.vertices - shape.geometries.mesh.get_center()  
+    # shape.geometries.mesh.vertices = shape.geometries.mesh.vertices - shape.geometries.mesh.get_center()
    
     shape.geometries.mesh = rot_pca(shape.geometries.mesh)  # Rotate based on PCA
     shape.geometries.mesh = flipper(shape.geometries.mesh)  # Flips the mesh
-    shape.geometries.mesh = scaler(shape.geometries.mesh)  # Scales to a unit bounding box the mesh
+    # shape.geometries.mesh = scaler(shape.geometries.mesh)  # Scales to a unit bounding box the mesh
 
 
 def rot_pca(mesh):
@@ -28,7 +28,7 @@ def rot_pca(mesh):
     max_eigen = np.argmax(eigenvalues)
     mid_eigen = np.setdiff1d([0, 1, 2], [min_eigen, max_eigen])[0]
 
-    new_verts = []
+    new_verts = o3d.utility.Vector3dVector()
     for v in verts:
         v1 = np.dot(v, eigenvectors[:, max_eigen])
         v2 = np.dot(v, eigenvectors[:, mid_eigen])
