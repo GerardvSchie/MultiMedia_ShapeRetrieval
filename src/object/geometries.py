@@ -15,6 +15,7 @@ class Geometries:
         self.convex_hull_line_set: o3d.geometry.LineSet = None
         self.axis_aligned_bounding_box_line_set: o3d.geometry.LineSet = None
         self.axes: o3d.geometry.TriangleMesh = None
+        self.center_mesh: o3d.geometry.TriangleMesh = None
 
     # A big portion of these two methods comes from the open3d example, see license in app folder.
     def load(self):
@@ -23,6 +24,7 @@ class Geometries:
         self.load_convex_hull()
         self.load_coordinate_axes()
         self.load_axis_aligned_bounding_box()
+        self.load_center_mesh()
 
     def load_mesh(self) -> bool:
         # Mesh is already loaded
@@ -33,7 +35,6 @@ class Geometries:
 
         if geometry_type & o3d.io.CONTAINS_TRIANGLES:
             self.mesh: open3d.cpu.pybind.geometry.TriangleMesh = o3d.io.read_triangle_mesh(self.path)
-            # self.mesh.orient_triangles()
             # self.mesh.fill_holes()
 
         # Could not load mesh
@@ -48,7 +49,13 @@ class Geometries:
             self.mesh = None
             return False
 
-        # Get the normals of the mesh
+        #
+        self.calculate_mesh()
+        return True
+
+    def calculate_mesh(self):
+        # Get the normals of the mesh after orientating them
+        self.mesh.orient_triangles()
         self.mesh.compute_triangle_normals(True)
         self.mesh.compute_vertex_normals()
         if len(self.mesh.vertex_colors) == 0:
@@ -59,8 +66,6 @@ class Geometries:
             uv = np.array([[0.0, 0.0]] * (3 * len(self.mesh.triangles)))
             self.mesh.triangle_uvs = o3d.utility.Vector2dVector(uv)
 
-        return True
-
     def load_point_cloud(self) -> bool:
         # Point cloud already existed
         if self.point_cloud:
@@ -68,9 +73,6 @@ class Geometries:
 
         try:
             self.point_cloud: o3d.geometry.PointCloud = o3d.io.read_point_cloud(self.path)
-            # self.point_cloud = self.mesh.sample_points_uniformly(number_of_points=500)
-            self.point_cloud.estimate_normals()
-            self.point_cloud.orient_normals_consistent_tangent_plane(10)
         except Exception as ex:
             logging.error(ex)
             return False
@@ -79,7 +81,12 @@ class Geometries:
             logging.warning("Failed to read point cloud")
             return False
 
+        self.calculate_point_cloud()
         return True
+
+    def calculate_point_cloud(self):
+        self.point_cloud.estimate_normals()
+        self.point_cloud.orient_normals_consistent_tangent_plane(10)
 
     def load_convex_hull(self) -> bool:
         if self.convex_hull_mesh:
@@ -113,15 +120,30 @@ class Geometries:
             logging.error("Cannot compute coordinate axes without a mesh")
             return False
 
-        self.axes = self.mesh.create_coordinate_frame(0.1)
+        self.axes = o3d.geometry.TriangleMesh().create_coordinate_frame(0.1, np.array([0, 0, 0]))
         return True
 
     def reconstruct_mesh(self):
-        radii = [0.005, 0.01, 0.02, 0.04]
-        self.mesh = o3d.geometry.TriangleMesh.create_from_point_cloud_ball_pivoting(self.point_cloud, o3d.utility.DoubleVector(radii))
+        # Make sure there is a point cloud to work with
+        if self.load_point_cloud():
+            radii = [0.005, 0.01, 0.02, 0.04]
+            self.mesh = o3d.geometry.TriangleMesh.create_from_point_cloud_ball_pivoting(self.point_cloud, o3d.utility.DoubleVector(radii))
+            self.calculate_mesh()
 
         self.convex_hull_mesh = None
         self.convex_hull_line_set = None
         self.axis_aligned_bounding_box_line_set = None
 
         self.load()
+
+    def load_center_mesh(self):
+        if self.center_mesh:
+            return True
+
+        if not self.load_mesh():
+            return False
+
+        self.center_mesh: o3d.geometry.TriangleMesh = o3d.geometry.TriangleMesh().create_sphere(0.015)
+        self.center_mesh.translate(self.mesh.get_center())
+        self.center_mesh.paint_uniform_color([1, 0, 1])
+        return True

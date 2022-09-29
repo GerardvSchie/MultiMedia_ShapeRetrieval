@@ -33,7 +33,7 @@ class FeaturesWidget(QWidget):
         layout.add_row("Box:", [self.bounding_box_area_value_label])
         self.setLayout(layout)
 
-    def update_values(self, features: Features):
+    def update_widget(self, features: Features):
         self.class_value_label.setText(features.true_class)
         self.nr_vertices_value_label.setText(str(features.nr_vertices))
         self.nr_faces_value_label.setText(str(features.nr_faces))

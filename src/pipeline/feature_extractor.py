@@ -1,8 +1,24 @@
 import logging
+import math
 from src.object.shape import Shape
+
+import open3d as o3d
 
 
 class FeatureExtractor:
+    @staticmethod
+    def extract_normalization_features(shape: Shape):
+        if shape is None:
+            logging.warning("Cannot extract features from None shape")
+            return
+
+        if not math.isinf(shape.normalization_features.distance_to_center):
+            shape.normalization_features.distance_to_center = shape.geometries.mesh.get_center()
+        if not math.isinf(shape.normalization_features.scale):
+            box: o3d.geometry.AxisAlignedBoundingBox = shape.geometries.mesh.get_axis_aligned_bounding_box()
+            print(box)
+            shape.normalization_features.scale = box.max_bound
+
     @staticmethod
     # Only extract the features that are not yet set with values in the shape
     def extract_features(shape: Shape):

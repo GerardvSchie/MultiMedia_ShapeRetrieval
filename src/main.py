@@ -42,18 +42,7 @@ def main():
 
     src.util.plot.plot_features([shape.features for shape in shape_collection])
     src.database.writer.write_to_file(shape_collection)
-
-    #
-    # off_example = Shape("data/example.off")
-    # print(off_example.mesh)
-    # ply_example = Shape("data/example.ply")
-    # print(ply_example.mesh)
-    #
-    # FeatureExtractor.extract_features(ply_example)
-    # print(ply_example.features.nr_vertices)
-    # print(ply_example.features.nr_triangles)
-
-    logging.info("jflsdjfsldk")
+    print("run complete")
 
 
 # Example loads an .off and .ply file

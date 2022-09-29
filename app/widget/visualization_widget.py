@@ -3,12 +3,10 @@ import open3d as o3d
 import open3d.visualization
 import win32gui
 
-from PyQt6.QtWidgets import QWidget, QSizePolicy
+from PyQt6.QtWidgets import QWidget
 
 from src.object.shape import Shape
 from src.object.settings import Settings
-from src.pipeline.feature_extractor import FeatureExtractor
-from app.widget.features_widget import FeaturesWidget
 from app.util.os import IsMacOS
 
 
@@ -24,17 +22,17 @@ class VisualizationWidget(QWidget):
         # self.setSizePolicy(size_policy)
 
         self.shape: Shape = None
-        self.features_widget = None
 
         # Settings and state
         self.settings: Settings = settings
         self._background_color: [float] = (1, 1, 1)
         self._mesh_color: [float] = (1, 1, 1)
-        # self._convex_hull_color = (1, 0, 0)
+
         self._show_mesh: bool = False
         self._show_point_cloud: bool = False
         self._show_convex_hull: bool = False
         self._show_axis_aligned_bounding_box: bool = False
+        self._show_center_mesh: bool = False
 
         self._show_silhouette: bool = False
         self._show_axes: bool = False
@@ -49,9 +47,6 @@ class VisualizationWidget(QWidget):
 
         self.load_shape("data/example.off")
 
-    def connect_features(self, features_widget: FeaturesWidget):
-        self.features_widget = features_widget
-
     def closeEvent(self, *args, **kwargs):
         self.vis.close()
         self.vis.destroy_window()
@@ -59,8 +54,7 @@ class VisualizationWidget(QWidget):
     # Part of the scene, what is in the window
     def load_shape(self, path):
         # Clear geometries and update state
-        self.vis.clear_geometries()
-        self.clear_geometries_state()
+        self.clear()
 
         # Load shape
         self.shape = Shape(path, load_geometries=True)
@@ -68,17 +62,21 @@ class VisualizationWidget(QWidget):
             self.shape.geometries.mesh.paint_uniform_color((0, 0, 0))
         else:
             self.shape.geometries.mesh.paint_uniform_color(self.settings.mesh_color)
-
-        FeatureExtractor.extract_features(self.shape)
-        self.visualize_shape()
-
-        # Only update features if there is one connected
-        if self.features_widget:
-            self.features_widget.update_values(self.shape.features)
+        self.update_widget()
 
         # bounds = self.shape.geometry.get_axis_aligned_bounding_box()
         # self.widget.setup_camera(60, bounds, bounds.get_center())
         # self.property_widget.update_properties(self.shape.features)
+
+    def clear(self):
+        self.vis.clear_geometries()
+        # Update state
+        self._show_mesh = False
+        self._show_point_cloud = False
+        self._show_convex_hull = False
+        self._show_axis_aligned_bounding_box = False
+        self._show_axes = False
+        self._show_center_mesh = False
 
     def start_vis(self):
         self.vis.run()
@@ -86,13 +84,6 @@ class VisualizationWidget(QWidget):
     def update_vis(self):
         self.vis.poll_events()
         self.vis.update_renderer()
-
-    def clear_geometries_state(self):
-        self._show_mesh = False
-        self._show_point_cloud = False
-        self._show_convex_hull = False
-        self._show_axis_aligned_bounding_box = False
-        self._show_axes = False
 
     def update_state(self):
         # Colors
@@ -104,12 +95,13 @@ class VisualizationWidget(QWidget):
         self._show_point_cloud = self.settings.show_point_cloud
         self._show_convex_hull = self.settings.show_convex_hull
         self._show_axis_aligned_bounding_box = self.settings.show_axis_aligned_bounding_box
+        self._show_center_mesh = self.settings.show_center_mesh
 
         # Additional options
         self._show_silhouette = self.settings.show_silhouette
         self._show_axes = self.settings.show_axes
 
-    def visualize_shape(self):
+    def update_widget(self):
         # Set render options
         render_option: o3d.visualization.RenderOption = self.vis.get_render_option()
         render_option.mesh_show_wireframe = self.settings.show_wireframe and not self.settings.show_silhouette
@@ -128,6 +120,7 @@ class VisualizationWidget(QWidget):
         self._resolve_geometry_state_difference(self._show_convex_hull, self.settings.show_convex_hull, self.shape.geometries.convex_hull_line_set)
         self._resolve_geometry_state_difference(self._show_axis_aligned_bounding_box, self.settings.show_axis_aligned_bounding_box, self.shape.geometries.axis_aligned_bounding_box_line_set)
         self._resolve_geometry_state_difference(self._show_axes, self.settings.show_axes, self.shape.geometries.axes)
+        self._resolve_geometry_state_difference(self._show_center_mesh, self.settings.show_center_mesh, self.shape.geometries.center_mesh)
 
         # Silhouette mode
         self._resolve_silhouette_state_difference(self._show_silhouette, self.settings.show_silhouette)

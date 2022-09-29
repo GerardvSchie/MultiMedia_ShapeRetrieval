@@ -37,22 +37,24 @@ class SettingsWidget(QWidget):
         show_axes_checkbox = QCheckBox(self)
         show_axes_checkbox.stateChanged.connect(lambda state: self._on_show_axes(state))
 
+        # Color buttons
         mesh_color_button = ColorButton(True)
         mesh_color_button.connect_settings(self)
-
         background_color_button = ColorButton(False)
         background_color_button.connect_settings(self)
 
+        # Toggle buttons
         wireframe_button = ToggleButton("app/icon/triangle.png")
         wireframe_button.clicked.connect(lambda state: self._on_show_wireframe(state))
-
         normals_button = ToggleButton("app/icon/arrow.png")
         normals_button.clicked.connect(lambda state: self._on_show_normals(state))
+        center_button = ToggleButton("app/icon/center.png")
+        center_button.clicked.connect(lambda state: self._on_show_center_mesh(state))
 
         # Create layout
         layout: GridLayout = GridLayout()
         layout.add_header("Settings")
-        layout.add_row("Mesh:", [show_mesh_checkbox, wireframe_button, mesh_color_button])
+        layout.add_row("Mesh:", [show_mesh_checkbox, center_button, wireframe_button, mesh_color_button])
         layout.add_row("Point cloud:", [show_point_cloud_checkbox, normals_button])
         layout.add_row("Convex hull:", [show_convex_hull_checkbox])
         layout.add_row("Box:", [show_axis_aligned_bounding_box_checkbox])
@@ -69,7 +71,7 @@ class SettingsWidget(QWidget):
 
     def apply_settings(self):
         for visualizer_widget in self.visualizer_widgets:
-            visualizer_widget.visualize_shape()
+            visualizer_widget.update_widget()
 
     # Method called by color button
     def _on_background_color(self, new_color):
@@ -88,6 +90,10 @@ class SettingsWidget(QWidget):
 
     def _on_show_normals(self, state: bool):
         self.settings.show_normals = state
+        self.apply_settings()
+
+    def _on_show_center_mesh(self, state: bool):
+        self.settings.show_center_mesh = state
         self.apply_settings()
 
     # All of these are checkboxes

@@ -9,33 +9,34 @@ from PyQt6.QtGui import QWindow
 
 from src.object.settings import Settings
 from app.util.os import IsMacOS
+from src.pipeline.feature_extractor import FeatureExtractor
 
 
 class ViewerWidget(QWidget):
-    def __init__(self, settings: Settings):
+    def __init__(self):
         super(ViewerWidget, self).__init__()
         color_widget(self, [0, 255, 0])
 
-        settings_widget = SettingsWidget(settings)
-        features_widget = FeaturesWidget()
+        # Left panel
+        self.settings: Settings = Settings()
+        self.settings_widget = SettingsWidget(self.settings)
+        self.features_widget = FeaturesWidget()
 
-        visualization_widget = VisualizationWidget(settings)
+        self.visualization_widget = VisualizationWidget(self.settings)
         if not IsMacOS:
-            window = QWindow.fromWinId(visualization_widget.hwnd)
-            window_container = self.createWindowContainer(window, visualization_widget)
+            window = QWindow.fromWinId(self.visualization_widget.hwnd)
+            window_container = self.createWindowContainer(window, self.visualization_widget)
 
         # Connect the settings to the widget
-        visualization_widget.connect_features(features_widget)
-        self.scene_widgets = [visualization_widget]
-        settings_widget.connect_visualizers(self.scene_widgets)
+        self.scene_widgets = [self.visualization_widget]
+        self.settings_widget.connect_visualizers(self.scene_widgets)
 
         # Set the layout of the widget
-        layout = QHBoxLayout(self)
-
         left_layout = QVBoxLayout()
-        left_layout.addWidget(settings_widget)
-        left_layout.addWidget(features_widget)
+        left_layout.addWidget(self.settings_widget)
+        left_layout.addWidget(self.features_widget)
 
+        layout = QHBoxLayout(self)
         layout.addLayout(left_layout)
         if not IsMacOS:
             layout.addWidget(window_container)
@@ -43,6 +44,8 @@ class ViewerWidget(QWidget):
 
     def load_shape(self, file_path: str):
         self.scene_widgets[0].load_shape(file_path)
+        FeatureExtractor.extract_features(self.scene_widgets[0].shape)
+        self.features_widget.update_widget(self.scene_widgets[0].shape.features)
 
     def save_shape(self, file_path: str):
         self.scene_widgets[0].shape.save(file_path)

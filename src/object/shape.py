@@ -4,6 +4,7 @@ import open3d as o3d
 
 from src.object.features import Features
 from src.object.geometries import Geometries
+from src.object.normalization_features import NormalizationFeatures
 
 
 class Shape:
@@ -21,6 +22,8 @@ class Shape:
             # Separate path based on separator of os system
             self.features: Features = Features()
             self.features.true_class = os.path.split(os.path.split(shape_path)[0])[1]
+
+        self.normalization_features: NormalizationFeatures = NormalizationFeatures()
 
         self.geometries: Geometries = Geometries(path)
         if load_geometries:

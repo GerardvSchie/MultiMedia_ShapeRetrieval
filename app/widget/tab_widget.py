@@ -23,9 +23,6 @@ class TabWidget(QTabWidget):
         menu_bar = next(obj for obj in all_widgets if type(obj) == MenuBar)
         menu_bar.connect_tab_widget(self)
 
-        # Central settings for the tabs
-        self.settings = Settings()
-
         # Start thread that handles the events on o3d windows
         self.thread = QtCore.QThread()
         self.worker = Worker()
@@ -38,12 +35,12 @@ class TabWidget(QTabWidget):
         color_widget(self, [255, 0, 0])
 
         # Tab 1
-        self.tab1_widget = ViewerWidget(self.settings)
+        self.tab1_widget = ViewerWidget()
         self.addTab(self.tab1_widget, "Mesh inspect")
 
         # Tab 2
         if not IsMacOS:
-            self.tab2_widget = NormalizationTabWidget(self.settings)
+            self.tab2_widget = NormalizationTabWidget()
             self.addTab(self.tab2_widget, "Normalize mesh")
 
     def closeEvent(self, *args, **kwargs):
