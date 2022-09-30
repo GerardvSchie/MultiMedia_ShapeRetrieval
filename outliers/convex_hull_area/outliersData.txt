@@ -1,0 +1,29 @@
+Feature convex_hull_area has 4 outliers in 380 Shapes:
+The outlier with ID 156 should be = data\LabeledDB_new\Cup\37.ply
+shapeFromIdData.nr_vertices = 6270
+shapeFromIdData.nr_faces = 12540
+shapeFromIdData.mesh_area = 12.477987278992194
+shapeFromIdData.convex_hull_area = 8.524179252906345
+shapeFromIdData.boundingbox_area = 12.934788357236236
+
+The outlier with ID 276 should be = data\LabeledDB_new\Mech\337.ply
+shapeFromIdData.nr_vertices = 11533
+shapeFromIdData.nr_faces = 23062
+shapeFromIdData.mesh_area = 8.928292334643219
+shapeFromIdData.convex_hull_area = 8.817103699733979
+shapeFromIdData.boundingbox_area = 13.721109471025265
+
+The outlier with ID 327 should be = data\LabeledDB_new\Table\148.ply
+shapeFromIdData.nr_vertices = 13375
+shapeFromIdData.nr_faces = 26746
+shapeFromIdData.mesh_area = 7.6389944145126005
+shapeFromIdData.convex_hull_area = 8.511756072682324
+shapeFromIdData.boundingbox_area = 12.480338901033004
+
+The outlier with ID 336 should be = data\LabeledDB_new\Table\157.ply
+shapeFromIdData.nr_vertices = 13883
+shapeFromIdData.nr_faces = 27762
+shapeFromIdData.mesh_area = 7.223223935739954
+shapeFromIdData.convex_hull_area = 8.606949246939875
+shapeFromIdData.boundingbox_area = 13.645061470416838
+

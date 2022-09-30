@@ -1,0 +1,29 @@
+Feature bounding_box_area has 4 outliers in 380 Shapes:
+The outlier with ID 79 should be = data\LabeledDB_new\Bearing\360.ply
+shapeFromIdData.nr_vertices = 2200
+shapeFromIdData.nr_faces = 4396
+shapeFromIdData.mesh_area = 0.02401534704587683
+shapeFromIdData.convex_hull_area = 0.023578025366316688
+shapeFromIdData.boundingbox_area = 0.031868776288166895
+
+The outlier with ID 106 should be = data\LabeledDB_new\Bust\307.ply
+shapeFromIdData.nr_vertices = 27439
+shapeFromIdData.nr_faces = 54874
+shapeFromIdData.mesh_area = 7.6535182332104075
+shapeFromIdData.convex_hull_area = 7.620986770354867
+shapeFromIdData.boundingbox_area = 17.891958241961213
+
+The outlier with ID 107 should be = data\LabeledDB_new\Bust\308.ply
+shapeFromIdData.nr_vertices = 23976
+shapeFromIdData.nr_faces = 47948
+shapeFromIdData.mesh_area = 8.530232132855419
+shapeFromIdData.convex_hull_area = 8.43077294391525
+shapeFromIdData.boundingbox_area = 17.22155905988153
+
+The outlier with ID 109 should be = data\LabeledDB_new\Bust\310.ply
+shapeFromIdData.nr_vertices = 8263
+shapeFromIdData.nr_faces = 16522
+shapeFromIdData.mesh_area = 8.09344624178696
+shapeFromIdData.convex_hull_area = 8.094856620206238
+shapeFromIdData.boundingbox_area = 16.278395017231446
+

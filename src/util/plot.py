@@ -5,6 +5,8 @@ import src.util.io
 import numpy as np
 from src.object.features import Features
 
+from src.database.reader import dataPaths
+
 
 
 # Python cant't convert variable names to string.
@@ -78,6 +80,14 @@ def plot_features(feature_list: [Features]):
 
     # Compare convex_hull_area with remaining others
     compareFeatures(convex_hull_area, convexArea, bounding_box_area, boundingArea)
+
+
+    # Detect the outliers of a single feature.
+    detectOutliers(vertices, nr_vertices, feature_list)
+    detectOutliers(faces, nr_faces, feature_list)
+    detectOutliers(meshArea, mesh_area, feature_list)
+    detectOutliers(convexArea, convex_hull_area, feature_list)
+    detectOutliers(boundingArea, bounding_box_area, feature_list)
 
 
 def compareFeatures(firstFeature, firstName, secondFeature, secondName):
@@ -163,10 +173,10 @@ def scatter_hist(x, y, xName, yName, ax, ax_histx, ax_histy):
 
     save_plt(f"{xName} and {yName} of meshes")
 
-    # Detecting outliers.
-    detectOutliers(xName, x)
-    plt.figure()
-    detectOutliers(yName, y)
+    # # Detecting outliers of both features.
+    # detectOutliers(xName, x)
+    # plt.figure()
+    # detectOutliers(yName, y)
 
     # plt.show()
 
@@ -197,8 +207,7 @@ def save_plt(title: str):
 
 
 # Source = https://www.geeksforgeeks.org/finding-the-outlier-points-from-matplotlib/
-def detectOutliers(featureName, featureData):
-    plt.title(f'Detecting outliers in feature = {featureName}')
+def detectOutliers(featureName, featureData, allFeatures: [Features]):
     plt.boxplot(featureData)
 
     firstQuartile = np.quantile(featureData, 0.25)
@@ -224,10 +233,59 @@ def detectOutliers(featureName, featureData):
     # print(f'\nupper_bound = {upper_bound}')
     # print(f'lower_bound = {lower_bound}')
 
-    print(f'\nDetected {len(outliers)} outliers in {featureName}:')
+    plt.title(f'Detected {len(outliers)} outliers in {len(featureData)} Shapes when looking at the {featureName} feature')
 
-    for elem in outliers:
-       print(f'{elem} has element id {featureData.index(elem)} in the {featureName} data.')
+    print(f'\nDetected {len(outliers)} outliers in {len(featureData)} Shapes when looking at the {featureName} feature:')
+
+    
+    outlierText = f'Feature {featureName} has {len(outliers)} outliers in {len(featureData)} Shapes:\n'
+
+    outlier_path = f'outliers/{featureName}'
+    complete_outlier_path = outlier_path + '/outliersData.txt'
+
+    # Outlier file does not exist
+    if not os.path.exists(outlier_path):
+        os.makedirs(outlier_path)
+
+    with open(complete_outlier_path, 'w') as f:
+        f.write(outlierText)
+
+        for i, elem in enumerate(outliers):
+            outlierIndex = featureData.index(elem)
+
+            print(f'outlier {i} = {outlierIndex}')
+
+            # Use the index to get the path to the Shape mesh.
+            outlierPath = dataPaths[outlierIndex]
+
+            f.write(f'The outlier with ID {outlierIndex} should be = {outlierPath}\n')
+
+            print(f'The outlier with ID {outlierIndex} should be = {outlierPath}')
+
+            # TODO Get the feature data based on the path value
+
+            # Check if the features values of Shape based on the index and based on the mesh path are the same.
+            shapeFromIdData = allFeatures[outlierIndex]
+
+            nr_facesFromId = [features.nr_faces for features in allFeatures][outlierIndex]
+            nr_verticesFromId = [features.nr_vertices for features in allFeatures][outlierIndex]
+
+            print(f'shapeFromIdData.nr_faces =?= nr_facesFromId')
+            print(f'{shapeFromIdData.nr_faces} =?= {nr_facesFromId}')
+
+            print(f'shapeFromIdData.nr_vertices =?= nr_verticesFromId')
+            print(f'{shapeFromIdData.nr_vertices} =?= {nr_verticesFromId}')
+
+            f.write(f'shapeFromIdData.nr_vertices = {shapeFromIdData.nr_vertices}\n')
+            f.write(f'shapeFromIdData.nr_faces = {shapeFromIdData.nr_faces}\n')
+            f.write(f'shapeFromIdData.mesh_area = {shapeFromIdData.mesh_area}\n')
+            f.write(f'shapeFromIdData.convex_hull_area = {shapeFromIdData.convex_hull_area}\n')
+            f.write(f'shapeFromIdData.boundingbox_area = {shapeFromIdData.bounding_box_area}\n\n')
+
+    # for elem in outliers:
+    #    print(f'{elem} has element id {featureData.index(elem)} in the {featureName} data.')
+
+    plt.show()
 
 
 def drawShapeDotOfSingleFeatureOnPlot(ax, featureID, featureName, featureData, otherFeatureName, otherFeatureData, value, dotText, givenColor):
@@ -253,24 +311,6 @@ def drawShapeDotOfSingleFeatureOnPlot(ax, featureID, featureName, featureData, o
 
     # Draw a dot where the average shape based on the mathematical average of the features lies.
     ax.plot(coordX, coordY, 'o', color = givenColor, alpha = 0.2)
-    ax.annotate(dotText, closestPosition, color = givenColor)
-    
-
-def drawShapeDotOfBothFeaturesOnPlot(ax, firstName, firstFeatureData, firstValue, secondName, secondFeatureData, secondValue, dotText, givenColor):
-    print(f'\nDraw a dot for {dotText}')
-
-    closestToFirstFeature = closestValue(firstFeatureData, firstValue)
-    closestToSecondFeature = closestValue(secondFeatureData, secondValue)
-
-    print(f'\nclosestToFirstFeature ({firstName}) = {closestToFirstFeature}')
-    print(f'closestToSecondFeature ({secondName}) = {closestToSecondFeature}')
-
-    closestPosition = (closestToFirstFeature, closestToSecondFeature)
-
-    print(f'closestPosition = {closestPosition}')
-
-    # Draw a dot where the average shape based on the mathematical average of the features lies.
-    ax.plot(closestToFirstFeature, closestToSecondFeature, 'o', color = givenColor, alpha = 0.5)
     ax.annotate(dotText, closestPosition, color = givenColor)
 
 

@@ -3,6 +3,8 @@ import os.path
 
 from src.object.features import Features
 
+dataPaths = list()
+
 
 def read_from_file() -> dict[str, Features]:
     database_path = "data/database.csv"
@@ -32,5 +34,7 @@ def read_from_file() -> dict[str, Features]:
 
             # Add to dict
             feature_dict[data.path] = data
+
+            dataPaths.append(data.path)
 
         return feature_dict

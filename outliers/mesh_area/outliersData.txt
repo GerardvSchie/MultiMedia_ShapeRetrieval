@@ -1,0 +1,274 @@
+Feature mesh_area has 39 outliers in 380 Shapes:
+The outlier with ID 106 should be = data\LabeledDB_new\Bust\307.ply
+shapeFromIdData.nr_vertices = 27439
+shapeFromIdData.nr_faces = 54874
+shapeFromIdData.mesh_area = 7.6535182332104075
+shapeFromIdData.convex_hull_area = 7.620986770354867
+shapeFromIdData.boundingbox_area = 17.891958241961213
+
+The outlier with ID 107 should be = data\LabeledDB_new\Bust\308.ply
+shapeFromIdData.nr_vertices = 23976
+shapeFromIdData.nr_faces = 47948
+shapeFromIdData.mesh_area = 8.530232132855419
+shapeFromIdData.convex_hull_area = 8.43077294391525
+shapeFromIdData.boundingbox_area = 17.22155905988153
+
+The outlier with ID 109 should be = data\LabeledDB_new\Bust\310.ply
+shapeFromIdData.nr_vertices = 8263
+shapeFromIdData.nr_faces = 16522
+shapeFromIdData.mesh_area = 8.09344624178696
+shapeFromIdData.convex_hull_area = 8.094856620206238
+shapeFromIdData.boundingbox_area = 16.278395017231446
+
+The outlier with ID 140 should be = data\LabeledDB_new\Cup\21.ply
+shapeFromIdData.nr_vertices = 15198
+shapeFromIdData.nr_faces = 30396
+shapeFromIdData.mesh_area = 8.532710254929206
+shapeFromIdData.convex_hull_area = 6.248269227365263
+shapeFromIdData.boundingbox_area = 10.417006860431883
+
+The outlier with ID 141 should be = data\LabeledDB_new\Cup\22.ply
+shapeFromIdData.nr_vertices = 15002
+shapeFromIdData.nr_faces = 30004
+shapeFromIdData.mesh_area = 11.408528863769403
+shapeFromIdData.convex_hull_area = 8.073047575232374
+shapeFromIdData.boundingbox_area = 13.086801940555922
+
+The outlier with ID 142 should be = data\LabeledDB_new\Cup\23.ply
+shapeFromIdData.nr_vertices = 15037
+shapeFromIdData.nr_faces = 30074
+shapeFromIdData.mesh_area = 8.3282729238813
+shapeFromIdData.convex_hull_area = 6.383787001799344
+shapeFromIdData.boundingbox_area = 11.660478303377474
+
+The outlier with ID 143 should be = data\LabeledDB_new\Cup\24.ply
+shapeFromIdData.nr_vertices = 15246
+shapeFromIdData.nr_faces = 30492
+shapeFromIdData.mesh_area = 11.531435520839333
+shapeFromIdData.convex_hull_area = 8.298321268073494
+shapeFromIdData.boundingbox_area = 13.48540636100897
+
+The outlier with ID 144 should be = data\LabeledDB_new\Cup\25.ply
+shapeFromIdData.nr_vertices = 15087
+shapeFromIdData.nr_faces = 30170
+shapeFromIdData.mesh_area = 11.919530211221339
+shapeFromIdData.convex_hull_area = 7.530822061858638
+shapeFromIdData.boundingbox_area = 10.567541001787355
+
+The outlier with ID 145 should be = data\LabeledDB_new\Cup\26.ply
+shapeFromIdData.nr_vertices = 15209
+shapeFromIdData.nr_faces = 30418
+shapeFromIdData.mesh_area = 10.73081162978652
+shapeFromIdData.convex_hull_area = 6.9208235182378655
+shapeFromIdData.boundingbox_area = 10.975660866255502
+
+The outlier with ID 146 should be = data\LabeledDB_new\Cup\27.ply
+shapeFromIdData.nr_vertices = 15137
+shapeFromIdData.nr_faces = 30274
+shapeFromIdData.mesh_area = 9.935083355420456
+shapeFromIdData.convex_hull_area = 6.625247600484774
+shapeFromIdData.boundingbox_area = 10.451953042072915
+
+The outlier with ID 147 should be = data\LabeledDB_new\Cup\28.ply
+shapeFromIdData.nr_vertices = 15070
+shapeFromIdData.nr_faces = 30140
+shapeFromIdData.mesh_area = 8.754257894662635
+shapeFromIdData.convex_hull_area = 6.409398673671895
+shapeFromIdData.boundingbox_area = 10.69401271100056
+
+The outlier with ID 148 should be = data\LabeledDB_new\Cup\29.ply
+shapeFromIdData.nr_vertices = 15127
+shapeFromIdData.nr_faces = 30254
+shapeFromIdData.mesh_area = 8.964377227889232
+shapeFromIdData.convex_hull_area = 6.483382592034221
+shapeFromIdData.boundingbox_area = 9.681481069204207
+
+The outlier with ID 150 should be = data\LabeledDB_new\Cup\31.ply
+shapeFromIdData.nr_vertices = 15227
+shapeFromIdData.nr_faces = 30454
+shapeFromIdData.mesh_area = 10.6946500753399
+shapeFromIdData.convex_hull_area = 7.878090909904279
+shapeFromIdData.boundingbox_area = 14.084761122251969
+
+The outlier with ID 151 should be = data\LabeledDB_new\Cup\32.ply
+shapeFromIdData.nr_vertices = 14751
+shapeFromIdData.nr_faces = 29502
+shapeFromIdData.mesh_area = 9.682185329609265
+shapeFromIdData.convex_hull_area = 6.39432625901743
+shapeFromIdData.boundingbox_area = 9.912652373311708
+
+The outlier with ID 152 should be = data\LabeledDB_new\Cup\33.ply
+shapeFromIdData.nr_vertices = 7349
+shapeFromIdData.nr_faces = 14698
+shapeFromIdData.mesh_area = 10.44848657084975
+shapeFromIdData.convex_hull_area = 7.43876415589878
+shapeFromIdData.boundingbox_area = 12.365287595649662
+
+The outlier with ID 153 should be = data\LabeledDB_new\Cup\34.ply
+shapeFromIdData.nr_vertices = 9602
+shapeFromIdData.nr_faces = 19204
+shapeFromIdData.mesh_area = 11.147574319828392
+shapeFromIdData.convex_hull_area = 8.071488663965457
+shapeFromIdData.boundingbox_area = 12.770908942219279
+
+The outlier with ID 155 should be = data\LabeledDB_new\Cup\36.ply
+shapeFromIdData.nr_vertices = 9076
+shapeFromIdData.nr_faces = 18152
+shapeFromIdData.mesh_area = 8.935174311733464
+shapeFromIdData.convex_hull_area = 5.926881956052792
+shapeFromIdData.boundingbox_area = 12.776767327923125
+
+The outlier with ID 156 should be = data\LabeledDB_new\Cup\37.ply
+shapeFromIdData.nr_vertices = 6270
+shapeFromIdData.nr_faces = 12540
+shapeFromIdData.mesh_area = 12.477987278992194
+shapeFromIdData.convex_hull_area = 8.524179252906345
+shapeFromIdData.boundingbox_area = 12.934788357236236
+
+The outlier with ID 157 should be = data\LabeledDB_new\Cup\38.ply
+shapeFromIdData.nr_vertices = 15064
+shapeFromIdData.nr_faces = 30128
+shapeFromIdData.mesh_area = 11.158973311905923
+shapeFromIdData.convex_hull_area = 7.810242635298435
+shapeFromIdData.boundingbox_area = 11.865485171224918
+
+The outlier with ID 158 should be = data\LabeledDB_new\Cup\39.ply
+shapeFromIdData.nr_vertices = 15161
+shapeFromIdData.nr_faces = 30322
+shapeFromIdData.mesh_area = 11.659442345741162
+shapeFromIdData.convex_hull_area = 7.396323331141187
+shapeFromIdData.boundingbox_area = 10.87998944883067
+
+The outlier with ID 159 should be = data\LabeledDB_new\Cup\40.ply
+shapeFromIdData.nr_vertices = 15165
+shapeFromIdData.nr_faces = 30326
+shapeFromIdData.mesh_area = 11.282776553574069
+shapeFromIdData.convex_hull_area = 6.704658970600462
+shapeFromIdData.boundingbox_area = 9.72318831484587
+
+The outlier with ID 260 should be = data\LabeledDB_new\Mech\321.ply
+shapeFromIdData.nr_vertices = 14995
+shapeFromIdData.nr_faces = 29986
+shapeFromIdData.mesh_area = 7.7402190165071625
+shapeFromIdData.convex_hull_area = 7.5982950739851765
+shapeFromIdData.boundingbox_area = 8.59701445125134
+
+The outlier with ID 261 should be = data\LabeledDB_new\Mech\322.ply
+shapeFromIdData.nr_vertices = 14991
+shapeFromIdData.nr_faces = 29978
+shapeFromIdData.mesh_area = 7.723416579258474
+shapeFromIdData.convex_hull_area = 7.605264296665482
+shapeFromIdData.boundingbox_area = 8.604901963478675
+
+The outlier with ID 262 should be = data\LabeledDB_new\Mech\323.ply
+shapeFromIdData.nr_vertices = 14991
+shapeFromIdData.nr_faces = 29978
+shapeFromIdData.mesh_area = 7.683156910154509
+shapeFromIdData.convex_hull_area = 7.592911977244139
+shapeFromIdData.boundingbox_area = 8.590924871118254
+
+The outlier with ID 263 should be = data\LabeledDB_new\Mech\324.ply
+shapeFromIdData.nr_vertices = 14812
+shapeFromIdData.nr_faces = 29620
+shapeFromIdData.mesh_area = 8.22780088823296
+shapeFromIdData.convex_hull_area = 7.9386579486960205
+shapeFromIdData.boundingbox_area = 10.993700858907658
+
+The outlier with ID 264 should be = data\LabeledDB_new\Mech\325.ply
+shapeFromIdData.nr_vertices = 14999
+shapeFromIdData.nr_faces = 29994
+shapeFromIdData.mesh_area = 7.835606049952648
+shapeFromIdData.convex_hull_area = 7.535568403347302
+shapeFromIdData.boundingbox_area = 11.151740180574102
+
+The outlier with ID 265 should be = data\LabeledDB_new\Mech\326.ply
+shapeFromIdData.nr_vertices = 14995
+shapeFromIdData.nr_faces = 29986
+shapeFromIdData.mesh_area = 8.123215874602923
+shapeFromIdData.convex_hull_area = 7.952415006069032
+shapeFromIdData.boundingbox_area = 10.741937439612038
+
+The outlier with ID 267 should be = data\LabeledDB_new\Mech\328.ply
+shapeFromIdData.nr_vertices = 14994
+shapeFromIdData.nr_faces = 29984
+shapeFromIdData.mesh_area = 7.853879572947577
+shapeFromIdData.convex_hull_area = 7.787656537122351
+shapeFromIdData.boundingbox_area = 8.811268049881711
+
+The outlier with ID 268 should be = data\LabeledDB_new\Mech\329.ply
+shapeFromIdData.nr_vertices = 14999
+shapeFromIdData.nr_faces = 29994
+shapeFromIdData.mesh_area = 7.826574494535157
+shapeFromIdData.convex_hull_area = 7.702597405716849
+shapeFromIdData.boundingbox_area = 8.71502908601397
+
+The outlier with ID 269 should be = data\LabeledDB_new\Mech\330.ply
+shapeFromIdData.nr_vertices = 15000
+shapeFromIdData.nr_faces = 29996
+shapeFromIdData.mesh_area = 7.827753616235255
+shapeFromIdData.convex_hull_area = 7.693109605564767
+shapeFromIdData.boundingbox_area = 8.704293098384362
+
+The outlier with ID 270 should be = data\LabeledDB_new\Mech\331.ply
+shapeFromIdData.nr_vertices = 15000
+shapeFromIdData.nr_faces = 29996
+shapeFromIdData.mesh_area = 8.03023522340472
+shapeFromIdData.convex_hull_area = 7.5752359693278795
+shapeFromIdData.boundingbox_area = 8.748577008414344
+
+The outlier with ID 272 should be = data\LabeledDB_new\Mech\333.ply
+shapeFromIdData.nr_vertices = 14942
+shapeFromIdData.nr_faces = 29880
+shapeFromIdData.mesh_area = 7.880410781047185
+shapeFromIdData.convex_hull_area = 7.399243410192665
+shapeFromIdData.boundingbox_area = 8.545323200235146
+
+The outlier with ID 273 should be = data\LabeledDB_new\Mech\334.ply
+shapeFromIdData.nr_vertices = 14997
+shapeFromIdData.nr_faces = 29990
+shapeFromIdData.mesh_area = 7.5974123230318
+shapeFromIdData.convex_hull_area = 7.198598846943598
+shapeFromIdData.boundingbox_area = 8.33364099107957
+
+The outlier with ID 274 should be = data\LabeledDB_new\Mech\335.ply
+shapeFromIdData.nr_vertices = 14995
+shapeFromIdData.nr_faces = 29986
+shapeFromIdData.mesh_area = 7.745419845488513
+shapeFromIdData.convex_hull_area = 7.603400673029934
+shapeFromIdData.boundingbox_area = 8.602791473452726
+
+The outlier with ID 276 should be = data\LabeledDB_new\Mech\337.ply
+shapeFromIdData.nr_vertices = 11533
+shapeFromIdData.nr_faces = 23062
+shapeFromIdData.mesh_area = 8.928292334643219
+shapeFromIdData.convex_hull_area = 8.817103699733979
+shapeFromIdData.boundingbox_area = 13.721109471025265
+
+The outlier with ID 278 should be = data\LabeledDB_new\Mech\339.ply
+shapeFromIdData.nr_vertices = 15000
+shapeFromIdData.nr_faces = 29996
+shapeFromIdData.mesh_area = 8.027443695120782
+shapeFromIdData.convex_hull_area = 7.57260249596925
+shapeFromIdData.boundingbox_area = 8.745536643659612
+
+The outlier with ID 279 should be = data\LabeledDB_new\Mech\340.ply
+shapeFromIdData.nr_vertices = 14997
+shapeFromIdData.nr_faces = 29990
+shapeFromIdData.mesh_area = 7.591705143148541
+shapeFromIdData.convex_hull_area = 7.19319194276569
+shapeFromIdData.boundingbox_area = 8.327377863000123
+
+The outlier with ID 327 should be = data\LabeledDB_new\Table\148.ply
+shapeFromIdData.nr_vertices = 13375
+shapeFromIdData.nr_faces = 26746
+shapeFromIdData.mesh_area = 7.6389944145126005
+shapeFromIdData.convex_hull_area = 8.511756072682324
+shapeFromIdData.boundingbox_area = 12.480338901033004
+
+The outlier with ID 364 should be = data\LabeledDB_new\Vase\365.ply
+shapeFromIdData.nr_vertices = 13514
+shapeFromIdData.nr_faces = 27028
+shapeFromIdData.mesh_area = 7.696390139551253
+shapeFromIdData.convex_hull_area = 7.612524710459115
+shapeFromIdData.boundingbox_area = 14.898641537220549
+
