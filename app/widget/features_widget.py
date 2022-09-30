@@ -35,9 +35,9 @@ class FeaturesWidget(QWidget):
 
     def update_widget(self, features: Features):
         self.class_value_label.setText(features.true_class)
-        self.nr_vertices_value_label.setText(str(features.nr_vertices))
-        self.nr_faces_value_label.setText(str(features.nr_faces))
+        self.nr_vertices_value_label.setText('{0}'.format(features.nr_vertices))
+        self.nr_faces_value_label.setText('{0}'.format(features.nr_faces))
         self.type_faces_value_label.setText(features.type_faces)
-        self.mesh_area_value_label.setText(str(features.mesh_area))
-        self.convex_hull_area_value_label.setText(str(features.convex_hull_area))
-        self.bounding_box_area_value_label.setText(str(features.bounding_box_area))
+        self.mesh_area_value_label.setText('{0:.6}'.format(features.mesh_area))
+        self.convex_hull_area_value_label.setText('{0:.6}'.format(features.convex_hull_area))
+        self.bounding_box_area_value_label.setText('{0:.6}'.format(features.bounding_box_area))

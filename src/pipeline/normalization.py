@@ -10,9 +10,7 @@ class Normalizer:
     def normalize_shape(shape: Shape):
         GeometriesController.calculate_mesh(shape.geometries)
         # Translate to center
-        # print(shape.geometries.mesh.get_center())
         shape.geometries.mesh.translate(-shape.geometries.mesh.get_center())
-        # print(shape.geometries.mesh.get_center())
 
         Normalizer.rot_pca(shape)  # Rotate based on PCA
         # shape.geometries.mesh = flipper(shape.geometries.mesh)  # Flips the mesh
@@ -27,18 +25,16 @@ class Normalizer:
     def rot_pca(shape: Shape):
         sort = Normalizer.get_eigenvalues_and_eigenvectors(shape.geometries.point_cloud)
         rotation_matrix = np.array([sort[0][1], sort[1][1], sort[2][1]])
-        mesh: o3d.geometry.TriangleMesh = shape.geometries.mesh
 
-        diagonal_minus = sum([1 for item in [rotation_matrix[0, 0], rotation_matrix[1, 1], rotation_matrix[2, 2]] if item < 0])
-
-        # Depending on the number of - in the diagonal, rotate with positive or negative matrix
-        if diagonal_minus % 2 == 0:
+        # Depending on the determinant of the rotation matrix
+        # rotate with positive or negative matrix
+        if np.linalg.det(rotation_matrix) >= 0:
             shape.geometries.mesh.rotate(R=rotation_matrix)
         else:
             shape.geometries.mesh.rotate(R=-rotation_matrix)
 
         # Verify eigenvalues of new mesh
-        point_cloud = o3d.geometry.PointCloud(mesh.vertices)
+        point_cloud = o3d.geometry.PointCloud(shape.geometries.mesh.vertices)
         Normalizer.get_eigenvalues_and_eigenvectors(point_cloud)
 
     @staticmethod
@@ -46,7 +42,8 @@ class Normalizer:
         mean, covariance = pcd.compute_mean_and_covariance()
         eigenvalues, eigenvectors = np.linalg.eig(covariance)
 
-        print(eigenvectors)
+        # print(eigenvalues)
+        # print(eigenvectors)
 
         zipped = [
             (eigenvalues[0], eigenvectors[:, 0]),

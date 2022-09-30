@@ -29,8 +29,8 @@ class NormalizationFeaturesWidget(QWidget):
         self.setLayout(layout)
 
     def update_widget(self, normalization_features: NormalizationFeatures):
-        self.distance_to_center_label.setText(str(normalization_features.distance_to_center))
-        self.scale_value_label.setText(str(normalization_features.scale))
-        self.alignment_value_label.setText(str(normalization_features.alignment))
-        self.rotation_value_label.setText(str(normalization_features.rotation))
-        self.flip_value_label.setText(str(normalization_features.flip))
+        self.distance_to_center_label.setText('{0:.6}'.format(normalization_features.distance_to_center))
+        self.scale_value_label.setText('{0:.6}'.format(normalization_features.scale))
+        self.alignment_value_label.setText('{0:.6}'.format(normalization_features.alignment))
+        self.rotation_value_label.setText('{0:.6}'.format(normalization_features.rotation))
+        self.flip_value_label.setText('{0:.6}'.format(normalization_features.flip))

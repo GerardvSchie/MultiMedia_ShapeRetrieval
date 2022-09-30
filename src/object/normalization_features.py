@@ -7,6 +7,6 @@ class NormalizationFeatures:
         self.scale: float = math.inf
         self.alignment: float = math.inf
         self.rotation: float = math.inf
-        self.flip = None
+        self.flip: float = math.inf
 
         self.triangle_sizes = []
