@@ -70,12 +70,7 @@ class FeatureExtractor:
         box = shape.geometries.axis_aligned_bounding_box
 
         # Axes of the shape
-        x = box.max_bound[0] - box.min_bound[0]
-        y = box.max_bound[1] - box.min_bound[1]
-        z = box.max_bound[2] - box.min_bound[2]
-
-        # Ensure no axis is negative, which would mess up the calculations
-        if x < 0 or y < 0 or z < 0:
-            raise Exception(f"Cannot compute surface area of dimensions: [{x} {y} {z}]")
-
+        x = abs(box.max_bound[0] - box.min_bound[0])
+        y = abs(box.max_bound[1] - box.min_bound[1])
+        z = abs(box.max_bound[2] - box.min_bound[2])
         return 2 * x * y + 2 * x * z + 2 * y * z

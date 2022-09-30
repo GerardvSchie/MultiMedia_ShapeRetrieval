@@ -1,10 +1,10 @@
 import logging
 import numpy as np
 import math
-import open3d as o3d
 
 from src.object.shape import Shape
 from src.controller.geometries_controller import GeometriesController
+from src.pipeline.normalization import Normalizer
 
 
 class NormalizationFeatureExtractor:
@@ -52,10 +52,18 @@ class NormalizationFeatureExtractor:
         if not math.isinf(shape.normalization_features.alignment) and not force_recompute:
             return shape.normalization_features.alignment
 
+        # Computed over the point cloud
         if not shape.geometries.point_cloud:
             GeometriesController.calculate_mesh(shape.geometries)
             GeometriesController.calculate_point_cloud(shape.geometries)
 
-        # eigenvalues_eigenvectors = .getEigen(shape.geometries.point_cloud)
+        # Compute the eigenvalues and vectors
+        eigenvalues_eigenvectors = Normalizer.get_eigenvalues_and_eigenvectors(shape.geometries.point_cloud)
 
-        return math.inf
+        # Dot product with each vector component
+        col1 = abs(np.dot(eigenvalues_eigenvectors[0][1], np.array([1, 0, 0])))
+        col2 = abs(np.dot(eigenvalues_eigenvectors[1][1], np.array([0, 1, 0])))
+        col3 = abs(np.dot(eigenvalues_eigenvectors[2][1], np.array([0, 0, 1])))
+
+        # Return the average dot product
+        return (col1 + col2 + col3) / 3
