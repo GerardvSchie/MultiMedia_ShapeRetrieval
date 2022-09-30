@@ -1,3 +1,6 @@
+import math
+
+
 class Features:
     def __init__(self) -> None:
         self.true_class: str = ""
@@ -8,11 +11,11 @@ class Features:
         self.type_faces: str = ""
 
         # Area
-        self.mesh_area: float = 0
-        self.convex_hull_area: float = 0
-        self.bounding_box_area: float = 0
+        self.mesh_area: float = math.inf
+        self.convex_hull_area: float = math.inf
+        self.bounding_box_area: float = math.inf
 
         # Volume
-        self.mesh_volume: float = 0
-        self.convex_hull_volume: float = 0
-        self.bounding_box_volume: float = 0
+        self.mesh_volume: float = math.inf
+        self.convex_hull_volume: float = math.inf
+        self.bounding_box_volume: float = math.inf

@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout
 from PyQt6.QtGui import QWindow
 
 from app.widget.normalization_features_widget import NormalizationFeaturesWidget
@@ -10,7 +10,8 @@ from app.widget.visualization_widget import VisualizationWidget
 from src.object.settings import Settings
 from app.util.os import IsMacOS
 from src.pipeline.feature_extractor import FeatureExtractor
-from src.pipeline.normalization import normalize_shape
+from src.pipeline.normalization_feature_extractor import NormalizationFeatureExtractor
+from src.pipeline.normalization import Normalizer
 
 
 class NormalizationTabWidget(QWidget):
@@ -66,19 +67,24 @@ class NormalizationTabWidget(QWidget):
         # First mesh
         self.scene_widgets[0].load_shape(file_path)
         FeatureExtractor.extract_features(self.scene_widgets[0].shape)
+        # NormalizationFeatureExtractor.extract_normalization_features(self.scene_widgets[0].shape)
         self.features_widget_1.update_widget(self.scene_widgets[0].shape.features)
 
         # Normalized mesh with 3000 points
         self.scene_widgets[1].load_shape(file_path)
         self.scene_widgets[1].clear()
 
-        self.scene_widgets[1].shape.geometries.point_cloud = self.scene_widgets[1].shape.geometries.mesh.sample_points_poisson_disk(3000)
+        # self.scene_widgets[1].shape.geometries.point_cloud = self.scene_widgets[1].shape.geometries.mesh.sample_points_poisson_disk(3000)
         # shape.geometries.point_cloud = shape.geometries.mesh.sample_points_uniformly(3000)
-        self.scene_widgets[1].shape.geometries.reconstruct_mesh()
+        # self.scene_widgets[1].shape.geometries.reconstruct_mesh()
+
+        Normalizer.normalize_shape(self.scene_widgets[1].shape)
 
         # Extract features and
         FeatureExtractor.extract_features(self.scene_widgets[1].shape)
+        NormalizationFeatureExtractor.extract_normalization_features(self.scene_widgets[1].shape)
         self.features_widget_2.update_widget(self.scene_widgets[1].shape.features)
+        self.normalization_widget.update_widget(self.scene_widgets[1].shape.normalization_features)
         self.scene_widgets[1].update_widget()
 
         # normalize_shape(self.scene_widgets[1].shape)

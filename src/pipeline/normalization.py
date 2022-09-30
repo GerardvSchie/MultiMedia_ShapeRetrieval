@@ -1,57 +1,75 @@
 import open3d as o3d
 import numpy as np
+
+from src.controller.geometries_controller import GeometriesController
 from src.object.shape import Shape
 
 
-def normalize_shape(shape: Shape):
-    shape.geometries.load_mesh()
+class Normalizer:
+    @staticmethod
+    def normalize_shape(shape: Shape):
+        GeometriesController.calculate_mesh(shape.geometries)
+        # Translate to center
+        # print(shape.geometries.mesh.get_center())
+        shape.geometries.mesh.translate(-shape.geometries.mesh.get_center())
+        # print(shape.geometries.mesh.get_center())
 
-    # Translate to center
-    # shape.geometries.mesh.vertices = shape.geometries.mesh.vertices - shape.geometries.mesh.get_center()
-   
-    shape.geometries.mesh = rot_pca(shape.geometries.mesh)  # Rotate based on PCA
-    shape.geometries.mesh = flipper(shape.geometries.mesh)  # Flips the mesh
-    # shape.geometries.mesh = scaler(shape.geometries.mesh)  # Scales to a unit bounding box the mesh
+        Normalizer.rot_pca(shape)  # Rotate based on PCA
+        # shape.geometries.mesh = flipper(shape.geometries.mesh)  # Flips the mesh
+        # shape.geometries.mesh = scaler(shape.geometries.mesh)  # Scales to a unit bounding box the mesh
 
+        # All other parts need to get recomputed
+        GeometriesController.calculate_all_from_mesh(shape.geometries, True)
+        GeometriesController.calculate_mesh_normals(shape.geometries, True)
+        GeometriesController.calculate_point_cloud_normals(shape.geometries, True)
 
-def rot_pca(mesh):
-    verts = mesh.vertices
-    A = np.zeros((3, len(verts)))
-    A[0] = np.array([x[0] for x in verts])
-    A[1] = np.array([x[1] for x in verts])
-    A[2] = np.array([x[2] for x in verts])
+    @staticmethod
+    def rot_pca(shape: Shape):
+        sort = Normalizer.get_eigenvalues_and_eigenvectors(shape.geometries.point_cloud)
+        rotation_matrix = np.array([sort[0][1], sort[1][1], sort[2][1]])
+        mesh: o3d.geometry.TriangleMesh = shape.geometries.mesh
 
-    A_cov = np.cov(A)
+        diagonal_minus = sum([1 for item in [rotation_matrix[0, 0], rotation_matrix[1, 1], rotation_matrix[2, 2]] if item < 0])
 
-    eigenvalues, eigenvectors = np.linalg.eig(A_cov)
-    min_eigen = np.argmin(eigenvalues)
-    max_eigen = np.argmax(eigenvalues)
-    mid_eigen = np.setdiff1d([0, 1, 2], [min_eigen, max_eigen])[0]
+        # Depending on the number of - in the diagonal, rotate with positive or negative matrix
+        if diagonal_minus % 2 == 0:
+            shape.geometries.mesh.rotate(R=rotation_matrix)
+        else:
+            shape.geometries.mesh.rotate(R=-rotation_matrix)
 
-    new_verts = o3d.utility.Vector3dVector()
-    for v in verts:
-        v1 = np.dot(v, eigenvectors[:, max_eigen])
-        v2 = np.dot(v, eigenvectors[:, mid_eigen])
-        v3 = np.dot(v, eigenvectors[:, min_eigen])
-        new_verts.append([v1, v2, v3])
-    mesh.vertices = new_verts
+        # Verify eigenvalues of new mesh
+        point_cloud = o3d.geometry.PointCloud(mesh.vertices)
+        Normalizer.get_eigenvalues_and_eigenvectors(point_cloud)
 
-    return mesh
+    @staticmethod
+    def get_eigenvalues_and_eigenvectors(pcd: o3d.geometry.PointCloud):
+        mean, covariance = pcd.compute_mean_and_covariance()
+        eigenvalues, eigenvectors = np.linalg.eig(covariance)
 
+        print(eigenvectors)
 
-def flipper(mesh):
-    # verts = mesh.vertices
-    return mesh
+        zipped = [
+            (eigenvalues[0], eigenvectors[:, 0]),
+            (eigenvalues[1], eigenvectors[:, 1]),
+            (eigenvalues[2], eigenvectors[:, 2]),
+        ]
 
+        return sorted(zipped, key=lambda x: x[0], reverse=True)
 
-def scaler(mesh):
-    verts = mesh.vertices
-    xc = [x[0] for x in verts]
-    yc = [x[1] for x in verts]
-    zc = [x[2] for x in verts]
-    xmin, xmax = min(xc), max(xc)
-    ymin, ymax = min(yc), max(yc)
-    zmin, zmax = min(zc), max(zc)
-    maxbox = max([xmax - xmin, ymax - ymin, zmax - zmin])
-    mesh.vertices /= maxbox
-    return mesh
+    @staticmethod
+    def flipper(mesh):
+        # verts = mesh.vertices
+        return mesh
+
+    @staticmethod
+    def scaler(mesh):
+        verts = mesh.vertices
+        xc = [x[0] for x in verts]
+        yc = [x[1] for x in verts]
+        zc = [x[2] for x in verts]
+        xmin, xmax = min(xc), max(xc)
+        ymin, ymax = min(yc), max(yc)
+        zmin, zmax = min(zc), max(zc)
+        maxbox = max([xmax - xmin, ymax - ymin, zmax - zmin])
+        mesh.vertices /= maxbox
+        return mesh

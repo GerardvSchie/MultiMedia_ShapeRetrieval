@@ -1,70 +1,73 @@
 import logging
 import math
 from src.object.shape import Shape
-
-import open3d as o3d
+from src.controller.geometries_controller import GeometriesController
 
 
 class FeatureExtractor:
     @staticmethod
-    def extract_normalization_features(shape: Shape):
-        if shape is None:
-            logging.warning("Cannot extract features from None shape")
-            return
-
-        if not math.isinf(shape.normalization_features.distance_to_center):
-            shape.normalization_features.distance_to_center = shape.geometries.mesh.get_center()
-        if not math.isinf(shape.normalization_features.scale):
-            box: o3d.geometry.AxisAlignedBoundingBox = shape.geometries.mesh.get_axis_aligned_bounding_box()
-            print(box)
-            shape.normalization_features.scale = box.max_bound
-
-    @staticmethod
     # Only extract the features that are not yet set with values in the shape
-    def extract_features(shape: Shape):
+    def extract_features(shape: Shape, force_recompute=False):
         if shape is None:
             logging.warning("Cannot extract features from None shape")
             return
-
-        if not shape.features.nr_vertices:
-            shape.features.nr_vertices = FeatureExtractor.number_of_vertices(shape)
-        if not shape.features.nr_faces:
-            shape.features.nr_faces = FeatureExtractor.number_of_faces(shape)
 
         # Open3D reads everything into triangles and automatically converts quads
         shape.features.type_faces = "only triangles"
-
-        if not shape.features.mesh_area:
-            shape.features.mesh_area = FeatureExtractor.mesh_area(shape)
-        if not shape.features.convex_hull_area:
-            shape.features.convex_hull_area = FeatureExtractor.convex_hull_area(shape)
-        if not shape.features.bounding_box_area:
-            shape.features.bounding_box_area = FeatureExtractor.bounding_box_area(shape)
+        shape.features.nr_vertices = FeatureExtractor.number_of_vertices(shape, force_recompute)
+        shape.features.nr_faces = FeatureExtractor.number_of_faces(shape, force_recompute)
+        shape.features.mesh_area = FeatureExtractor.mesh_area(shape, force_recompute)
+        shape.features.convex_hull_area = FeatureExtractor.convex_hull_area(shape, force_recompute)
+        shape.features.bounding_box_area = FeatureExtractor.bounding_box_area(shape, force_recompute)
 
     @staticmethod
-    def number_of_vertices(shape: Shape):
-        shape.geometries.load_mesh()
-        return len(shape.geometries.mesh.vertices)
+    def number_of_vertices(shape: Shape, force_recompute=False):
+        if shape.features.nr_vertices and not force_recompute:
+            return shape.features.nr_vertices
+
+        if shape.geometries.point_cloud:
+            return len(shape.geometries.point_cloud.points)
+        else:
+            GeometriesController.calculate_mesh(shape.geometries)
+            return len(shape.geometries.mesh.vertices)
 
     @staticmethod
-    def number_of_faces(shape: Shape):
-        shape.geometries.load_mesh()
+    def number_of_faces(shape: Shape, force_recompute=False):
+        if shape.features.nr_faces and not force_recompute:
+            return shape.features.nr_faces
+
+        GeometriesController.calculate_mesh(shape.geometries, force_recompute)
         return len(shape.geometries.mesh.triangles)
 
     @staticmethod
-    def mesh_area(shape: Shape):
-        shape.geometries.load_mesh()
+    def mesh_area(shape: Shape, force_recompute=False):
+        if not math.isinf(shape.features.mesh_area) and not force_recompute:
+            return shape.features.mesh_area
+
+        GeometriesController.calculate_mesh(shape.geometries)
         return shape.geometries.mesh.get_surface_area()
 
     @staticmethod
-    def convex_hull_area(shape: Shape):
-        shape.geometries.load_convex_hull()
+    def convex_hull_area(shape: Shape, force_recompute=False):
+        if not math.isinf(shape.features.convex_hull_area) and not force_recompute:
+            return shape.features.convex_hull_area
+
+        if not GeometriesController.calculate_convex_hull(shape.geometries):
+            GeometriesController.calculate_mesh(shape.geometries)
+            GeometriesController.calculate_convex_hull(shape.geometries)
+
         return shape.geometries.convex_hull_mesh.get_surface_area()
 
     @staticmethod
-    def bounding_box_area(shape: Shape):
-        shape.geometries.load_mesh()
-        box = shape.geometries.mesh.get_axis_aligned_bounding_box()
+    def bounding_box_area(shape: Shape, force_recompute=False):
+        if not math.isinf(shape.features.bounding_box_area) and not force_recompute:
+            return shape.features.bounding_box_area
+
+        if not GeometriesController.calculate_aligned_bounding_box(shape.geometries):
+            GeometriesController.calculate_mesh(shape.geometries)
+            GeometriesController.calculate_aligned_bounding_box(shape.geometries)
+
+        box = shape.geometries.axis_aligned_bounding_box
 
         # Axes of the shape
         x = box.max_bound[0] - box.min_bound[0]
@@ -75,4 +78,4 @@ class FeatureExtractor:
         if x < 0 or y < 0 or z < 0:
             raise Exception(f"Cannot compute surface area of dimensions: [{x} {y} {z}]")
 
-        return 2*x*y + 2*x*z + 2*y*z
+        return 2 * x * y + 2 * x * z + 2 * y * z

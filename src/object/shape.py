@@ -2,6 +2,7 @@ import os.path
 import logging
 import open3d as o3d
 
+from src.controller.geometries_controller import GeometriesController
 from src.object.features import Features
 from src.object.geometries import Geometries
 from src.object.normalization_features import NormalizationFeatures
@@ -27,7 +28,7 @@ class Shape:
 
         self.geometries: Geometries = Geometries(path)
         if load_geometries:
-            self.geometries.load()
+            GeometriesController.load_all_from_file(self.geometries)
 
     @staticmethod
     def convert_to_ply(path) -> str:

@@ -5,6 +5,7 @@ import win32gui
 
 from PyQt6.QtWidgets import QWidget
 
+from src.controller.geometries_controller import GeometriesController
 from src.object.shape import Shape
 from src.object.settings import Settings
 from app.util.os import IsMacOS
@@ -36,6 +37,7 @@ class VisualizationWidget(QWidget):
 
         self._show_silhouette: bool = False
         self._show_axes: bool = False
+        self._axes = GeometriesController.get_coordinate_axes()
 
         self.vis: open3d.visualization.Visualizer = o3d.visualization.Visualizer()
 
@@ -58,6 +60,9 @@ class VisualizationWidget(QWidget):
 
         # Load shape
         self.shape = Shape(path, load_geometries=True)
+        GeometriesController.calculate_mesh_normals(self.shape.geometries, True)
+        GeometriesController.calculate_point_cloud_normals(self.shape.geometries, True)
+
         if self.settings.show_silhouette:
             self.shape.geometries.mesh.paint_uniform_color((0, 0, 0))
         else:
@@ -119,7 +124,7 @@ class VisualizationWidget(QWidget):
         self._resolve_geometry_state_difference(self._show_point_cloud, self.settings.show_point_cloud, self.shape.geometries.point_cloud)
         self._resolve_geometry_state_difference(self._show_convex_hull, self.settings.show_convex_hull, self.shape.geometries.convex_hull_line_set)
         self._resolve_geometry_state_difference(self._show_axis_aligned_bounding_box, self.settings.show_axis_aligned_bounding_box, self.shape.geometries.axis_aligned_bounding_box_line_set)
-        self._resolve_geometry_state_difference(self._show_axes, self.settings.show_axes, self.shape.geometries.axes)
+        self._resolve_geometry_state_difference(self._show_axes, self.settings.show_axes, self._axes)
         self._resolve_geometry_state_difference(self._show_center_mesh, self.settings.show_center_mesh, self.shape.geometries.center_mesh)
 
         # Silhouette mode
