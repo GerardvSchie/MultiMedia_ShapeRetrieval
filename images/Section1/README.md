@@ -1,0 +1,1 @@
+Dog path: data\LabeledDB_new\FourLeg\398.ply
