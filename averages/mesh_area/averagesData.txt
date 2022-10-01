@@ -1,0 +1,8 @@
+Feature mesh_area has an average Shape of 3.488005832564766 based on 380 Shapes with ID 294:
+The average with ID 294 should be = data\LabeledDB_new\Octopus\135.ply
+shapeFromIdData.nr_vertices = 15201
+shapeFromIdData.nr_faces = 30398
+shapeFromIdData.mesh_area = 3.488005832564766
+shapeFromIdData.convex_hull_area = 5.512549655863707
+shapeFromIdData.boundingbox_area = 9.560557510454842
+

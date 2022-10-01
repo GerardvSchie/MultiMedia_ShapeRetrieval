@@ -82,12 +82,29 @@ def plot_features(feature_list: [Features]):
     compareFeatures(convex_hull_area, convexArea, bounding_box_area, boundingArea)
 
 
+    # Save the data related to the Shape closest to the average of a feature
+    saveAverageShapeData(vertices, nr_vertices, feature_list)
+    saveAverageShapeData(faces, nr_faces, feature_list)
+    saveAverageShapeData(meshArea, mesh_area, feature_list)
+    saveAverageShapeData(convexArea, convex_hull_area, feature_list)
+    saveAverageShapeData(boundingArea, bounding_box_area, feature_list)
+
+
     # Detect the outliers of a single feature.
     detectOutliers(vertices, nr_vertices, feature_list)
     detectOutliers(faces, nr_faces, feature_list)
     detectOutliers(meshArea, mesh_area, feature_list)
     detectOutliers(convexArea, convex_hull_area, feature_list)
     detectOutliers(boundingArea, bounding_box_area, feature_list)
+
+
+    # Check if we have any poorly-sampled Shapes that don't appear in as outliers for some reason.
+    for i, elem in enumerate(nr_vertices):
+        if (elem < 100):
+            print(f'SHAPE AT INDEX {i} IS POORLY-SAMPLED, NOT ENOUGH VERTICES')
+    for i, elem in enumerate(nr_faces):
+        if (elem < 100):
+            print(f'SHAPE AT INDEX {i} IS POORLY-SAMPLED, NOT ENOUGH FACES')
 
 
 def compareFeatures(firstFeature, firstName, secondFeature, secondName):
@@ -206,6 +223,44 @@ def save_plt(title: str):
     plt.close()
 
 
+def saveAverageShapeData(featureName, featureData, allFeatures: [Features]):
+    mathAverage = np.mean(featureData)
+    shapeClosestToAverage = closestValue(featureData, mathAverage)
+    averageIndex = featureData.index(shapeClosestToAverage)
+
+    averageText = f'Feature {featureName} has an average Shape of {shapeClosestToAverage} based on {len(featureData)} Shapes with ID {averageIndex}:\n'
+
+    average_path = f'averages/{featureName}'
+    complete_average_path = average_path + '/averagesData.txt'
+
+    # Average file does not exist
+    if not os.path.exists(average_path):
+        os.makedirs(average_path)
+
+    with open(complete_average_path, 'w') as f:
+        f.write(averageText)
+
+        # print(f'average = {averageIndex}')
+
+        # Use the index to get the path to the Shape mesh.
+        averagePath = dataPaths[averageIndex]
+
+        f.write(f'The average with ID {averageIndex} should be = {averagePath}\n')
+
+        # print(f'The average with ID {averageIndex} should be = {averagePath}')
+
+        # TODO Get the feature data based on the path value
+
+        # Check if the features values of Shape based on the index and based on the mesh path are the same.
+        shapeFromIdData = allFeatures[averageIndex]
+
+        f.write(f'shapeFromIdData.nr_vertices = {shapeFromIdData.nr_vertices}\n')
+        f.write(f'shapeFromIdData.nr_faces = {shapeFromIdData.nr_faces}\n')
+        f.write(f'shapeFromIdData.mesh_area = {shapeFromIdData.mesh_area}\n')
+        f.write(f'shapeFromIdData.convex_hull_area = {shapeFromIdData.convex_hull_area}\n')
+        f.write(f'shapeFromIdData.boundingbox_area = {shapeFromIdData.bounding_box_area}\n\n')
+
+
 # Source = https://www.geeksforgeeks.org/finding-the-outlier-points-from-matplotlib/
 def detectOutliers(featureName, featureData, allFeatures: [Features]):
     plt.boxplot(featureData)
@@ -253,14 +308,14 @@ def detectOutliers(featureName, featureData, allFeatures: [Features]):
         for i, elem in enumerate(outliers):
             outlierIndex = featureData.index(elem)
 
-            print(f'outlier {i} = {outlierIndex}')
+            # print(f'outlier {i} = {outlierIndex}')
 
             # Use the index to get the path to the Shape mesh.
             outlierPath = dataPaths[outlierIndex]
 
             f.write(f'The outlier with ID {outlierIndex} should be = {outlierPath}\n')
 
-            print(f'The outlier with ID {outlierIndex} should be = {outlierPath}')
+            # print(f'The outlier with ID {outlierIndex} should be = {outlierPath}')
 
             # TODO Get the feature data based on the path value
 
@@ -270,11 +325,11 @@ def detectOutliers(featureName, featureData, allFeatures: [Features]):
             nr_facesFromId = [features.nr_faces for features in allFeatures][outlierIndex]
             nr_verticesFromId = [features.nr_vertices for features in allFeatures][outlierIndex]
 
-            print(f'shapeFromIdData.nr_faces =?= nr_facesFromId')
-            print(f'{shapeFromIdData.nr_faces} =?= {nr_facesFromId}')
+            # print(f'shapeFromIdData.nr_faces =?= nr_facesFromId')
+            # print(f'{shapeFromIdData.nr_faces} =?= {nr_facesFromId}')
 
-            print(f'shapeFromIdData.nr_vertices =?= nr_verticesFromId')
-            print(f'{shapeFromIdData.nr_vertices} =?= {nr_verticesFromId}')
+            # print(f'shapeFromIdData.nr_vertices =?= nr_verticesFromId')
+            # print(f'{shapeFromIdData.nr_vertices} =?= {nr_verticesFromId}')
 
             f.write(f'shapeFromIdData.nr_vertices = {shapeFromIdData.nr_vertices}\n')
             f.write(f'shapeFromIdData.nr_faces = {shapeFromIdData.nr_faces}\n')
@@ -282,32 +337,31 @@ def detectOutliers(featureName, featureData, allFeatures: [Features]):
             f.write(f'shapeFromIdData.convex_hull_area = {shapeFromIdData.convex_hull_area}\n')
             f.write(f'shapeFromIdData.boundingbox_area = {shapeFromIdData.bounding_box_area}\n\n')
 
+            if (shapeFromIdData.nr_vertices < 100 or shapeFromIdData.nr_faces < 100):
+                f.write('THIS SHAPE IS POORLY-SAMPLED!')
+
     # for elem in outliers:
     #    print(f'{elem} has element id {featureData.index(elem)} in the {featureName} data.')
 
-    plt.show()
+    # plt.show()
+    save_plt(f'{featureName} outliers')
 
 
-def drawShapeDotOfSingleFeatureOnPlot(ax, featureID, featureName, featureData, otherFeatureName, otherFeatureData, value, dotText, givenColor):
+def drawShapeDotOfSingleFeatureOnPlot(ax, featureID, featureName, featureData, otherFeatureName, otherFeatureData, featureMathAverage, dotText, givenColor):
     # print(f'\nDraw a dot for {dotText}')
 
-    closestToFeatureAverage = closestValue(featureData, value)
-    otherFeatureValue = otherFeatureData[featureData.index(closestToFeatureAverage)]
-
-    # print(f'\nclosestToFeatureAverage ({featureName}) = {closestToFeatureAverage}')
-    # print(f'\notherFeatureValue ({otherFeatureName}) = {otherFeatureValue}')
+    shapeClosestToFeatureAverage = closestValue(featureData, featureMathAverage)
+    otherFeatureValue = otherFeatureData[featureData.index(shapeClosestToFeatureAverage)]
 
     # The coordinates have to be flipped depending on the feature being looked at.
     if (featureID == 0):
-        coordX = closestToFeatureAverage
+        coordX = shapeClosestToFeatureAverage
         coordY = otherFeatureValue
-        closestPosition = (closestToFeatureAverage, otherFeatureValue)
+        closestPosition = (shapeClosestToFeatureAverage, otherFeatureValue)
     else:
         coordX = otherFeatureValue
-        coordY = closestToFeatureAverage
-        closestPosition = (otherFeatureValue, closestToFeatureAverage)
-
-    # print(f'closestPosition = {closestPosition}')
+        coordY = shapeClosestToFeatureAverage
+        closestPosition = (otherFeatureValue, shapeClosestToFeatureAverage)
 
     # Draw a dot where the average shape based on the mathematical average of the features lies.
     ax.plot(coordX, coordY, 'o', color = givenColor, alpha = 0.2)
@@ -322,12 +376,8 @@ def closestValue(listOfValues, value):
     arr = np.asarray(listOfValues)
     
     a = np.abs(arr - value)
-    # print(f'a:\n{a}')
-
     index = a.argmin()
-    # print(f'index = {index}')
 
     result = arr[index]
-    # print(f'result = {result}')
 
     return result

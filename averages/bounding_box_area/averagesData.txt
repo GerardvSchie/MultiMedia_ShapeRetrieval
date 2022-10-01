@@ -1,0 +1,8 @@
+Feature bounding_box_area has an average Shape of 7.906061036148859 based on 380 Shapes with ID 154:
+The average with ID 154 should be = data\LabeledDB_new\Cup\35.ply
+shapeFromIdData.nr_vertices = 15136
+shapeFromIdData.nr_faces = 30268
+shapeFromIdData.mesh_area = 6.277348325543741
+shapeFromIdData.convex_hull_area = 6.018322749361538
+shapeFromIdData.boundingbox_area = 7.906061036148859
+
