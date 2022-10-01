@@ -1,7 +1,8 @@
+from app.widget.tab.shape_features_tab_widget import ShapeFeaturesTabWidget
 from app.widget.util import color_widget
 
 from PyQt6 import QtCore
-from PyQt6.QtWidgets import QTabWidget
+from PyQt6.QtWidgets import QTabWidget, QApplication
 
 from app.util.worker import Worker
 from app.gui.menu_bar import MenuBar
@@ -9,9 +10,6 @@ from app.widget.tab.viewer_widget import ViewerWidget
 from app.widget.tab.multi_viewer_widget import MultiViewerWidget
 from app.widget.tab.normalization_tab_widget import NormalizationTabWidget
 from app.util.os import IsMacOS
-
-from src.object.settings import Settings
-from PyQt6.QtWidgets import QApplication
 
 
 class TabWidget(QTabWidget):
@@ -42,6 +40,10 @@ class TabWidget(QTabWidget):
         if not IsMacOS:
             self.tab2_widget = NormalizationTabWidget()
             self.addTab(self.tab2_widget, "Normalize mesh")
+
+        if not IsMacOS:
+            self.tab3_widget = ShapeFeaturesTabWidget()
+            self.addTab(self.tab3_widget, "Features")
 
     def closeEvent(self, *args, **kwargs):
         self.worker.stop()
