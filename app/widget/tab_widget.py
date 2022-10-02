@@ -7,7 +7,6 @@ from PyQt6.QtWidgets import QTabWidget, QApplication
 from app.util.worker import Worker
 from app.gui.menu_bar import MenuBar
 from app.widget.tab.viewer_widget import ViewerWidget
-from app.widget.tab.multi_viewer_widget import MultiViewerWidget
 from app.widget.tab.normalization_tab_widget import NormalizationTabWidget
 from app.util.os import IsMacOS
 

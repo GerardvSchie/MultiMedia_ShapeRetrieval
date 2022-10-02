@@ -1,5 +1,5 @@
 from app.widget.util import color_widget
-from src.object.normalization_features import NormalizationFeatures
+from src.object.features.normalization_features import NormalizationFeatures
 
 from PyQt6.QtWidgets import QWidget, QLabel
 
@@ -24,7 +24,6 @@ class NormalizationFeaturesWidget(QWidget):
         layout.add_row("Center distance:", [self.distance_to_center_label])
         layout.add_row("Scale:", [self.scale_value_label])
         layout.add_row("Alignment:", [self.alignment_value_label])
-        layout.add_row("Rotation:", [self.rotation_value_label])
         layout.add_row("Flip:", [self.flip_value_label])
         self.setLayout(layout)
 
@@ -32,5 +31,4 @@ class NormalizationFeaturesWidget(QWidget):
         self.distance_to_center_label.setText('{0:.6}'.format(normalization_features.distance_to_center))
         self.scale_value_label.setText('{0:.6}'.format(normalization_features.scale))
         self.alignment_value_label.setText('{0:.6}'.format(normalization_features.alignment))
-        self.rotation_value_label.setText('{0:.6}'.format(normalization_features.rotation))
         self.flip_value_label.setText('{0:.6}'.format(normalization_features.flip))

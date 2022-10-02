@@ -9,7 +9,7 @@ from PyQt6.QtGui import QWindow
 
 from src.object.settings import Settings
 from app.util.os import IsMacOS
-from src.pipeline.feature_extractor import FeatureExtractor
+from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
 
 
 class ViewerWidget(QWidget):
@@ -44,7 +44,7 @@ class ViewerWidget(QWidget):
 
     def load_shape(self, file_path: str):
         self.scene_widgets[0].load_shape(file_path)
-        FeatureExtractor.extract_features(self.scene_widgets[0].shape)
+        ShapeFeatureExtractor.extract_all_shape_features(self.scene_widgets[0].shape)
         self.features_widget.update_widget(self.scene_widgets[0].shape.features)
 
     def save_shape(self, file_path: str):

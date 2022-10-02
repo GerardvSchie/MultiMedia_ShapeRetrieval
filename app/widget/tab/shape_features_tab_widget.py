@@ -10,7 +10,7 @@ from app.widget.visualization_widget import VisualizationWidget
 
 from src.object.settings import Settings
 from app.util.os import IsMacOS
-from src.pipeline.normalization_feature_extractor import NormalizationFeatureExtractor
+from src.pipeline.feature_extractor.normalization_feature_extractor import NormalizationFeatureExtractor
 
 
 class ShapeFeaturesTabWidget(QWidget):
@@ -76,15 +76,14 @@ class ShapeFeaturesTabWidget(QWidget):
         self.scene_widgets[2].update_widget()
 
         # Update normalization
-        NormalizationFeatureExtractor.extract_normalization_features(self.scene_widgets[0].shape)
-        self.normalization_widget.update_widget(self.scene_widgets[0].shape.normalization_features)
+        NormalizationFeatureExtractor.extract_features(
+            self.scene_widgets[0].shape.geometries.mesh,
+            self.scene_widgets[0].shape.geometries.point_cloud,
+            self.scene_widgets[0].shape.geometries.axis_aligned_bounding_box,
+            self.scene_widgets[0].shape.features.normalization_features,
+        )
 
-        # FeatureExtractor.extract_features(self.scene_widgets[0].shape)
-        # self.features_widget_1.update_widget(self.scene_widgets[0].shape.features)
-
-        # Extract features and
-
-        # self.features_widget_2.update_widget(self.scene_widgets[1].shape.features)
+        self.normalization_widget.update_widget(self.scene_widgets[0].shape.features.normalization_features)
 
     def save_shape(self, file_path: str):
         self.scene_widgets[1].shape.save(file_path)

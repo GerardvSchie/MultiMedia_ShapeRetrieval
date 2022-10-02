@@ -1,0 +1,6 @@
+Feature Mesh nr_faces has an average Shape of 20462 based on 380 Shapes with ID 344:
+The average with ID 344 should be = data\LabeledDB_new\Teddy\165.ply
+shapeFromIdData.mesh_nr_vertices = 10233
+shapeFromIdData.mesh_nr_faces = 20462
+shapeFromIdData.mesh_area = 4.114574575372516
+shapeFromIdData.convex_hull_area = 4.8690401162551025

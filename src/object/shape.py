@@ -3,13 +3,12 @@ import logging
 import open3d as o3d
 
 from src.controller.geometries_controller import GeometriesController
-from src.object.features import Features
+from src.object.features.shape_features import ShapeFeatures
 from src.object.geometries import Geometries
-from src.object.normalization_features import NormalizationFeatures
 
 
 class Shape:
-    def __init__(self, shape_path: str, pre_computed_features: Features = None, load_geometries: bool = False):
+    def __init__(self, shape_path: str, pre_computed_features: ShapeFeatures = None, load_geometries: bool = False):
         if not os.path.exists(shape_path):
             logging.error(f"Shape file at path {os.path.abspath(shape_path)} does not exist!")
             raise Exception("Path does not exist")
@@ -18,13 +17,11 @@ class Shape:
         path = self.convert_to_ply(os.path.relpath(shape_path))
 
         if pre_computed_features:
-            self.features: Features = pre_computed_features
+            self.features: ShapeFeatures = pre_computed_features
         else:
             # Separate path based on separator of os system
-            self.features: Features = Features()
+            self.features: ShapeFeatures = ShapeFeatures()
             self.features.true_class = os.path.split(os.path.split(shape_path)[0])[1]
-
-        self.normalization_features: NormalizationFeatures = NormalizationFeatures()
 
         self.geometries: Geometries = Geometries(path)
         if load_geometries:

@@ -11,10 +11,9 @@ from app.widget.visualization_widget import VisualizationWidget
 
 from src.object.settings import Settings
 from app.util.os import IsMacOS
-from src.pipeline.feature_extractor import FeatureExtractor
+from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
 from src.controller.geometries_controller import GeometriesController
-from src.pipeline.normalization_feature_extractor import NormalizationFeatureExtractor
-from src.pipeline.normalization import Normalizer
+from src.pipeline.feature_extractor.normalization_feature_extractor import NormalizationFeatureExtractor
 
 
 class NormalizationTabWidget(QWidget):
@@ -72,7 +71,7 @@ class NormalizationTabWidget(QWidget):
         self.scene_widgets[1].clear()
         self.scene_widgets[1].shape = deepcopy(self.scene_widgets[0].shape)
 
-        FeatureExtractor.extract_features(self.scene_widgets[0].shape)
+        ShapeFeatureExtractor.extract_all_shape_features(self.scene_widgets[0].shape)
         self.features_widget_1.update_widget(self.scene_widgets[0].shape.features)
 
         # Normalized mesh with 3000 points
@@ -80,7 +79,6 @@ class NormalizationTabWidget(QWidget):
 
         # self.scene_widgets[1].shape.geometries.point_cloud = self.scene_widgets[1].shape.geometries.mesh.sample_points_poisson_disk(3000)
         self.scene_widgets[1].shape.geometries.point_cloud = self.scene_widgets[1].shape.geometries.mesh.sample_points_uniformly(3000)
-        # self.scene_widgets[1].shape.geometries.reconstruct_mesh()
 
         GeometriesController.calculate_all_from_point_cloud(self.scene_widgets[1].shape.geometries, True)
         GeometriesController.calculate_mesh_normals(self.scene_widgets[1].shape.geometries, True)
@@ -89,10 +87,10 @@ class NormalizationTabWidget(QWidget):
         # Normalizer.normalize_shape(self.scene_widgets[1].shape)
 
         # Extract features and
-        FeatureExtractor.extract_features(self.scene_widgets[1].shape)
-        NormalizationFeatureExtractor.extract_normalization_features(self.scene_widgets[1].shape)
+        ShapeFeatureExtractor.extract_all_shape_features(self.scene_widgets[1].shape)
+        # NormalizationFeatureExtractor.extract_features(self.scene_widgets[1].shape)
         self.features_widget_2.update_widget(self.scene_widgets[1].shape.features)
-        self.normalization_widget.update_widget(self.scene_widgets[1].shape.normalization_features)
+        self.normalization_widget.update_widget(self.scene_widgets[1].shape.features.normalization_features)
         self.scene_widgets[1].update_widget()
 
         # normalize_shape(self.scene_widgets[1].shape)

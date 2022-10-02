@@ -1,4 +1,3 @@
-import logging
 import os
 
 # Needed to fix ModuleNotFoundError when importing src.util.logger.
@@ -11,7 +10,7 @@ sys.path.append(repoDirectory)
 
 import src.util.logger as logger
 from src.object.shape import Shape
-from src.pipeline.feature_extractor import FeatureExtractor
+from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
 import src.util.plot
 import src.database.writer
 import src.database.reader
@@ -36,12 +35,15 @@ def main():
                     shape = Shape(path, features_data[feature_path])
                 else:
                     shape = Shape(path)
-                FeatureExtractor.extract_features(shape)
+
+                # Disable additional feature extraction, meshes are not watertight
+                # ShapeFeatureExtractor.extract_mesh_features(shape)
+                # ShapeFeatureExtractor.extract_convex_hull_features(shape)
 
                 shape_collection.append(shape)
 
     src.util.plot.plot_features([shape.features for shape in shape_collection])
-    src.database.writer.write_to_file(shape_collection)
+    # src.database.writer.write_to_file(shape_collection)
     print("run complete")
 
 

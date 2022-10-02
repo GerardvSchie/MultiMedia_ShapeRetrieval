@@ -1,21 +1,28 @@
+import math
 import os
 import matplotlib
 import matplotlib.pyplot as plt
 import src.util.io
 import numpy as np
-from src.object.features import Features
+from src.object.features.shape_features import ShapeFeatures
 
 from src.database.reader import dataPaths
 
 
+# Python can't convert variable names to string.
+CLASSES = 'classes'
 
-# Python cant't convert variable names to string.
-faces = 'nr_faces'
-vertices = 'nr_vertices'
-meshArea = 'mesh_area'
-convexArea = 'convex_hull_area'
-boundingArea = 'bounding_box_area'
-classes = 'classes'
+MESH_FACES = 'Mesh nr_faces'
+MESH_VERTICES = 'Mesh nr_vertices'
+MESH_AREA = 'Mesh area'
+MESH_VOLUME = 'Mesh volume'
+
+CONVEX_HULL_FACES = 'Convex hull nr_faces'
+CONVEX_HULL_VERTICES = 'Convex hull nr_vertices'
+CONVEX_HULL_AREA = 'Convex hull area'
+CONVEX_HULL_VOLUME = 'Convex hull volume'
+
+# boundingArea = 'bounding_box_area'
 
 
 
@@ -26,7 +33,7 @@ histBins = 100
 scatterHistBins = 100
 
 
-def plot_features(feature_list: [Features]):
+def plot_features(feature_list: [ShapeFeatures]):
     # Choose a backend for matplotlib
     matplotlib.use('TkAgg')
     # Create folder for the plots
@@ -34,27 +41,31 @@ def plot_features(feature_list: [Features]):
 
     # A list where each element is the number of faces of a single shape.
     # There are 380 elements/shapes.
-    nr_faces = [features.nr_faces for features in feature_list]
-    hist_plot(faces, nr_faces)
+    mesh_nr_faces = [features.mesh_features.nr_faces for features in feature_list]
+    hist_plot(MESH_FACES, mesh_nr_faces)
 
     # A list where each element is the number of vertices of a single shape.
     # There are 380 elements/shapes.
-    nr_vertices = [features.nr_vertices for features in feature_list]
-    hist_plot(vertices, nr_vertices)
+    mesh_nr_vertices = [features.mesh_features.nr_vertices for features in feature_list]
+    hist_plot(MESH_VERTICES, mesh_nr_vertices)
 
-    mesh_area = [features.mesh_area for features in feature_list]
-    hist_plot(meshArea, mesh_area)
+    mesh_area = [features.mesh_features.surface_area for features in feature_list]
+    hist_plot(MESH_AREA, mesh_area)
 
-    convex_hull_area = [features.convex_hull_area for features in feature_list]
-    hist_plot(convexArea, convex_hull_area)
+    mesh_volume = [features.mesh_features.volume for features in feature_list if not math.isinf(features.mesh_features.volume)]
+    hist_plot(MESH_VOLUME, mesh_volume)
 
-    bounding_box_area = [features.bounding_box_area for features in feature_list]
-    hist_plot(boundingArea, bounding_box_area)
+    convex_hull_area = [features.convex_hull_features.surface_area for features in feature_list]
+    hist_plot(CONVEX_HULL_AREA, convex_hull_area)
+
+    # Bounding box features added soon
+    # bounding_box_area = [features.bounding_box_area for features in feature_list]
+    # hist_plot(boundingArea, bounding_box_area)
 
     # Class is a string, which requires a special comparison.
     # There are 19 classes.
     true_classes = [features.true_class for features in feature_list]
-    hist_plot(classes, true_classes)
+    hist_plot(CLASSES, true_classes)
 
     # compareFeatures(true_classes, classes, nr_vertices, vertices) TODO Figure out how to make comparisons between classes (strings) and other features (integers).
 
@@ -64,46 +75,46 @@ def plot_features(feature_list: [Features]):
 
     # Create images based on all feature being compared.
     # Compare vertices with all current other features in the database for now.
-    compareFeatures(nr_vertices, vertices, nr_faces, faces)
-    compareFeatures(nr_vertices, vertices, mesh_area, meshArea)
-    compareFeatures(nr_vertices, vertices, convex_hull_area, convexArea)
-    compareFeatures(nr_vertices, vertices, bounding_box_area, boundingArea)
+    compareFeatures(mesh_nr_vertices, MESH_VERTICES, mesh_nr_faces, MESH_FACES)
+    compareFeatures(mesh_nr_vertices, MESH_VERTICES, mesh_area, MESH_AREA)
+    compareFeatures(mesh_nr_vertices, MESH_VERTICES, convex_hull_area, CONVEX_HULL_AREA)
+    # compareFeatures(MESH_VERTICES, mesh_nr_vertices, bounding_box_area, boundingArea)
 
     # Compare faces with remaining others
-    compareFeatures(nr_faces, faces, mesh_area, meshArea)
-    compareFeatures(nr_faces, faces, convex_hull_area, convexArea)
-    compareFeatures(nr_faces, faces, bounding_box_area, boundingArea)
+    compareFeatures(mesh_nr_faces, MESH_FACES, mesh_area, MESH_AREA)
+    compareFeatures(mesh_nr_faces, MESH_FACES, convex_hull_area, CONVEX_HULL_AREA)
+    # compareFeatures(MESH_FACES, faces, bounding_box_area, boundingArea)
 
     # Compare mesh_area with remaining others
-    compareFeatures(mesh_area, meshArea, convex_hull_area, convexArea)
-    compareFeatures(mesh_area, meshArea, bounding_box_area, boundingArea)
+    compareFeatures(mesh_area, MESH_AREA, convex_hull_area, CONVEX_HULL_AREA)
+    # compareFeatures(MESH_AREA, meshArea, bounding_box_area, boundingArea)
 
     # Compare convex_hull_area with remaining others
-    compareFeatures(convex_hull_area, convexArea, bounding_box_area, boundingArea)
+    # compareFeatures(CONVEX_HULL_AREA, convexArea, bounding_box_area, boundingArea)
 
 
     # Save the data related to the Shape closest to the average of a feature
-    saveAverageShapeData(vertices, nr_vertices, feature_list)
-    saveAverageShapeData(faces, nr_faces, feature_list)
-    saveAverageShapeData(meshArea, mesh_area, feature_list)
-    saveAverageShapeData(convexArea, convex_hull_area, feature_list)
-    saveAverageShapeData(boundingArea, bounding_box_area, feature_list)
+    saveAverageShapeData(MESH_VERTICES, mesh_nr_vertices, feature_list)
+    saveAverageShapeData(MESH_FACES, mesh_nr_faces, feature_list)
+    saveAverageShapeData(MESH_AREA, mesh_area, feature_list)
+    saveAverageShapeData(CONVEX_HULL_AREA, convex_hull_area, feature_list)
+    # saveAverageShapeData(boundingArea, bounding_box_area, feature_list)
 
 
     # Detect the outliers of a single feature.
-    detectOutliers(vertices, nr_vertices, feature_list)
-    detectOutliers(faces, nr_faces, feature_list)
-    detectOutliers(meshArea, mesh_area, feature_list)
-    detectOutliers(convexArea, convex_hull_area, feature_list)
-    detectOutliers(boundingArea, bounding_box_area, feature_list)
+    detectOutliers(MESH_VERTICES, mesh_nr_vertices, feature_list)
+    detectOutliers(MESH_FACES, mesh_nr_faces, feature_list)
+    detectOutliers(MESH_AREA, mesh_area, feature_list)
+    detectOutliers(CONVEX_HULL_AREA, convex_hull_area, feature_list)
+    # detectOutliers(boundingArea, bounding_box_area, feature_list)
 
 
     # Check if we have any poorly-sampled Shapes that don't appear in as outliers for some reason.
-    for i, elem in enumerate(nr_vertices):
-        if (elem < 100):
+    for i, elem in enumerate(mesh_nr_vertices):
+        if elem < 100:
             print(f'SHAPE AT INDEX {i} IS POORLY-SAMPLED, NOT ENOUGH VERTICES')
-    for i, elem in enumerate(nr_faces):
-        if (elem < 100):
+    for i, elem in enumerate(mesh_nr_faces):
+        if elem < 100:
             print(f'SHAPE AT INDEX {i} IS POORLY-SAMPLED, NOT ENOUGH FACES')
 
 
@@ -223,7 +234,7 @@ def save_plt(title: str):
     plt.close()
 
 
-def saveAverageShapeData(featureName, featureData, allFeatures: [Features]):
+def saveAverageShapeData(featureName, featureData, allFeatures: [ShapeFeatures]):
     mathAverage = np.mean(featureData)
     shapeClosestToAverage = closestValue(featureData, mathAverage)
     averageIndex = featureData.index(shapeClosestToAverage)
@@ -254,15 +265,15 @@ def saveAverageShapeData(featureName, featureData, allFeatures: [Features]):
         # Check if the features values of Shape based on the index and based on the mesh path are the same.
         shapeFromIdData = allFeatures[averageIndex]
 
-        f.write(f'shapeFromIdData.nr_vertices = {shapeFromIdData.nr_vertices}\n')
-        f.write(f'shapeFromIdData.nr_faces = {shapeFromIdData.nr_faces}\n')
-        f.write(f'shapeFromIdData.mesh_area = {shapeFromIdData.mesh_area}\n')
-        f.write(f'shapeFromIdData.convex_hull_area = {shapeFromIdData.convex_hull_area}\n')
-        f.write(f'shapeFromIdData.boundingbox_area = {shapeFromIdData.bounding_box_area}\n\n')
+        f.write(f'shapeFromIdData.mesh_nr_vertices = {shapeFromIdData.mesh_features.nr_vertices}\n')
+        f.write(f'shapeFromIdData.mesh_nr_faces = {shapeFromIdData.mesh_features.nr_faces}\n')
+        f.write(f'shapeFromIdData.mesh_area = {shapeFromIdData.mesh_features.surface_area}\n')
+        f.write(f'shapeFromIdData.convex_hull_area = {shapeFromIdData.convex_hull_features.surface_area}\n')
+        # f.write(f'shapeFromIdData.boundingbox_area = {shapeFromIdData.bounding_box_area}\n\n')
 
 
 # Source = https://www.geeksforgeeks.org/finding-the-outlier-points-from-matplotlib/
-def detectOutliers(featureName, featureData, allFeatures: [Features]):
+def detectOutliers(featureName, featureData, allFeatures: [ShapeFeatures]):
     plt.boxplot(featureData)
 
     firstQuartile = np.quantile(featureData, 0.25)
@@ -322,8 +333,8 @@ def detectOutliers(featureName, featureData, allFeatures: [Features]):
             # Check if the features values of Shape based on the index and based on the mesh path are the same.
             shapeFromIdData = allFeatures[outlierIndex]
 
-            nr_facesFromId = [features.nr_faces for features in allFeatures][outlierIndex]
-            nr_verticesFromId = [features.nr_vertices for features in allFeatures][outlierIndex]
+            nr_facesFromId = [features.mesh_features.nr_faces for features in allFeatures][outlierIndex]
+            nr_verticesFromId = [features.mesh_features.nr_vertices for features in allFeatures][outlierIndex]
 
             # print(f'shapeFromIdData.nr_faces =?= nr_facesFromId')
             # print(f'{shapeFromIdData.nr_faces} =?= {nr_facesFromId}')
@@ -331,13 +342,13 @@ def detectOutliers(featureName, featureData, allFeatures: [Features]):
             # print(f'shapeFromIdData.nr_vertices =?= nr_verticesFromId')
             # print(f'{shapeFromIdData.nr_vertices} =?= {nr_verticesFromId}')
 
-            f.write(f'shapeFromIdData.nr_vertices = {shapeFromIdData.nr_vertices}\n')
-            f.write(f'shapeFromIdData.nr_faces = {shapeFromIdData.nr_faces}\n')
-            f.write(f'shapeFromIdData.mesh_area = {shapeFromIdData.mesh_area}\n')
-            f.write(f'shapeFromIdData.convex_hull_area = {shapeFromIdData.convex_hull_area}\n')
-            f.write(f'shapeFromIdData.boundingbox_area = {shapeFromIdData.bounding_box_area}\n\n')
+            f.write(f'shapeFromIdData.nr_vertices = {shapeFromIdData.mesh_features.nr_vertices}\n')
+            f.write(f'shapeFromIdData.nr_faces = {shapeFromIdData.mesh_features.nr_faces}\n')
+            f.write(f'shapeFromIdData.mesh_area = {shapeFromIdData.mesh_features.surface_area}\n')
+            f.write(f'shapeFromIdData.convex_hull_area = {shapeFromIdData.convex_hull_features.surface_area}\n')
+            # f.write(f'shapeFromIdData.boundingbox_area = {shapeFromIdData.bounding_box_area}\n\n')
 
-            if (shapeFromIdData.nr_vertices < 100 or shapeFromIdData.nr_faces < 100):
+            if (shapeFromIdData.mesh_features.nr_vertices < 100 or shapeFromIdData.mesh_features.nr_faces < 100):
                 f.write('THIS SHAPE IS POORLY-SAMPLED!')
 
     # for elem in outliers:

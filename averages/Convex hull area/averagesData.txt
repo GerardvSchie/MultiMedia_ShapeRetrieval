@@ -1,0 +1,6 @@
+Feature Convex hull area has an average Shape of 4.389672744727351 based on 380 Shapes with ID 24:
+The average with ID 24 should be = data\LabeledDB_new\Ant\84.ply
+shapeFromIdData.mesh_nr_vertices = 6850
+shapeFromIdData.mesh_nr_faces = 13696
+shapeFromIdData.mesh_area = 2.215585276014107
+shapeFromIdData.convex_hull_area = 4.389672744727351

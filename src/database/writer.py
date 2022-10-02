@@ -9,8 +9,10 @@ def write_to_file(shape_list: [Shape]):
         # Write row to file
         header = [
             "path", "class",
-            "nr_of_vertices", "nr_of_faces",
-            "mesh_area", "convex_hull_area", "bounding_box_area",
+            "mesh_nr_of_vertices", "mesh_nr_of_faces",
+            "mesh_surface_area", "mesh_volume",
+            "convex_hull_nr_of_vertices", "convex_hull_nr_of_faces",
+            "convex_hull_surface_area", "convex_hull_volume",
         ]
         writer.writerow(header)
 
@@ -18,7 +20,9 @@ def write_to_file(shape_list: [Shape]):
         for shape in shape_list:
             data = [
                 shape.geometries.path, shape.features.true_class,
-                shape.features.nr_vertices, shape.features.nr_faces,
-                shape.features.mesh_area, shape.features.convex_hull_area, shape.features.bounding_box_area,
+                shape.features.mesh_features.nr_vertices, shape.features.mesh_features.nr_faces,
+                shape.features.mesh_features.surface_area, shape.features.mesh_features.volume,
+                shape.features.convex_hull_features.nr_vertices, shape.features.convex_hull_features.nr_faces,
+                shape.features.convex_hull_features.surface_area, shape.features.convex_hull_features.volume,
             ]
             writer.writerow(data)
