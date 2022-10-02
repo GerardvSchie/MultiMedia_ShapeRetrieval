@@ -1,5 +1,5 @@
 from app.widget.settings_widget import SettingsWidget
-from app.widget.features_widget import FeaturesWidget
+from app.widget.features.shape_features_widget import ShapeFeaturesWidget
 from app.widget.visualization_widget import VisualizationWidget
 from app.widget.util import color_widget
 
@@ -20,7 +20,7 @@ class ViewerWidget(QWidget):
         # Left panel
         self.settings: Settings = Settings()
         self.settings_widget = SettingsWidget(self.settings)
-        self.features_widget = FeaturesWidget()
+        self.features_widget = ShapeFeaturesWidget()
 
         self.visualization_widget = VisualizationWidget(self.settings)
         if not IsMacOS:

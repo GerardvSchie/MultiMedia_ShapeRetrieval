@@ -5,7 +5,7 @@ class Settings:
     def __init__(self):
         # Colors
         self.background_color: [float] = (1, 1, 1)
-        self.mesh_color: [float] = (1, 1, 1)
+        self.mesh_color: [float] = (2/3, 2/3, 1)
 
         # Render settings
         self.show_mesh: bool = True

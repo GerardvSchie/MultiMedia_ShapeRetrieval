@@ -10,3 +10,9 @@ class SilhouetteFeatures:
         self.rectangularity: float = math.inf
         self.diameter: float = math.inf
         self.eccentricity: float = math.inf
+
+    def misses_values(self):
+        return any([math.isinf(self.area), math.isinf(self.perimeter), math.isinf(self.compactness),
+                    math.isinf(self.axis_aligned_bounding_box), math.isinf(self.rectangularity),
+                    math.isinf(self.diameter), math.isinf(self.eccentricity)
+                    ])

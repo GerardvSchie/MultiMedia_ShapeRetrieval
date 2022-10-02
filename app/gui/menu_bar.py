@@ -81,7 +81,7 @@ class MenuBar(QMenuBar):
         file_name, _ = QFileDialog.getSaveFileName(self, "Save Image", "data", file_filter)
 
         if file_name:
-            self.tab_widget.export_shape_image(file_name)
+            self.tab_widget.export_image_action(file_name)
 
     def open_airplane_shape(self):
         self.tab_widget.load_shape("data/LabeledDB_new/Airplane/61.off")

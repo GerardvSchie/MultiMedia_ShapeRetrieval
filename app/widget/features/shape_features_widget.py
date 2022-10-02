@@ -6,9 +6,9 @@ from PyQt6.QtWidgets import QWidget, QLabel
 from app.layout.grid_layout import GridLayout
 
 
-class FeaturesWidget(QWidget):
+class ShapeFeaturesWidget(QWidget):
     def __init__(self):
-        super(FeaturesWidget, self).__init__()
+        super(ShapeFeaturesWidget, self).__init__()
         color_widget(self, [255, 255, 0])
         self.setFixedWidth(165)
 

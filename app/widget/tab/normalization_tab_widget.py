@@ -3,17 +3,16 @@ from copy import deepcopy
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout
 from PyQt6.QtGui import QWindow
 
-from app.widget.normalization_features_widget import NormalizationFeaturesWidget
+from app.widget.features.normalization_features_widget import NormalizationFeaturesWidget
 from app.widget.util import color_widget
 from app.widget.settings_widget import SettingsWidget
-from app.widget.features_widget import FeaturesWidget
+from app.widget.features.shape_features_widget import ShapeFeaturesWidget
 from app.widget.visualization_widget import VisualizationWidget
 
 from src.object.settings import Settings
 from app.util.os import IsMacOS
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
 from src.controller.geometries_controller import GeometriesController
-from src.pipeline.feature_extractor.normalization_feature_extractor import NormalizationFeatureExtractor
 
 
 class NormalizationTabWidget(QWidget):
@@ -24,7 +23,7 @@ class NormalizationTabWidget(QWidget):
         # Left panel
         self.settings: Settings = Settings()
         self.settings_widget = SettingsWidget(self.settings)
-        self.features_widget_1 = FeaturesWidget()
+        self.features_widget_1 = ShapeFeaturesWidget()
 
         # Widget 1
         self.scene_widget_1 = VisualizationWidget(self.settings)
@@ -40,7 +39,7 @@ class NormalizationTabWidget(QWidget):
 
         # Right panel
         self.normalization_widget = NormalizationFeaturesWidget()
-        self.features_widget_2 = FeaturesWidget()
+        self.features_widget_2 = ShapeFeaturesWidget()
 
         # Connect the settings to the widget
         self.scene_widgets = [self.scene_widget_1, self.scene_widget_2]
