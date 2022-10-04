@@ -12,21 +12,23 @@ from src.database.reader import dataPaths
 # Python can't convert variable names to string.
 CLASSES = 'classes'
 
-MESH_FACES = 'Mesh nr_faces'
-MESH_VERTICES = 'Mesh nr_vertices'
+MESH_FACES = 'Mesh nr. faces'
+MESH_VERTICES = 'Mesh nr. vertices'
 MESH_AREA = 'Mesh area'
 MESH_VOLUME = 'Mesh volume'
 
-CONVEX_HULL_FACES = 'Convex hull nr_faces'
-CONVEX_HULL_VERTICES = 'Convex hull nr_vertices'
+CONVEX_HULL_FACES = 'Convex hull nr. faces'
+CONVEX_HULL_VERTICES = 'Convex hull nr. vertices'
 CONVEX_HULL_AREA = 'Convex hull area'
 CONVEX_HULL_VOLUME = 'Convex hull volume'
 
+NORMALIZATION_DISTANCE_TO_CENTER = 'Distance to center'
+NORMALIZATION_SCALE = 'Scale'
+NORMALIZATION_ALIGNMENT = 'Alignment'
+
 # boundingArea = 'bounding_box_area'
 
-
-
-# bins decides how many bars we see in the histogram and scatter histogram.
+# bins decide how many bars we see in the histogram and scatter histogram.
 # Histogram default = 10
 # Scatter histogram = 50
 histBins = 100
@@ -58,6 +60,15 @@ def plot_features(feature_list: [ShapeFeatures]):
     convex_hull_area = [features.convex_hull_features.surface_area for features in feature_list]
     hist_plot(CONVEX_HULL_AREA, convex_hull_area)
 
+    distance_to_center = [features.normalization_features.distance_to_center for features in feature_list]
+    hist_plot(NORMALIZATION_DISTANCE_TO_CENTER, distance_to_center)
+
+    scale = [features.normalization_features.scale for features in feature_list]
+    hist_plot(NORMALIZATION_SCALE, scale)
+
+    alignment = [features.normalization_features.alignment for features in feature_list]
+    hist_plot(NORMALIZATION_ALIGNMENT, alignment)
+
     # Bounding box features added soon
     # bounding_box_area = [features.bounding_box_area for features in feature_list]
     # hist_plot(boundingArea, bounding_box_area)
@@ -66,6 +77,8 @@ def plot_features(feature_list: [ShapeFeatures]):
     # There are 19 classes.
     true_classes = [features.true_class for features in feature_list]
     hist_plot(CLASSES, true_classes)
+
+    return
 
     # compareFeatures(true_classes, classes, nr_vertices, vertices) TODO Figure out how to make comparisons between classes (strings) and other features (integers).
 
@@ -209,14 +222,27 @@ def scatter_hist(x, y, xName, yName, ax, ax_histx, ax_histy):
     # plt.show()
 
 
-def hist_plot(title: str, data):
-    hist = plt.hist(data, bins = histBins)
+def hist_plot(title: str, data, log=False):
+    hist = plt.hist(data, bins=histBins, log=log)
 
-    plt.title(f'Feature used = {title}\n{histBins} bins used')
+    SMALL_SIZE = 10
+    MEDIUM_SIZE = 12
+    BIGGER_SIZE = 16
+
+    plt.rc('font', size=SMALL_SIZE)  # controls default text sizes
+    plt.rc('axes', titlesize=SMALL_SIZE)  # fontsize of the axes title
+    plt.rc('axes', labelsize=MEDIUM_SIZE)  # fontsize of the x and y labels
+    plt.rc('xtick', labelsize=SMALL_SIZE)  # fontsize of the tick labels
+    plt.rc('ytick', labelsize=SMALL_SIZE)  # fontsize of the tick labels
+    plt.rc('legend', fontsize=SMALL_SIZE)  # legend fontsize
+    plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
+    plt.rc('figure', labelsize=BIGGER_SIZE)  # fontsize of the figure title
+
+    plt.title(f'Feature used = {title}\n{histBins} bins used', fontdict={'fontsize': BIGGER_SIZE})
 
     # data is list of the number of faces/vertices per shape
     plt.xlabel(f'{title} per shape')
-    plt.ylabel('amount of shapes with the same count')
+    plt.ylabel('Number of shapes')
 
     # plt.show()
 

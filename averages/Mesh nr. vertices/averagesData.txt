@@ -1,0 +1,1 @@
+Feature Mesh nr. vertices has an average Shape of 10233 based on 380 Shapes with ID 344:

@@ -48,8 +48,8 @@ def main():
             # ShapeFeatureExtractor.extract_normalization_features(shape)
             shape_collection.append(shape)
 
-    # src.util.plot.plot_features([shape.features for shape in shape_collection])
-    DatabaseWriter.write_all_shape_features(shape_collection)
+    src.util.plot.plot_features([shape.features for shape in shape_collection])
+    # DatabaseWriter.write_all_shape_features(shape_collection)
     print("run complete")
 
 

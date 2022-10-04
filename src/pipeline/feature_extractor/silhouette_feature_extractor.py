@@ -1,6 +1,5 @@
 import logging
 import math
-import time
 
 import numpy as np
 import os
@@ -23,8 +22,8 @@ class SilhouetteFeatureExtractor:
         if not silhouette_features.misses_values() and not force_recompute:
             return
 
-        print(time.time())
         image = skimage.io.imread(path, as_gray=True)
+        # print(image.size)
 
         # White = False, Black = True
         binary = image < 0.5
@@ -71,27 +70,45 @@ class SilhouetteFeatureExtractor:
         _, (w, h), _ = rect
         silhouette_features.rectangularity = silhouette_features.area / (w * h)
 
-        print(time.time())
-        # # Write debug image
-        # box = np.int0(cv.boxPoints(rect))
-        # hull = cv.convexHull(contours[0])
-        # aabb = silhouette_features.axis_aligned_bounding_box
-        #
-        # # Draw all the things over the image
-        # cv.fillPoly(img, [hull[:, 0, :]], (170, 170, 170))
-        # img[gray < 0.5] = [0, 0, 0]
-        # cv.rectangle(img, [aabb[1], aabb[0]], [aabb[3], aabb[2]], (0, 255, 0), 2)
-        # cv.drawContours(img, [box], 0, (0, 0, 255), 2)
-        #
-        # for contour in contours:
-        #     cv.drawContours(img, [contour[:, 0, :]], 0, (255, 0, 255), 2)
-        #
-        # cv.circle(img, (silhouette_features.centroid[1], silhouette_features.centroid[0]), 4, (255, 255, 0), 2)
-        #
-        # debug_path = path.split('.')[0] + '_debug.png'
-        # cv.imwrite(debug_path, img)
-        #
-        # print(silhouette_features)
+    @staticmethod
+    def write_debug_image(path: str, silhouette_features: SilhouetteFeatures):
+        img = cv.imread(path)
+        gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+        _, thresh = cv.threshold(gray, 127, 255, 0)
+        contours, _ = cv.findContours(thresh, 1, 2)
+        contours = list(contours)
+        contours = contours[1:]
+
+        if len(contours) == 0:
+            logging.warning(f'found no non-image contour {os.path.abspath(path)}')
+            return
+        elif len(contours) > 2:
+            logging.warning(f'A total of {len(contours)} contours found, please verify image {os.path.abspath(path)}')
+
+        # Area largest to smallest
+        contours.sort(key=cv.contourArea, reverse=True)
+
+        rect = cv.minAreaRect(contours[0])
+
+        box = np.int0(cv.boxPoints(rect))
+        hull = cv.convexHull(contours[0])
+
+        # Draw all the things over the image
+        cv.fillPoly(img, [hull[:, 0, :]], (170, 170, 170))
+        img[gray < 0.5] = [0, 0, 0]
+        aabb = silhouette_features.axis_aligned_bounding_box
+        cv.rectangle(img, [aabb[1], aabb[0]], [aabb[3], aabb[2]], (0, 255, 0), 2)
+        cv.drawContours(img, [box], 0, (0, 0, 255), 2)
+
+        for contour in contours:
+            cv.drawContours(img, [contour[:, 0, :]], 0, (255, 0, 255), 2)
+
+        cv.circle(img, (silhouette_features.centroid[1], silhouette_features.centroid[0]), 4, (255, 255, 0), 2)
+
+        debug_path = path.split('.')[0] + '_debug.png'
+        cv.imwrite(debug_path, img)
+
+        print(silhouette_features)
 
 
 if __name__ == '__main__':
