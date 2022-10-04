@@ -12,38 +12,44 @@ import src.util.logger as logger
 from src.object.shape import Shape
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
 import src.util.plot
-import src.database.writer
-import src.database.reader
+from src.database.writer import DatabaseWriter
+from src.database.reader import DatabaseReader
 from src.util.io import check_working_dir
 
 
 def main():
     shape_collection = []
     # Offline computed features
-    features_data = src.database.reader.read_from_file()
+    features_data = DatabaseReader.read_all_shape_features()
 
     # Walk through labeledDB directory
-    for subdir, dirs, files in os.walk(os.path.join("data", "LabeledDB_new")):
-        for file in files:
-            if file.endswith(".off"):
-                # Load shape and extract the features
-                path = os.path.join(subdir, file)
-                # Database depends on relative paths
-                rel_path = os.path.relpath(path)
-                feature_path = rel_path.replace(".off", ".ply")
-                if features_data.__contains__(feature_path):
-                    shape = Shape(path, features_data[feature_path])
-                else:
-                    shape = Shape(path)
+    for sub_item in os.scandir(os.path.join("data", "LabeledDB_new")):
+        if not sub_item.is_dir():
+            continue
 
-                # Disable additional feature extraction, meshes are not watertight
-                # ShapeFeatureExtractor.extract_mesh_features(shape)
-                # ShapeFeatureExtractor.extract_convex_hull_features(shape)
+        for item in os.scandir(sub_item.path):
+            if item.is_dir():
+                continue
 
-                shape_collection.append(shape)
+            if not item.path.endswith('.off'):
+                continue
 
-    src.util.plot.plot_features([shape.features for shape in shape_collection])
-    # src.database.writer.write_to_file(shape_collection)
+            # Database depends on relative paths
+            rel_path = os.path.relpath(item.path)
+            shape = Shape(rel_path)
+
+            if shape.geometries.path in features_data:
+                shape.features = features_data[shape.geometries.path]
+
+            # Disable additional feature extraction, meshes are not watertight
+            # ShapeFeatureExtractor.extract_axis_aligned_bounding_box(shape)
+            # ShapeFeatureExtractor.extract_mesh_features(shape)
+            # ShapeFeatureExtractor.extract_convex_hull_features(shape)
+            # ShapeFeatureExtractor.extract_normalization_features(shape)
+            shape_collection.append(shape)
+
+    # src.util.plot.plot_features([shape.features for shape in shape_collection])
+    DatabaseWriter.write_all_shape_features(shape_collection)
     print("run complete")
 
 

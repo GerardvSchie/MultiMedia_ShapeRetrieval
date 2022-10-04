@@ -1,50 +1,174 @@
 import csv
 import os.path
+import numpy as np
 
+from src.object.features.mesh_features import MeshFeatures
 from src.object.features.shape_features import ShapeFeatures
+from src.object.features.normalization_features import NormalizationFeatures
 
 dataPaths = list()
 
 
-def read_from_file() -> dict[str, ShapeFeatures]:
-    database_path = "data/database.csv"
+class DatabaseReader:
+    @staticmethod
+    def read_all_shape_features() -> dict[str, ShapeFeatures]:
+        shape_features = dict()
 
-    # Features file does not exist
-    if not os.path.exists(database_path):
-        return {}
+        os.makedirs('data/database/original', exist_ok=True)
+        DatabaseReader.read_mesh_features(shape_features, 'data/database/original')
+        DatabaseReader.read_convex_hull_features(shape_features, 'data/database/original')
+        DatabaseReader.read_other_features(shape_features, 'data/database/original')
+        DatabaseReader.read_normalization_features(shape_features, 'data/database/original')
 
-    # File exists, load all features
-    with open("data/database.csv", "r") as f:
-        feature_dict = {}
-        reader = csv.reader(f)
+        return shape_features
 
-        # Skip header
-        next(reader)
+    @staticmethod
+    def read_mesh_features(shape_features: dict[str, ShapeFeatures], database_dir):
+        database_path = os.path.join(database_dir, "mesh.csv")
 
-        # Read the lines from the file
-        for features in reader:
-            data: ShapeFeatures = ShapeFeatures()
+        # Features file does not exist
+        if not os.path.exists(database_path):
+            return
 
-            data.path, data.true_class, \
-                data.mesh_features.nr_vertices, data.mesh_features.nr_faces, \
-                data.mesh_features.surface_area, data.mesh_features.volume, \
-                data.convex_hull_features.nr_vertices, data.convex_hull_features.nr_faces, \
-                data.convex_hull_features.surface_area, data.convex_hull_features.volume = features
+        # File exists, load all features
+        with open(database_path, "r") as f:
+            reader = csv.reader(f)
 
-            # Cast to types
-            data.mesh_features.nr_vertices = int(data.mesh_features.nr_vertices)
-            data.mesh_features.nr_faces = int(data.mesh_features.nr_faces)
-            data.mesh_features.surface_area = float(data.mesh_features.surface_area)
-            data.mesh_features.volume = float(data.mesh_features.volume)
+            # Skip header
+            next(reader)
 
-            data.convex_hull_features.nr_vertices = int(data.convex_hull_features.nr_vertices)
-            data.convex_hull_features.nr_faces = int(data.convex_hull_features.nr_faces)
-            data.convex_hull_features.surface_area = float(data.convex_hull_features.surface_area)
-            data.convex_hull_features.volume = float(data.convex_hull_features.volume)
+            # Read the lines from the file
+            for features in reader:
+                data: MeshFeatures = MeshFeatures()
 
-            # Add to dict
-            feature_dict[data.path] = data
+                identifier, data.nr_vertices, data.nr_faces, data.surface_area, data.volume, \
+                    = features
 
-            dataPaths.append(data.path)
+                # Reconstruct environment specific path, used numpy representation to be OS-invariant
+                path = os.path.join(*(_read_np_array(identifier)))
 
-        return feature_dict
+                # Cast to types
+                data.nr_vertices = int(data.nr_vertices)
+                data.nr_faces = int(data.nr_faces)
+                data.surface_area = float(data.surface_area)
+                data.volume = float(data.volume)
+
+                # Add to dict
+                _add_if_not_exists(shape_features, path)
+                shape_features[path].mesh_features = data
+
+    @staticmethod
+    def read_convex_hull_features(shape_features: dict[str, ShapeFeatures], database_dir):
+        database_path = os.path.join(database_dir, "convex_hull.csv")
+
+        # Features file does not exist
+        if not os.path.exists(database_path):
+            return
+
+        # File exists, load all features
+        with open(database_path, "r") as f:
+            reader = csv.reader(f)
+
+            # Skip header
+            next(reader)
+
+            # Read the lines from the file
+            for features in reader:
+                data: MeshFeatures = MeshFeatures()
+
+                identifier, data.nr_vertices, data.nr_faces, data.surface_area, data.volume, \
+                    = features
+
+                # Reconstruct environment specific path, used numpy representation to be OS-invariant
+                path = os.path.join(*(_read_np_array(identifier)))
+
+                # Cast to types
+                data.nr_vertices = int(data.nr_vertices)
+                data.nr_faces = int(data.nr_faces)
+                data.surface_area = float(data.surface_area)
+                data.volume = float(data.volume)
+
+                # Add to dict
+                _add_if_not_exists(shape_features, path)
+                shape_features[path].convex_hull_features = data
+
+    @staticmethod
+    def read_other_features(shape_features: dict[str, ShapeFeatures], database_dir):
+        database_path = os.path.join(database_dir, "other.csv")
+
+        # Features file does not exist
+        if not os.path.exists(database_path):
+            return
+
+        # File exists, load all features
+        with open(database_path, "r") as f:
+            reader = csv.reader(f)
+
+            # Skip header
+            next(reader)
+
+            # Read the lines from the file
+            for features in reader:
+                data: ShapeFeatures = ShapeFeatures()
+
+                identifier, data.true_class, data.aabb_min_bound, data.aabb_max_bound = features
+
+                # Reconstruct environment specific path, used numpy representation to be OS-invariant
+                path = os.path.join(*(_read_np_array(identifier)))
+                _add_if_not_exists(shape_features, path)
+
+                # Assign to features
+                shape_features[path].true_class = data.true_class
+                shape_features[path].aabb_min_bound = _read_np_array(data.aabb_min_bound)
+                shape_features[path].aabb_max_bound = _read_np_array(data.aabb_max_bound)
+
+    @staticmethod
+    def read_normalization_features(shape_features: dict[str, ShapeFeatures], database_dir):
+        database_path = os.path.join(database_dir, "normalization.csv")
+
+        # Features file does not exist
+        if not os.path.exists(database_path):
+            return
+
+        # File exists, load all features
+        with open(database_path, "r") as f:
+            reader = csv.reader(f)
+
+            # Skip header
+            next(reader)
+
+            # Read the lines from the file
+            for features in reader:
+                data: NormalizationFeatures = NormalizationFeatures()
+
+                identifier, data.distance_to_center, data.scale, data.alignment = features
+
+                # Reconstruct environment specific path, used numpy representation to be OS-invariant
+                path = os.path.join(*(_read_np_array(identifier)))
+                _add_if_not_exists(shape_features, path)
+
+                # Cast to types
+                data.distance_to_center = float(data.distance_to_center)
+                data.scale = float(data.scale)
+                data.alignment = float(data.alignment)
+
+                shape_features[path].normalization_features = data
+
+
+def _add_if_not_exists(shape_collection: dict[str, ShapeFeatures], path: str):
+    if path in shape_collection:
+        return
+
+    shape_collection[path] = ShapeFeatures()
+
+
+def _read_np_array(array_str: str) -> np.array:
+    # Contains strings
+    if array_str.__contains__("'"):
+        arr = array_str[2:-2].split("\' \'")
+        return np.array(arr)
+    # Just an int array
+    else:
+        array_str = array_str.strip()
+        arr = array_str[1:-1].strip().split()
+        return np.array(arr, dtype=float)

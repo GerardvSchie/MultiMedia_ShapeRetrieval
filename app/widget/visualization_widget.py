@@ -43,7 +43,7 @@ class VisualizationWidget(QWidget):
         if not IsMacOS:
             self.hwnd = win32gui.FindWindowEx(0, 0, None, "Open3D")
 
-        # self.load_shape("data/example.off")
+        self.update_widget()
 
     def closeEvent(self, *args, **kwargs):
         self.vis.close()
@@ -81,10 +81,6 @@ class VisualizationWidget(QWidget):
         self.vis.update_renderer()
 
     def update_widget(self):
-        # Cannot update widget if there is no shape
-        if not self.shape:
-            return
-
         # Set render options
         render_option: o3d.visualization.RenderOption = self.vis.get_render_option()
         render_option.mesh_show_wireframe = self.desired_settings.show_wireframe and not self.desired_settings.show_silhouette and not self.silhouette_mode
@@ -95,6 +91,10 @@ class VisualizationWidget(QWidget):
             render_option.background_color = [255] * 3
         else:
             render_option.background_color = self.desired_settings.background_color
+
+        # Cannot update widget further if there is no shape
+        if not self.shape:
+            return
 
         self._resolve_mesh_color_difference(self.current_settings.mesh_color, self.desired_settings.mesh_color)
 

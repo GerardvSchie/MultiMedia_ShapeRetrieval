@@ -14,7 +14,7 @@ class SettingsWidget(QWidget):
     def __init__(self, settings: Settings):
         super(SettingsWidget, self).__init__()
         color_widget(self, [0, 255, 255])
-        self.setFixedWidth(165)
+        self.setFixedWidth(190)
 
         # Widget state of main app window and the scene that is controlled by the settings
         self.settings = settings

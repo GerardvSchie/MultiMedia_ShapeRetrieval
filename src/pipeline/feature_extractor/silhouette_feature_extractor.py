@@ -1,5 +1,6 @@
 import logging
 import math
+import time
 
 import numpy as np
 import os
@@ -22,6 +23,7 @@ class SilhouetteFeatureExtractor:
         if not silhouette_features.misses_values() and not force_recompute:
             return
 
+        print(time.time())
         image = skimage.io.imread(path, as_gray=True)
 
         # White = False, Black = True
@@ -69,6 +71,7 @@ class SilhouetteFeatureExtractor:
         _, (w, h), _ = rect
         silhouette_features.rectangularity = silhouette_features.area / (w * h)
 
+        print(time.time())
         # # Write debug image
         # box = np.int0(cv.boxPoints(rect))
         # hull = cv.convexHull(contours[0])

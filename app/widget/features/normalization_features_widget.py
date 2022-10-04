@@ -10,7 +10,7 @@ class NormalizationFeaturesWidget(QWidget):
     def __init__(self):
         super(NormalizationFeaturesWidget, self).__init__()
         color_widget(self, [255, 0, 255])
-        self.setFixedWidth(165)
+        self.setFixedWidth(190)
 
         self.distance_to_center_label = QLabel("0")
         self.scale_value_label = QLabel("0")
