@@ -1,17 +1,13 @@
 import logging
 import math
+
 import numpy as np
 import os
-import open3d as o3d
+import cv2 as cv
 import skimage.measure
-from skimage.color import gray2rgb
-from skimage.measure import *
-from skimage.io import *
-from skimage.filters import threshold_mean
-from skimage import img_as_uint
-from skimage.measure import label, regionprops, regionprops_table
+import skimage.io
+from skimage.measure import label, regionprops
 
-from src.object.features.mesh_features import MeshFeatures
 from src.object.features.silhouette_features import SilhouetteFeatures
 
 
@@ -26,7 +22,7 @@ class SilhouetteFeatureExtractor:
         if not silhouette_features.misses_values() and not force_recompute:
             return
 
-        image = imread(path, as_gray=True)
+        image = skimage.io.imread(path, as_gray=True)
 
         # White = False, Black = True
         binary = image < 0.5
@@ -37,39 +33,81 @@ class SilhouetteFeatureExtractor:
             logging.warning(f"No region found in image {os.path.abspath(path)}")
             return
 
+        silhouette_features.area = sum([region.area for region in regions])
+        silhouette_features.perimeter = sum([region.perimeter for region in regions])
+
+        regions.sort(key=lambda region: region.area_filled, reverse=True)
+
         shape_region = regions[0]
-
-        # silhouette_features.centroid = regions[0].centroid
-        silhouette_features.area = shape_region.area_filled
-        silhouette_features.perimeter = shape_region.perimeter
+        silhouette_features.centroid = np.int0(shape_region.centroid)
         silhouette_features.compactness = np.power(silhouette_features.perimeter, 2) / (4 * math.pi * silhouette_features.area)
-        silhouette_features.axis_aligned_bounding_box = shape_region.bbox
-        # silhouette_features.rectangularity = silhouette_features.area / regions[0].area_bbox
+        silhouette_features.axis_aligned_bounding_box = np.int0(shape_region.bbox)
         silhouette_features.diameter = shape_region.feret_diameter_max
-        # silhouette_features.eccentricity = regions[0].eccentricity
+        silhouette_features.eccentricity = shape_region.eccentricity
 
+        # When want to write the image directly to a file
         # Source: https://stackoverflow.com/questions/36206321/scikit-image-saves-binary-image-as-completely-black-image
-        black_white_image = img_as_uint(np.invert(binary))
-        imsave('C:/Users/gerard/MegaDrive/Documents/M2.1-MultiMedia_Retrieval/Assignment/data/temp.png', black_white_image)
+
+        # Source: https://docs.opencv.org/4.x/dd/d49/tutorial_py_contour_features.html
+        img = cv.imread(path)
+        gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+        _, thresh = cv.threshold(gray, 127, 255, 0)
+        contours, _ = cv.findContours(thresh, 1, 2)
+        contours = list(contours)
+        contours = contours[1:]
+
+        if len(contours) == 0:
+            logging.warning(f'found no non-image contour {os.path.abspath(path)}')
+            return
+        elif len(contours) > 2:
+            logging.warning(f'A total of {len(contours)} contours found, please verify image {os.path.abspath(path)}')
+
+        # Area largest to smallest
+        contours.sort(key=cv.contourArea, reverse=True)
+
+        rect = cv.minAreaRect(contours[0])
+        _, (w, h), _ = rect
+        silhouette_features.rectangularity = silhouette_features.area / (w * h)
+
+        # # Write debug image
+        # box = np.int0(cv.boxPoints(rect))
+        # hull = cv.convexHull(contours[0])
+        # aabb = silhouette_features.axis_aligned_bounding_box
+        #
+        # # Draw all the things over the image
+        # cv.fillPoly(img, [hull[:, 0, :]], (170, 170, 170))
+        # img[gray < 0.5] = [0, 0, 0]
+        # cv.rectangle(img, [aabb[1], aabb[0]], [aabb[3], aabb[2]], (0, 255, 0), 2)
+        # cv.drawContours(img, [box], 0, (0, 0, 255), 2)
+        #
+        # for contour in contours:
+        #     cv.drawContours(img, [contour[:, 0, :]], 0, (255, 0, 255), 2)
+        #
+        # cv.circle(img, (silhouette_features.centroid[1], silhouette_features.centroid[0]), 4, (255, 255, 0), 2)
+        #
+        # debug_path = path.split('.')[0] + '_debug.png'
+        # cv.imwrite(debug_path, img)
+        #
+        # print(silhouette_features)
 
 
 if __name__ == '__main__':
     SilhouetteFeatureExtractor.extract_features(
-        'C:/Users/gerard/MegaDrive/Documents/M2.1-MultiMedia_Retrieval/Assignment/data/silhouette.png',
+        'data/silhouette.png',
         SilhouetteFeatures()
     )
 
     SilhouetteFeatureExtractor.extract_features(
-        'C:/Users/gerard/MegaDrive/Documents/M2.1-MultiMedia_Retrieval/Assignment/data/Rectangle.png',
+        'data/Rectangle.png',
         SilhouetteFeatures()
     )
 
     SilhouetteFeatureExtractor.extract_features(
-        'C:/Users/gerard/MegaDrive/Documents/M2.1-MultiMedia_Retrieval/Assignment/data/RectangleWithHole.png',
+        'data/RectangleWithHole.png',
         SilhouetteFeatures()
     )
 
     SilhouetteFeatureExtractor.extract_features(
-        'C:/Users/gerard/MegaDrive/Documents/M2.1-MultiMedia_Retrieval/Assignment/data/RectangleWithHoleWithRectangle.png',
+        'data/RectangleWithHoleWithRectangle.png',
         SilhouetteFeatures()
     )

@@ -6,6 +6,7 @@ class Settings:
         # Colors
         self.background_color: [float] = (1, 1, 1)
         self.mesh_color: [float] = (2/3, 2/3, 1)
+        self.point_size: int = 3
 
         # Render settings
         self.show_mesh: bool = True
@@ -22,6 +23,7 @@ class Settings:
     def update(self, settings: Settings):
         self.background_color = settings.background_color
         self.mesh_color = settings.mesh_color
+        self.point_size = settings.point_size
 
         # Render settings
         self.show_mesh = settings.show_mesh

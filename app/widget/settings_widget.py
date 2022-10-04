@@ -1,13 +1,13 @@
 import logging
 
-from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QWidget, QCheckBox, QPushButton
+from PyQt6.QtWidgets import QWidget, QCheckBox
 
 from src.object.settings import Settings
 from app.widget.util import color_widget
 from app.layout.grid_layout import GridLayout
 from app.other.color_button import ColorButton
 from app.other.toggle_button import ToggleButton
+from app.other.spin_box import SpinBox
 
 
 class SettingsWidget(QWidget):
@@ -51,11 +51,15 @@ class SettingsWidget(QWidget):
         center_button = ToggleButton("app/icon/center.png")
         center_button.clicked.connect(lambda state: self._on_show_center_mesh(state))
 
+        # Point cloud size
+        point_size_spin_box = SpinBox()
+        point_size_spin_box.valueChanged.connect(lambda state: self._on_point_size(state))
+
         # Create layout
         layout: GridLayout = GridLayout()
         layout.add_header("Settings")
         layout.add_row("Mesh:", [show_mesh_checkbox, center_button, wireframe_button, mesh_color_button])
-        layout.add_row("Point cloud:", [show_point_cloud_checkbox, normals_button])
+        layout.add_row("Point cloud:", [show_point_cloud_checkbox, normals_button, point_size_spin_box])
         layout.add_row("Convex hull:", [show_convex_hull_checkbox])
         layout.add_row("Box:", [show_axis_aligned_bounding_box_checkbox])
         layout.add_section("Additional")
@@ -94,6 +98,11 @@ class SettingsWidget(QWidget):
 
     def _on_show_center_mesh(self, state: bool):
         self.settings.show_center_mesh = state
+        self.apply_settings()
+
+    # Spin box
+    def _on_point_size(self, state: int):
+        self.settings.point_size = state
         self.apply_settings()
 
     # All of these are checkboxes

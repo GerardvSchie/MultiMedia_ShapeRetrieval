@@ -1,3 +1,4 @@
+import logging
 import open3d as o3d
 import numpy as np
 
@@ -11,15 +12,21 @@ class Normalizer:
         GeometriesController.calculate_mesh(shape.geometries)
         # Translate to center
         shape.geometries.mesh.translate(-shape.geometries.mesh.get_center())
-
-        Normalizer.rot_pca(shape)  # Rotate based on PCA
+        # Scale shape to unit size
+        Normalizer.scaler(shape)
+        # Rotate based on PCA
+        Normalizer.rot_pca(shape)
         # shape.geometries.mesh = flipper(shape.geometries.mesh)  # Flips the mesh
-        # shape.geometries.mesh = scaler(shape.geometries.mesh)  # Scales to a unit bounding box the mesh
 
         # All other parts need to get recomputed
         GeometriesController.calculate_all_from_mesh(shape.geometries, True)
         GeometriesController.calculate_mesh_normals(shape.geometries, True)
         GeometriesController.calculate_point_cloud_normals(shape.geometries, True)
+
+    @staticmethod
+    def scaler(shape):
+        scale = shape.geometries.mesh.get_axis_aligned_bounding_box().get_max_extent()
+        shape.geometries.mesh.scale(1 / scale, shape.geometries.mesh.get_center())
 
     @staticmethod
     def rot_pca(shape: Shape):
@@ -56,17 +63,4 @@ class Normalizer:
     @staticmethod
     def flipper(mesh):
         # verts = mesh.vertices
-        return mesh
-
-    @staticmethod
-    def scaler(mesh):
-        verts = mesh.vertices
-        xc = [x[0] for x in verts]
-        yc = [x[1] for x in verts]
-        zc = [x[2] for x in verts]
-        xmin, xmax = min(xc), max(xc)
-        ymin, ymax = min(yc), max(yc)
-        zmin, zmax = min(zc), max(zc)
-        maxbox = max([xmax - xmin, ymax - ymin, zmax - zmin])
-        mesh.vertices /= maxbox
         return mesh

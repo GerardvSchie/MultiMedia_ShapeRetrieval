@@ -33,7 +33,7 @@ class SilhouetteFeaturesWidget(QWidget):
         self.area_value_label.setText('{0}'.format(silhouette_features.area))
         self.perimeter_value_label.setText('{0:.6}'.format(silhouette_features.perimeter))
         self.compactness_value_label.setText('{0:.6}'.format(silhouette_features.compactness))
-        # self.axis_aligned_bounding_box_value_label.setText('{0:.6}'.format(silhouette_features.axis_aligned_bounding_box))
+        self.axis_aligned_bounding_box_value_label.setText('{0}\n{1}'.format(silhouette_features.axis_aligned_bounding_box[:2], silhouette_features.axis_aligned_bounding_box[2:]))
         self.rectangularity_value_label.setText('{0:.6}'.format(silhouette_features.rectangularity))
         self.diameter_value_label.setText('{0:.6}'.format(silhouette_features.diameter))
         self.eccentricity_value_label.setText('{0:.6}'.format(silhouette_features.eccentricity))

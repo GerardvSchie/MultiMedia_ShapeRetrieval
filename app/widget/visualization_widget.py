@@ -81,11 +81,16 @@ class VisualizationWidget(QWidget):
         self.vis.update_renderer()
 
     def update_widget(self):
+        # Cannot update widget if there is no shape
+        if not self.shape:
+            return
+
         # Set render options
         render_option: o3d.visualization.RenderOption = self.vis.get_render_option()
         render_option.mesh_show_wireframe = self.desired_settings.show_wireframe and not self.desired_settings.show_silhouette and not self.silhouette_mode
         render_option.point_show_normal = self.desired_settings.show_normals
         render_option.light_on = not self.desired_settings.show_silhouette and not self.silhouette_mode
+        render_option.point_size = self.desired_settings.point_size
         if self.desired_settings.show_silhouette or self.silhouette_mode:
             render_option.background_color = [255] * 3
         else:

@@ -12,6 +12,7 @@ from app.widget.visualization_widget import VisualizationWidget
 from src.object.settings import Settings
 from app.util.os import IsMacOS
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
+from src.pipeline.normalization import Normalizer
 from src.controller.geometries_controller import GeometriesController
 
 
@@ -77,13 +78,13 @@ class NormalizationTabWidget(QWidget):
         # self.scene_widgets[1].load_shape(file_path)
 
         # self.scene_widgets[1].shape.geometries.point_cloud = self.scene_widgets[1].shape.geometries.mesh.sample_points_poisson_disk(3000)
-        self.scene_widgets[1].shape.geometries.point_cloud = self.scene_widgets[1].shape.geometries.mesh.sample_points_uniformly(3000)
+        # self.scene_widgets[1].shape.geometries.point_cloud = self.scene_widgets[1].shape.geometries.mesh.sample_points_uniformly(3000)
+        #
+        # GeometriesController.calculate_all_from_point_cloud(self.scene_widgets[1].shape.geometries, True)
+        # GeometriesController.calculate_mesh_normals(self.scene_widgets[1].shape.geometries, True)
+        # GeometriesController.calculate_point_cloud_normals(self.scene_widgets[1].shape.geometries, True)
 
-        GeometriesController.calculate_all_from_point_cloud(self.scene_widgets[1].shape.geometries, True)
-        GeometriesController.calculate_mesh_normals(self.scene_widgets[1].shape.geometries, True)
-        GeometriesController.calculate_point_cloud_normals(self.scene_widgets[1].shape.geometries, True)
-
-        # Normalizer.normalize_shape(self.scene_widgets[1].shape)
+        Normalizer.normalize_shape(self.scene_widgets[1].shape)
 
         # Extract features and
         ShapeFeatureExtractor.extract_all_shape_features(self.scene_widgets[1].shape)
