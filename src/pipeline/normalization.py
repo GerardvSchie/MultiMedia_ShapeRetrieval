@@ -64,7 +64,7 @@ def flipper(mesh):
             sy += np.sign(y) * (y ** 2)
 
         sz = 0
-        for x in triangles[2]:
+        for z in triangles[2]:
             sz += np.sign(z) * (z ** 2)
 
         flipping = np.array([[np.sign(sx), 0, 0], [0, np.sign(sy), 0], [0, 0, np.sign(sz)]])
