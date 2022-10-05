@@ -26,3 +26,23 @@ Eigen::Vector3d Geometry3D::ComputeCenter(
     return center;
 }
 ```
+
+Camera viewpoint:
+https://github.com/isl-org/Open3D/issues/1553
+
+Faster iteration:
+https://numpy.org/doc/stable/reference/arrays.nditer.html
+
+Random points:
+https://stackoverflow.com/questions/14262654/numpy-get-random-set-of-rows-from-2d-array
+
+Angle:
+https://stackoverflow.com/questions/35176451/python-code-to-calculate-angle-between-three-point-using-their-3d-coordinates
+
+Performance:
+https://mmas.github.io/python-image-processing-libraries-performance-opencv-scipy-scikit-image
+
+Alternatives for pywin32?:
+https://stackoverflow.com/questions/373020/finding-the-current-active-window-in-mac-os-x-using-python
+https://pypi.org/project/PyGetWindow/
+https://developer.apple.com/documentation/appkit/nsworkspace#//apple_ref/occ/instm/NSWorkspace/frontmostApplication

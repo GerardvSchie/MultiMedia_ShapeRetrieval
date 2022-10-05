@@ -1,9 +1,0 @@
-# Excludes all folders
-/*
-
-# Except for files with extention at root level
-!*.*
-
-# Except for these folders
-!/LabeledDB_new
-!/Princeton_benchmark
