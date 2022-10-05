@@ -3,6 +3,6 @@ open3d==0.15.1
 matplotlib
 PyQt6
 pywin32
-scikit-image==0.19.3
+feret
 opencv-python==4.6.0.66
 pymeshlab
