@@ -2,6 +2,9 @@ import logging
 import math
 import open3d as o3d
 import numpy as np
+from numpy.linalg import norm
+import sys
+import time
 
 from src.object.features.mesh_features import MeshFeatures
 from src.pipeline.normalization import Normalizer
@@ -15,6 +18,7 @@ class MeshFeatureExtractor:
             logging.warning("Cannot extract any features without mesh and point cloud")
             return
 
+        # MeshFeatureExtractor.calculate_angle_3_vertices(mesh, point_cloud, mesh_features, force_recompute)
         MeshFeatureExtractor.number_of_vertices(mesh, point_cloud, mesh_features, force_recompute)
         MeshFeatureExtractor.calculate_eccentricity(mesh, point_cloud, mesh_features, force_recompute)
 
@@ -137,3 +141,35 @@ class MeshFeatureExtractor:
         eccentricity = np.abs(eigenvalues_eigenvectors[0][0]) / np.abs(eigenvalues_eigenvectors[2][0])
         mesh_features.eccentricity = eccentricity
 
+    @staticmethod
+    def calculate_angle_3_vertices(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud, mesh_features: MeshFeatures, force_recompute=False) -> None:
+        if not math.isinf(mesh_features.eccentricity) and not force_recompute:
+            return
+
+        # Don't yet use
+        return
+
+        # Computed over the point cloud
+        if point_cloud:
+            points = np.asarray(point_cloud.points)
+        elif mesh:
+            points = np.asarray(mesh.vertices)
+        else:
+            logging.warning("Cannot compute angle between points without mesh or point cloud")
+            return
+
+        for _ in range(5000):
+            indices = np.random.choice(points.shape[0], 3, replace=False)
+            a = points[indices[0], :]
+            b = points[indices[1], :]
+            c = points[indices[2], :]
+
+            ba = a - b
+            bc = c - b
+
+            cosine_numerator = np.sum(ba * bc)
+            cosine_denominator_1 = np.linalg.norm(ba)
+            cosine_denominator_2 = np.linalg.norm(bc)
+            cosine_angle = cosine_numerator / (cosine_denominator_1 * cosine_denominator_2)
+            angles = np.arccos(cosine_angle)
+            degree_angles = np.rad2deg(angles)
