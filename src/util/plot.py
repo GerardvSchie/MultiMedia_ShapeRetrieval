@@ -97,8 +97,8 @@ def plot_features(feature_list: [ShapeFeatures], databasePaths: [str]):
             pathToPoorPLYMesh = databasePaths[i]
             
             # print(f'databasePaths:\n{databasePaths}')
-            print(f'databasePaths[{i}]:\n{pathToPoorPLYMesh}')
-            refineMesh(pathToPoorPLYMesh, desiredNumberOfVertices)
+            print(f'databasePaths[{i}]:\n{pathToPoorPLYMesh}\n++++++++++++++++++++++++++++++++++++')
+            refineMesh(pathToPoorPLYMesh, elem, desiredNumberOfVertices)
 
 
     return
