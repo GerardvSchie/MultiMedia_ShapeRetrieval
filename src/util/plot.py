@@ -33,6 +33,7 @@ NORMALIZATION_ALIGNMENT = 'Alignment'
 # Scatter histogram = 50
 histBins = 100
 scatterHistBins = 100
+poorlySampledLimit = 1000
 
 
 def plot_features(feature_list: [ShapeFeatures]):
@@ -121,14 +122,15 @@ def plot_features(feature_list: [ShapeFeatures]):
     detectOutliers(CONVEX_HULL_AREA, convex_hull_area, feature_list)
     # detectOutliers(boundingArea, bounding_box_area, feature_list)
 
+    print('========================= Checking poorly-sampled meshes in whole database ======================')
 
     # Check if we have any poorly-sampled Shapes that don't appear in as outliers for some reason.
     for i, elem in enumerate(mesh_nr_vertices):
-        if elem < 100:
-            print(f'SHAPE AT INDEX {i} IS POORLY-SAMPLED, NOT ENOUGH VERTICES')
+        if elem < poorlySampledLimit:
+            print(f'SHAPE AT INDEX {i} IS POORLY-SAMPLED, {elem} ARE NOT ENOUGH VERTICES')
     for i, elem in enumerate(mesh_nr_faces):
-        if elem < 100:
-            print(f'SHAPE AT INDEX {i} IS POORLY-SAMPLED, NOT ENOUGH FACES')
+        if elem < poorlySampledLimit:
+            print(f'SHAPE AT INDEX {i} IS POORLY-SAMPLED, {elem} ARE NOT ENOUGH FACES')
 
 
 def compareFeatures(firstFeature, firstName, secondFeature, secondName):
@@ -195,35 +197,15 @@ def scatter_hist(x, y, xName, yName, ax, ax_histx, ax_histy):
     ax.plot(averageX, averageY, 'o', color = averageDotColor)
     ax.annotate(f'Mathematical average:\n {averageX}\n{averageY}', averagePosition, color = averageDotColor)
 
-    # drawShapeDotOfBothFeaturesOnPlot(ax, xName, x, averageX, yName, y, averageY, 'Shape closest to the mathematical average', 'green')
-
-    # print('\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-
     drawShapeDotOfSingleFeatureOnPlot(ax, 0, xName, x, yName, y, averageX, f'Shape closest to {xName} average', 'green')
     drawShapeDotOfSingleFeatureOnPlot(ax, 1, yName, y, xName, x, averageY, f'Shape closest to {yName} average', 'purple')
 
-    # print('\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-
-    # ax.text(100, 200, 'test')
-
-    # print(f'bbox.width = {ax.bbox.width}')
-    # print(f'bbox.height = {ax.bbox.height}')
-
-    # Disable otherwise it won't save as png. TODO fix this
-    #plt.show()
-
     save_plt(f"{xName} and {yName} of meshes")
-
-    # # Detecting outliers of both features.
-    # detectOutliers(xName, x)
-    # plt.figure()
-    # detectOutliers(yName, y)
-
-    # plt.show()
 
 
 def hist_plot(title: str, data, log=False):
-    hist = plt.hist(data, bins=histBins, log=log)
+    #hist = plt.hist(data, bins=histBins, log=log)
+    n, bins, patches = plt.hist(data, bins = histBins, log=log)
 
     SMALL_SIZE = 10
     MEDIUM_SIZE = 12
@@ -238,13 +220,27 @@ def hist_plot(title: str, data, log=False):
     plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
     plt.rc('figure', labelsize=BIGGER_SIZE)  # fontsize of the figure title
 
-    plt.title(f'Feature used = {title}\n{histBins} bins used', fontdict={'fontsize': BIGGER_SIZE})
+    mathAverage = np.mean(data)
+    shapeClosestToAverage = closestValue(data, mathAverage)
+
+    for i, bin in enumerate(bins):
+        if bin < shapeClosestToAverage:
+            continue
+        elif bin >= shapeClosestToAverage:
+            averageIndexInHistogram = i - 1
+            break
+
+    # print(f'averageIndexInHistogram = {averageIndexInHistogram}')
+    # print(f'bins[averageIndexInHistogram] = {bins[averageIndexInHistogram]}')
+    # print(f'bins[averageIndexInHistogram + 1] = {bins[averageIndexInHistogram + 1]}')
+
+    patches[averageIndexInHistogram].set_fc('r')
+
+    plt.title(f'Average Shape value of {title}: {shapeClosestToAverage}\n{histBins} bins, poorly-sampled limit: {poorlySampledLimit}', fontdict={'fontsize': BIGGER_SIZE})
 
     # data is list of the number of faces/vertices per shape
     plt.xlabel(f'{title} per shape')
     plt.ylabel('Number of shapes')
-
-    # plt.show()
 
     save_plt(title)
 
@@ -252,10 +248,6 @@ def hist_plot(title: str, data, log=False):
 def save_plt(title: str):
     file_name = (title.lower() + ".png").replace(" ", "_")
     plt.savefig(os.path.join("plots", file_name))
-
-    # Show each of the 3 plots.
-    # Needs to be placed here? because otherwise the image if not saved as a png.
-    # plt.show()
 
     plt.close()
 
@@ -283,10 +275,7 @@ def saveAverageShapeData(featureName, featureData, allFeatures: [ShapeFeatures])
         averagePath = dataPaths[averageIndex]
 
         f.write(f'The average with ID {averageIndex} should be = {averagePath}\n')
-
         # print(f'The average with ID {averageIndex} should be = {averagePath}')
-
-        # TODO Get the feature data based on the path value
 
         # Check if the features values of Shape based on the index and based on the mesh path are the same.
         shapeFromIdData = allFeatures[averageIndex]
@@ -304,7 +293,6 @@ def detectOutliers(featureName, featureData, allFeatures: [ShapeFeatures]):
 
     firstQuartile = np.quantile(featureData, 0.25)
     thirdQuartile = np.quantile(featureData, 0.75)
-    median = np.median(featureData)
 
     interQuartile = thirdQuartile - firstQuartile
 
@@ -316,17 +304,7 @@ def detectOutliers(featureName, featureData, allFeatures: [ShapeFeatures]):
 
     outliers = numpyX[(numpyX <= lower_bound) | (numpyX >= upper_bound)]
 
-    # print(f'firstQuartile = {firstQuartile}')
-    # print(f'thirdQuartile = {thirdQuartile}')
-    # print(f'median = {median}')
-
-    # print(f'interQuartile = {interQuartile}')
-
-    # print(f'\nupper_bound = {upper_bound}')
-    # print(f'lower_bound = {lower_bound}')
-
     plt.title(f'Detected {len(outliers)} outliers in {len(featureData)} Shapes when looking at the {featureName} feature')
-
     print(f'\nDetected {len(outliers)} outliers in {len(featureData)} Shapes when looking at the {featureName} feature:')
 
     
@@ -351,22 +329,10 @@ def detectOutliers(featureName, featureData, allFeatures: [ShapeFeatures]):
             outlierPath = dataPaths[outlierIndex]
 
             f.write(f'The outlier with ID {outlierIndex} should be = {outlierPath}\n')
-
             # print(f'The outlier with ID {outlierIndex} should be = {outlierPath}')
-
-            # TODO Get the feature data based on the path value
 
             # Check if the features values of Shape based on the index and based on the mesh path are the same.
             shapeFromIdData = allFeatures[outlierIndex]
-
-            nr_facesFromId = [features.mesh_features.nr_faces for features in allFeatures][outlierIndex]
-            nr_verticesFromId = [features.mesh_features.nr_vertices for features in allFeatures][outlierIndex]
-
-            # print(f'shapeFromIdData.nr_faces =?= nr_facesFromId')
-            # print(f'{shapeFromIdData.nr_faces} =?= {nr_facesFromId}')
-
-            # print(f'shapeFromIdData.nr_vertices =?= nr_verticesFromId')
-            # print(f'{shapeFromIdData.nr_vertices} =?= {nr_verticesFromId}')
 
             f.write(f'shapeFromIdData.nr_vertices = {shapeFromIdData.mesh_features.nr_vertices}\n')
             f.write(f'shapeFromIdData.nr_faces = {shapeFromIdData.mesh_features.nr_faces}\n')
@@ -374,7 +340,8 @@ def detectOutliers(featureName, featureData, allFeatures: [ShapeFeatures]):
             f.write(f'shapeFromIdData.convex_hull_area = {shapeFromIdData.convex_hull_features.surface_area}\n')
             # f.write(f'shapeFromIdData.boundingbox_area = {shapeFromIdData.bounding_box_area}\n\n')
 
-            if (shapeFromIdData.mesh_features.nr_vertices < 100 or shapeFromIdData.mesh_features.nr_faces < 100):
+            if (shapeFromIdData.mesh_features.nr_vertices < poorlySampledLimit or shapeFromIdData.mesh_features.nr_faces < poorlySampledLimit):
+                print("THIS SHAPE IS POORLY-SAMPLED!")
                 f.write('THIS SHAPE IS POORLY-SAMPLED!')
 
     # for elem in outliers:
