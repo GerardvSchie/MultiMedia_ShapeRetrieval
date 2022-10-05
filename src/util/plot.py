@@ -6,7 +6,8 @@ import src.util.io
 import numpy as np
 from src.object.features.shape_features import ShapeFeatures
 
-from src.database.reader import dataPaths
+#from src.database.reader import dataPaths
+from vertex_normalization import refineMesh
 
 
 # Python can't convert variable names to string.
@@ -33,10 +34,12 @@ NORMALIZATION_ALIGNMENT = 'Alignment'
 # Scatter histogram = 50
 histBins = 100
 scatterHistBins = 100
-poorlySampledLimit = 1000
+
+poorlySampledLimit = 1500
+desiredNumberOfVertices = 10000
 
 
-def plot_features(feature_list: [ShapeFeatures]):
+def plot_features(feature_list: [ShapeFeatures], databasePaths: [str]):
     # Choose a backend for matplotlib
     matplotlib.use('TkAgg')
     # Create folder for the plots
@@ -74,10 +77,29 @@ def plot_features(feature_list: [ShapeFeatures]):
     # bounding_box_area = [features.bounding_box_area for features in feature_list]
     # hist_plot(boundingArea, bounding_box_area)
 
-    # Class is a string, which requires a special comparison.
-    # There are 19 classes.
-    true_classes = [features.true_class for features in feature_list]
-    hist_plot(CLASSES, true_classes)
+    # # Class is a string, which requires a special comparison.
+    # # There are 19 classes.
+    # true_classes = [features.true_class for features in feature_list]
+    # hist_plot(CLASSES, true_classes)
+
+
+
+    # print(feature_list)
+    # print(feature_list[0])
+
+    print('========================= Checking poorly-sampled meshes in whole database ======================')
+
+    # Check if we have any poorly-sampled Shapes that don't appear in as outliers for some reason.
+    for i, elem in enumerate(mesh_nr_vertices):
+        if elem < poorlySampledLimit:
+            print(f'SHAPE AT INDEX {i} IS POORLY-SAMPLED, {elem} ARE NOT ENOUGH VERTICES')
+
+            pathToPoorPLYMesh = databasePaths[i]
+            
+            # print(f'databasePaths:\n{databasePaths}')
+            print(f'databasePaths[{i}]:\n{pathToPoorPLYMesh}')
+            refineMesh(pathToPoorPLYMesh, desiredNumberOfVertices)
+
 
     return
 
@@ -121,16 +143,6 @@ def plot_features(feature_list: [ShapeFeatures]):
     detectOutliers(MESH_AREA, mesh_area, feature_list)
     detectOutliers(CONVEX_HULL_AREA, convex_hull_area, feature_list)
     # detectOutliers(boundingArea, bounding_box_area, feature_list)
-
-    print('========================= Checking poorly-sampled meshes in whole database ======================')
-
-    # Check if we have any poorly-sampled Shapes that don't appear in as outliers for some reason.
-    for i, elem in enumerate(mesh_nr_vertices):
-        if elem < poorlySampledLimit:
-            print(f'SHAPE AT INDEX {i} IS POORLY-SAMPLED, {elem} ARE NOT ENOUGH VERTICES')
-    for i, elem in enumerate(mesh_nr_faces):
-        if elem < poorlySampledLimit:
-            print(f'SHAPE AT INDEX {i} IS POORLY-SAMPLED, {elem} ARE NOT ENOUGH FACES')
 
 
 def compareFeatures(firstFeature, firstName, secondFeature, secondName):

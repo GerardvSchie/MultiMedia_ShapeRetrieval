@@ -5,3 +5,4 @@ PyQt6
 pywin32
 scikit-image==0.19.3
 opencv-python==4.6.0.66
+pymeshlab
