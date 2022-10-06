@@ -34,8 +34,9 @@ def refineMesh(poorPLYPath: str, originalVertices: str, desiredVertices: int):
 
     saveRefinedMesh(ms, poorPLYPath)
 
+
 def saveRefinedMesh(refinedMesh, oldPath):
-    print(f"oldPath:\n{oldPath}")
+    # print(f"oldPath:\n{oldPath}")
 
     rest1, plyName = os.path.split(oldPath)
     rest2, plyNumber = os.path.split(rest1)
@@ -46,9 +47,14 @@ def saveRefinedMesh(refinedMesh, oldPath):
     # print(plyNumber)
     # print(plyType)
 
-    refinedPLYLocation = f"data/refined meshes/{plyType}/{plyNumber}/refined.ply"
+    refinedPLYLocation = f"data/refined meshes/{plyType}/{plyNumber}"
+    refinedPLYComplete = f"{refinedPLYLocation}/refined.ply"
+
+    # Refined PLY folder does not exist
+    if not os.path.exists(refinedPLYLocation):
+        os.makedirs(refinedPLYLocation)
 
     # save the current selected mesh
-    #refinedMesh.save_current_mesh(refinedPLYLocation)
+    refinedMesh.save_current_mesh(refinedPLYComplete)
 
-    print(f'Saving the new PLY mesh to:\n{refinedPLYLocation}\n')
+    print(f'Saving the new PLY mesh to:\n{refinedPLYComplete}\n')
