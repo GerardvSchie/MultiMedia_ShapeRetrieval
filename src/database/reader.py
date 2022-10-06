@@ -141,7 +141,7 @@ class DatabaseReader:
             for features in reader:
                 data: NormalizationFeatures = NormalizationFeatures()
 
-                identifier, data.distance_to_center, data.scale, data.alignment = features
+                identifier, data.distance_to_center, data.scale, data.alignment, data.flip = features
 
                 # Reconstruct environment specific path, used numpy representation to be OS-invariant
                 path = os.path.join(*(_read_np_array(identifier)))
@@ -151,6 +151,7 @@ class DatabaseReader:
                 data.distance_to_center = float(data.distance_to_center)
                 data.scale = float(data.scale)
                 data.alignment = float(data.alignment)
+                data.flip = float(data.flip)
 
                 shape_features[path].normalization_features = data
 

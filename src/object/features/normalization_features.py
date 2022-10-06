@@ -9,6 +9,5 @@ class NormalizationFeatures:
         self.flip: float = math.inf
 
     def misses_values(self) -> bool:
-        # TODO: Add flip
-        misses_floats = any([math.isinf(self.distance_to_center), math.isinf(self.scale), math.isinf(self.alignment)])
+        misses_floats = any([math.isinf(self.distance_to_center), math.isinf(self.scale), math.isinf(self.alignment), math.isinf(self.flip)])
         return misses_floats

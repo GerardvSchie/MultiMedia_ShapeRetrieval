@@ -1,6 +1,9 @@
 import os
 
 # Needed to fix ModuleNotFoundError when importing src.util.logger.
+from src.controller.geometries_controller import GeometriesController
+from src.pipeline.feature_extractor.normalization_feature_extractor import NormalizationFeatureExtractor
+
 directoryContainingCurrentFile = os.path.dirname(__file__)
 repoDirectory = os.path.dirname(directoryContainingCurrentFile)
 
@@ -47,6 +50,7 @@ def main():
             # ShapeFeatureExtractor.extract_convex_hull_features(shape)
             # ShapeFeatureExtractor.extract_normalization_features(shape)
             # ShapeFeatureExtractor.extract_axis_aligned_bounding_box(shape)
+            # ShapeFeatureExtractor.extract_normalization_features(shape)
             shape_collection.append(shape)
 
     # Collect the paths to the Shapes too for refinement, if needed.

@@ -46,3 +46,6 @@ Alternatives for pywin32?:
 https://stackoverflow.com/questions/373020/finding-the-current-active-window-in-mac-os-x-using-python
 https://pypi.org/project/PyGetWindow/
 https://developer.apple.com/documentation/appkit/nsworkspace#//apple_ref/occ/instm/NSWorkspace/frontmostApplication
+
+Sample points on mesh uniformly fast:
+https://github.com/isl-org/Open3D/issues/2062

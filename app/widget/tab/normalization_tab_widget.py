@@ -66,17 +66,16 @@ class NormalizationTabWidget(QWidget):
         self.setLayout(layout)
 
     def load_shape(self, file_path: str):
-        # First mesh
+        # Load meshes
         self.scene_widgets[0].load_shape(file_path)
         self.scene_widgets[1].clear()
         self.scene_widgets[1].shape = deepcopy(self.scene_widgets[0].shape)
 
+        # Extract features of first shape
         ShapeFeatureExtractor.extract_all_shape_features(self.scene_widgets[0].shape)
         self.features_widget_1.update_widget(self.scene_widgets[0].shape.features)
 
         # Normalized mesh with 3000 points
-        # self.scene_widgets[1].load_shape(file_path)
-
         # self.scene_widgets[1].shape.geometries.point_cloud = self.scene_widgets[1].shape.geometries.mesh.sample_points_poisson_disk(3000)
         # self.scene_widgets[1].shape.geometries.point_cloud = self.scene_widgets[1].shape.geometries.mesh.sample_points_uniformly(3000)
         #
@@ -86,18 +85,18 @@ class NormalizationTabWidget(QWidget):
 
         Normalizer.normalize_shape(self.scene_widgets[1].shape)
 
-        # Extract features and
-        ShapeFeatureExtractor.extract_all_shape_features(self.scene_widgets[1].shape)
+        # Reconstruct all things of the mesh
         GeometriesController.calculate_all_from_mesh(self.scene_widgets[1].shape.geometries, True)
+        GeometriesController.calculate_point_cloud_normals(self.scene_widgets[1].shape.geometries, True)
+        GeometriesController.calculate_mesh_normals(self.scene_widgets[1].shape.geometries, True)
         GeometriesController.calculate_gui_geometries(self.scene_widgets[1].shape.geometries, True)
-        # NormalizationFeatureExtractor.extract_features(self.scene_widgets[1].shape)
+
+        # Extract features and update the panels
+        ShapeFeatureExtractor.extract_all_shape_features(self.scene_widgets[1].shape)
         self.features_widget_2.update_widget(self.scene_widgets[1].shape.features)
         self.normalization_widget.update_widget(self.scene_widgets[1].shape.features.normalization_features)
-        self.scene_widgets[1].update_widget()
 
-        # normalize_shape(self.scene_widgets[1].shape)
-        # self.scene_widgets[1].shape = shape
-        # self.scene_widgets[1].vis.update_geometry(self.scene_widgets[1].shape.geometries.mesh)
+        self.scene_widgets[1].update_widget()
 
     def save_shape(self, file_path: str):
         self.scene_widgets[1].shape.save(file_path)

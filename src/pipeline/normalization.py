@@ -1,6 +1,5 @@
 import open3d as o3d
 import numpy as np
-import logging
 
 from src.controller.geometries_controller import GeometriesController
 from src.object.shape import Shape
@@ -17,7 +16,7 @@ class Normalizer:
         # Rotate based on PCA
         Normalizer.rot_pca(shape)
         # Flip based on momentum
-        Normalizer.flipper(shape.geometries.mesh)
+        Normalizer.flipper_vertices_center(shape.geometries.mesh)
 
         # All other parts need to get recomputed
         GeometriesController.calculate_all_from_mesh(shape.geometries, True)
@@ -36,9 +35,14 @@ class Normalizer:
 
         # Depending on the determinant of the rotation matrix
         # rotate with positive or negative matrix
+        print('---------')
+        print(rotation_matrix)
+        print(np.linalg.det(rotation_matrix))
         if np.linalg.det(rotation_matrix) >= 0:
+            print('positive rotation matrix')
             shape.geometries.mesh.rotate(R=rotation_matrix)
         else:
+            print('negative rotation matrix')
             shape.geometries.mesh.rotate(R=-rotation_matrix)
 
         # Verify eigenvalues of new mesh
@@ -50,9 +54,6 @@ class Normalizer:
         mean, covariance = pcd.compute_mean_and_covariance()
         eigenvalues, eigenvectors = np.linalg.eig(covariance)
 
-        # print(eigenvalues)
-        # print(eigenvectors)
-
         zipped = [
             (eigenvalues[0], eigenvectors[:, 0]),
             (eigenvalues[1], eigenvectors[:, 1]),
@@ -62,7 +63,54 @@ class Normalizer:
         return sorted(zipped, key=lambda x: x[0], reverse=True)
 
     @staticmethod
-    def flipper(mesh):
+    def flipper_vertices_center(mesh: o3d.geometry.TriangleMesh):
+        fi = Normalizer.compute_fi(mesh)
+        flipping_rotation_matrix = np.zeros((3, 3))
+        np.fill_diagonal(flipping_rotation_matrix, np.sign(fi))
+        mesh.rotate(flipping_rotation_matrix)
+
+    @staticmethod
+    def compute_fi(mesh: o3d.geometry.TriangleMesh):
+        fi = np.array([0, 0, 0], dtype=float)
+
+        vertices = np.asarray(mesh.vertices)
+        for point_indices in mesh.triangles:
+            # Center of mass == Centroid
+            # Definitely scientific source: https://www.quora.com/What-is-the-difference-between-a-centroid-and-a-centre-of-mass
+            points = vertices[point_indices]
+            # Sum each coordinate and average
+            center_of_mass = np.sum(points, axis=0) / 3
+            # Add for each axis to fi
+            fi += np.sign(center_of_mass) * np.power(center_of_mass, 2)
+
+        return fi
+
+    @staticmethod
+    def flipper_vertices(mesh: o3d.geometry.TriangleMesh):
+        fx = 0
+        fy = 0
+        fz = 0
+
+        for point in mesh.vertices:
+            fx += np.sign(point[0]) * np.power(point[0], 2)
+            fy += np.sign(point[1]) * np.power(point[1], 2)
+            fz += np.sign(point[2]) * np.power(point[2], 2)
+
+        print(fx, fy, fz)
+
+        # Flipping is done at the end of the calculation
+        if np.sign(fx) == -1:
+            print('point: flipped along X')
+        if np.sign(fy) == -1:
+            print('point: flipped along Y')
+        if np.sign(fz) == -1:
+            print('point: flipped along Z')
+
+        flipping_matrix = np.array([[np.sign(fx), 0, 0], [0, np.sign(fy), 0], [0, 0, np.sign(fz)]])
+        mesh.rotate(flipping_matrix)
+
+    @staticmethod
+    def flipper(mesh: o3d.geometry.TriangleMesh):
         return
         faces = ( index, ( xcoord, ycoord, zcoord )  )
 
@@ -90,8 +138,8 @@ class Normalizer:
             for z in triangles[2]:
                 sz += np.sign(z) * (z ** 2)
 
-            flipping = np.array([[np.sign(sx), 0, 0], [0, np.sign(sy), 0], [0, 0, np.sign(sz)]])
+        flipping = np.array([[np.sign(sx), 0, 0], [0, np.sign(sy), 0], [0, 0, np.sign(sz)]])
 
-            mesh.vertices = np.matmul(mesh.vertices, flipping)
+        mesh.vertices = np.matmul(mesh.vertices, flipping)
 
         return mesh

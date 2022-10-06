@@ -73,7 +73,7 @@ class DatabaseWriter:
             header = [
                 "path",
                 "distance_to_center", "scale",
-                "alignment",
+                "alignment", "correctly_oriented_axes",
             ]
             writer.writerow(header)
             for shape in shape_list:
@@ -128,7 +128,7 @@ class DatabaseWriter:
             shape.features.normalization_features.distance_to_center,
             shape.features.normalization_features.scale,
             shape.features.normalization_features.alignment,
-            # TODO: Flip test
+            shape.features.normalization_features.flip,
         ]
 
     @staticmethod

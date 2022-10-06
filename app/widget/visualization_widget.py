@@ -83,6 +83,14 @@ class VisualizationWidget(QWidget):
         self.vis.poll_events()
         self.vis.update_renderer()
 
+    def update_view(self):
+        # View is already correct
+        view_control: o3d.visualization.ViewControl = self.vis.get_view_control()
+        ref_view = view_control.convert_to_pinhole_camera_parameters()
+        print('-----')
+        print('extrinsic', ref_view.extrinsic)
+        print('intrinsic', ref_view.intrinsic)
+
     def update_widget(self):
         # Set render options
         render_option: o3d.visualization.RenderOption = self.vis.get_render_option()
@@ -98,6 +106,8 @@ class VisualizationWidget(QWidget):
         # Cannot update widget further if there is no shape
         if not self.shape:
             return
+
+        # self.update_view()
 
         self._resolve_mesh_color_difference(self.current_settings.mesh_color, self.desired_settings.mesh_color)
 
