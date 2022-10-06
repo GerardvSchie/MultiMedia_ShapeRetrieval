@@ -32,10 +32,6 @@ class GridLayout(QGridLayout):
 
         self.addWidget(row_label, self._current_row_index, 0)
 
-        # if len(widgets) == 1:
-        #     self.addWidget(widgets[0], self._current_row_index, 1, 1, -1)
-        # else:
-        #     first_widgets, last_widget = widgets[0:-2], widgets[-1]
         for widget_index in range(len(widgets)):
             if widget_index == len(widgets) - 1:
                 self.addWidget(widgets[widget_index], self._current_row_index, widget_index + 1, 1, -1)

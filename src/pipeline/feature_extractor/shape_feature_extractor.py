@@ -5,6 +5,7 @@ import numpy as np
 from src.database.writer import path_to_array
 from src.object.shape import Shape
 from src.controller.geometries_controller import GeometriesController
+from src.pipeline.feature_extractor.bounding_box_feature_extractor import BoundingBoxFeatureExtractor
 from src.pipeline.feature_extractor.mesh_feature_extractor import MeshFeatureExtractor
 from src.pipeline.feature_extractor.normalization_feature_extractor import NormalizationFeatureExtractor
 
@@ -39,14 +40,14 @@ class ShapeFeatureExtractor:
 
     @staticmethod
     def extract_axis_aligned_bounding_box(shape: Shape, force_recompute=False):
-        if not any(np.isinf(shape.features.aabb_min_bound)) and not any(np.isinf(shape.features.aabb_max_bound)) and not force_recompute:
+        if not shape.features.axis_aligned_bounding_box_features.misses_values() and not force_recompute:
             return
 
-        GeometriesController.calculate_mesh(shape.geometries)
+        if not shape.geometries.mesh and not shape.geometries.point_cloud:
+            GeometriesController.calculate_mesh(shape.geometries)
         GeometriesController.calculate_aligned_bounding_box(shape.geometries)
 
-        shape.features.aabb_min_bound = shape.geometries.axis_aligned_bounding_box.min_bound
-        shape.features.aabb_max_bound = shape.geometries.axis_aligned_bounding_box.max_bound
+        BoundingBoxFeatureExtractor.extract_features(shape.geometries.mesh, shape.geometries.point_cloud, shape.geometries.axis_aligned_bounding_box, shape.features.axis_aligned_bounding_box_features, force_recompute)
 
     @staticmethod
     def extract_mesh_features(shape: Shape, force_recompute=False):
@@ -75,20 +76,3 @@ class ShapeFeatureExtractor:
             GeometriesController.calculate_mesh(shape.geometries)
 
         NormalizationFeatureExtractor.extract_features(shape.geometries.mesh, shape.geometries.point_cloud, shape.geometries.axis_aligned_bounding_box, shape.features.normalization_features, force_recompute)
-
-    # @staticmethod
-    # def bounding_box_area(shape: Shape, force_recompute=False):
-    #     if not math.isinf(shape.features.bounding_box_area) and not force_recompute:
-    #         return shape.features.bounding_box_area
-    #
-    #     if not GeometriesController.calculate_aligned_bounding_box(shape.geometries):
-    #         GeometriesController.calculate_mesh(shape.geometries)
-    #         GeometriesController.calculate_aligned_bounding_box(shape.geometries)
-    #
-    #     box = shape.geometries.axis_aligned_bounding_box
-    #
-    #     # Axes of the shape
-    #     x = abs(box.max_bound[0] - box.min_bound[0])
-    #     y = abs(box.max_bound[1] - box.min_bound[1])
-    #     z = abs(box.max_bound[2] - box.min_bound[2])
-    #     return 2 * x * y + 2 * x * z + 2 * y * z

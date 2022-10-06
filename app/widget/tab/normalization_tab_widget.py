@@ -88,6 +88,8 @@ class NormalizationTabWidget(QWidget):
 
         # Extract features and
         ShapeFeatureExtractor.extract_all_shape_features(self.scene_widgets[1].shape)
+        GeometriesController.calculate_all_from_mesh(self.scene_widgets[1].shape.geometries, True)
+        GeometriesController.calculate_gui_geometries(self.scene_widgets[1].shape.geometries, True)
         # NormalizationFeatureExtractor.extract_features(self.scene_widgets[1].shape)
         self.features_widget_2.update_widget(self.scene_widgets[1].shape.features)
         self.normalization_widget.update_widget(self.scene_widgets[1].shape.features.normalization_features)

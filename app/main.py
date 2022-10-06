@@ -19,7 +19,7 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     form = MainWindow()
     form.setWindowTitle('Multimedia Retrieval')
-    form.setGeometry(100, 100, 600, 500)
+    form.setGeometry(100, 100, 1000, 700)
     form.show()
     sys.exit(app.exec())
 

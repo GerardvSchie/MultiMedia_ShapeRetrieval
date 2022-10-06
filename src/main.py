@@ -46,13 +46,14 @@ def main():
             # ShapeFeatureExtractor.extract_mesh_features(shape)
             # ShapeFeatureExtractor.extract_convex_hull_features(shape)
             # ShapeFeatureExtractor.extract_normalization_features(shape)
+            # ShapeFeatureExtractor.extract_axis_aligned_bounding_box(shape)
             shape_collection.append(shape)
 
     # Collect the paths to the Shapes too for refinement, if needed.
     shapePaths = [shape.geometries.path for shape in shape_collection]
 
-    src.util.plot.plot_features([shape.features for shape in shape_collection], shapePaths)
-    # DatabaseWriter.write_all_shape_features(shape_collection)
+    # src.util.plot.plot_features([shape.features for shape in shape_collection], shapePaths)
+    DatabaseWriter.write_all_shape_features(shape_collection)
     print("run complete")
 
 

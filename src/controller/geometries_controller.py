@@ -26,7 +26,6 @@ class GeometriesController:
     def calculate_all_other_geometries(geometries: Geometries, force_reload=False) -> None:
         GeometriesController.calculate_convex_hull(geometries, force_reload)
         GeometriesController.calculate_aligned_bounding_box(geometries, force_reload)
-        GeometriesController.calculate_center_mesh(geometries, force_reload)
 
     @staticmethod
     def calculate_mesh(geometries: Geometries, force_reload=False) -> None:
@@ -99,8 +98,6 @@ class GeometriesController:
             logging.warning("Tried to calculate convex hull but there is no mesh or point cloud")
             return False
 
-        geometries.convex_hull_line_set = o3d.geometry.LineSet().create_from_triangle_mesh(geometries.convex_hull_mesh)
-        geometries.convex_hull_line_set.paint_uniform_color((1, 0, 0))
         return True
 
     @staticmethod
@@ -116,9 +113,6 @@ class GeometriesController:
             logging.warning("Tried to calculate axis aligned bounding box but there is no mesh or point cloud")
             return False
 
-        geometries.axis_aligned_bounding_box_line_set = \
-            o3d.geometry.LineSet().create_from_axis_aligned_bounding_box(geometries.axis_aligned_bounding_box)
-        geometries.axis_aligned_bounding_box_line_set.paint_uniform_color((0.5, 0, 0))
         return True
 
     @staticmethod
@@ -162,3 +156,17 @@ class GeometriesController:
     @staticmethod
     def get_coordinate_axes() -> o3d.geometry.TriangleMesh:
         return o3d.geometry.TriangleMesh().create_coordinate_frame(0.1, np.array([0, 0, 0]))
+
+    @staticmethod
+    def calculate_gui_geometries(geometries: Geometries, force_reload=False) -> None:
+        if not geometries.center_mesh or force_reload:
+            GeometriesController.calculate_center_mesh(geometries, force_reload)
+
+        if not geometries.convex_hull_line_set or force_reload:
+            geometries.convex_hull_line_set = o3d.geometry.LineSet().create_from_triangle_mesh(geometries.convex_hull_mesh)
+            geometries.convex_hull_line_set.paint_uniform_color((1, 0, 0))
+
+        if not geometries.axis_aligned_bounding_box_line_set or force_reload:
+            geometries.axis_aligned_bounding_box_line_set = \
+                o3d.geometry.LineSet().create_from_axis_aligned_bounding_box(geometries.axis_aligned_bounding_box)
+            geometries.axis_aligned_bounding_box_line_set.paint_uniform_color((0.5, 0, 0))

@@ -25,8 +25,8 @@ class SilhouetteFeaturesWidget(QWidget):
         layout.add_row("Compactness:", [self.compactness_value_label])
         layout.add_row("AABB:", [self.axis_aligned_bounding_box_value_label])
         layout.add_row("Rectangularity:", [self.rectangularity_value_label])
-        layout.add_row("diameter:", [self.diameter_value_label])
-        layout.add_row("eccentricity:", [self.eccentricity_value_label])
+        layout.add_row("Diameter:", [self.diameter_value_label])
+        layout.add_row("Eccentricity:", [self.eccentricity_value_label])
         self.setLayout(layout)
 
     def update_widget(self, silhouette_features: SilhouetteFeatures):

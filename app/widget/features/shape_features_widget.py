@@ -10,7 +10,7 @@ class ShapeFeaturesWidget(QWidget):
     def __init__(self):
         super(ShapeFeaturesWidget, self).__init__()
         color_widget(self, [255, 255, 0])
-        self.setFixedWidth(165)
+        self.setFixedWidth(190)
 
         self.class_value_label = QLabel("-")
 

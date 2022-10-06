@@ -10,6 +10,7 @@ class MeshFeaturesWidget(QWidget):
     def __init__(self):
         super(MeshFeaturesWidget, self).__init__()
         color_widget(self, [122, 122, 122])
+        self.setMaximumHeight(160)
 
         self.nr_vertices_value_label = QLabel("0")
         self.nr_faces_value_label = QLabel("0")

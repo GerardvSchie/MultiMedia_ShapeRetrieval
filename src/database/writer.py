@@ -12,6 +12,7 @@ class DatabaseWriter:
         DatabaseWriter.write_mesh_features(shape_list, "data/database/original")
         DatabaseWriter.write_convex_hull_features(shape_list, "data/database/original")
         DatabaseWriter.write_normalization_features(shape_list, "data/database/original")
+        DatabaseWriter.write_bounding_box_features(shape_list, "data/database/original")
 
     @staticmethod
     def write_other_features(shape_list: [Shape], database_dir):
@@ -79,11 +80,26 @@ class DatabaseWriter:
                 writer.writerow(DatabaseWriter.normalization_features_to_list(shape))
 
     @staticmethod
+    def write_bounding_box_features(shape_list: [Shape], database_dir):
+        database_path = os.path.join(database_dir, "bounding_box.csv")
+        with open(database_path, "w", newline='') as f:
+            writer = csv.writer(f)
+
+            # Write header to file
+            header = [
+                "path",
+                "bounding_box_p0", "bounding_box_p1",
+                "surface_area", "volume", "diameter",
+            ]
+            writer.writerow(header)
+            for shape in shape_list:
+                writer.writerow(DatabaseWriter.bounding_box_to_list(shape))
+
+    @staticmethod
     def other_features_to_list(shape: Shape) -> [object]:
         identifier: np.array = path_to_array(shape.geometries.path)
         return [
             identifier, shape.features.true_class,
-            shape.features.aabb_min_bound, shape.features.aabb_max_bound,
         ]
 
     @staticmethod
@@ -113,6 +129,18 @@ class DatabaseWriter:
             shape.features.normalization_features.scale,
             shape.features.normalization_features.alignment,
             # TODO: Flip test
+        ]
+
+    @staticmethod
+    def bounding_box_to_list(shape: Shape) -> [object]:
+        identifier: np.array = path_to_array(shape.geometries.path)
+        return [
+            identifier,
+            shape.features.axis_aligned_bounding_box_features.min_bound,
+            shape.features.axis_aligned_bounding_box_features.max_bound,
+            shape.features.axis_aligned_bounding_box_features.surface_area,
+            shape.features.axis_aligned_bounding_box_features.volume,
+            shape.features.axis_aligned_bounding_box_features.diameter,
         ]
 
 

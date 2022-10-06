@@ -54,8 +54,11 @@ class VisualizationWidget(QWidget):
         # Clear geometries and update state
         self.clear()
 
-        # Load shape
+        # Load shape + the geometries needed for GUI drawing
         self.shape = Shape(path, load_geometries=True)
+        GeometriesController.calculate_gui_geometries(self.shape.geometries, True)
+
+        # Compute normals
         GeometriesController.calculate_mesh_normals(self.shape.geometries, True)
         GeometriesController.calculate_point_cloud_normals(self.shape.geometries, True)
 

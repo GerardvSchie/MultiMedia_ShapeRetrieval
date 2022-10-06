@@ -1,8 +1,9 @@
 from copy import deepcopy
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QGridLayout
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QWindow
 
+from app.widget.features.bounding_box_features_widget import BoundingBoxFeaturesWidget
 from app.widget.features.mesh_features_widget import MeshFeaturesWidget
 from app.widget.features.silhouette_features_widget import SilhouetteFeaturesWidget
 from src.object.settings import Settings
@@ -55,33 +56,59 @@ class ShapeFeaturesTabWidget(QWidget):
         left_layout.addWidget(self.settings_widget)
         left_layout.addWidget(self.normalization_widget)
 
-        mesh_layout = QVBoxLayout()
-        mesh_layout.addWidget(ShapeFeaturesTabWidget._create_header("Mesh View"))
+        grid_layout = QGridLayout()
+        grid_layout.addWidget(ShapeFeaturesTabWidget._create_header("Mesh View"), 0, 0, 1, 1)
+        grid_layout.addWidget(ShapeFeaturesTabWidget._create_header("Convex Hull View"), 0, 1, 1, 1)
+        grid_layout.addWidget(ShapeFeaturesTabWidget._create_header("Silhouette View"), 0, 2, 1, 1)
+
         if not IsMacOS:
-            mesh_layout.addWidget(window_container_1)
+            grid_layout.addWidget(window_container_1, 1, 0, 1, 1)
+            grid_layout.addWidget(window_container_2, 1, 1, 1, 1)
+            grid_layout.addWidget(window_container_3, 1, 2, 1, 1)
+
         self.mesh_features_widget = MeshFeaturesWidget()
-        mesh_layout.addWidget(self.mesh_features_widget)
-
-        convex_hull_layout = QVBoxLayout()
-        convex_hull_layout.addWidget(ShapeFeaturesTabWidget._create_header("Convex Hull View"))
-        if not IsMacOS:
-            convex_hull_layout.addWidget(window_container_2)
         self.convex_hull_features_widget = MeshFeaturesWidget()
-        convex_hull_layout.addWidget(self.convex_hull_features_widget)
-
-        silhouette_layout = QVBoxLayout()
-        silhouette_layout.addWidget(ShapeFeaturesTabWidget._create_header("Silhouette View"))
-        if not IsMacOS:
-            silhouette_layout.addWidget(window_container_3)
         self.silhouette_features_widget = SilhouetteFeaturesWidget()
-        silhouette_layout.addWidget(self.silhouette_features_widget)
+
+        grid_layout.addWidget(self.mesh_features_widget, 2, 0, 1, 1)
+        grid_layout.addWidget(self.convex_hull_features_widget, 2, 1, 1, 1)
+        grid_layout.addWidget(self.silhouette_features_widget, 2, 2, -1, 1)
+
+        self.bounding_box_features_widget = BoundingBoxFeaturesWidget()
+        grid_layout.addWidget(self.bounding_box_features_widget, 3, 0, 1, 2)
 
         layout = QHBoxLayout(self)
         layout.addLayout(left_layout)
-        layout.addLayout(mesh_layout)
-        layout.addLayout(convex_hull_layout)
-        layout.addLayout(silhouette_layout)
+        layout.addLayout(grid_layout)
         self.setLayout(layout)
+
+        # mesh_layout = QVBoxLayout()
+        # mesh_layout.addWidget(ShapeFeaturesTabWidget._create_header("Mesh View"))
+        # if not IsMacOS:
+        #     mesh_layout.addWidget(window_container_1)
+        # self.mesh_features_widget = MeshFeaturesWidget()
+        # mesh_layout.addWidget(self.mesh_features_widget)
+        #
+        # convex_hull_layout = QVBoxLayout()
+        # convex_hull_layout.addWidget(ShapeFeaturesTabWidget._create_header("Convex Hull View"))
+        # if not IsMacOS:
+        #     convex_hull_layout.addWidget(window_container_2)
+        # self.convex_hull_features_widget = MeshFeaturesWidget()
+        # convex_hull_layout.addWidget(self.convex_hull_features_widget)
+        #
+        # silhouette_layout = QVBoxLayout()
+        # silhouette_layout.addWidget(ShapeFeaturesTabWidget._create_header("Silhouette View"))
+        # if not IsMacOS:
+        #     silhouette_layout.addWidget(window_container_3)
+        # self.silhouette_features_widget = SilhouetteFeaturesWidget()
+        # silhouette_layout.addWidget(self.silhouette_features_widget)
+        #
+        # layout = QHBoxLayout(self)
+        # layout.addLayout(left_layout)
+        # layout.addLayout(mesh_layout)
+        # layout.addLayout(convex_hull_layout)
+        # layout.addLayout(silhouette_layout)
+        # self.setLayout(layout)
 
     @staticmethod
     def _create_header(text: str) -> QLabel:
@@ -113,11 +140,10 @@ class ShapeFeaturesTabWidget(QWidget):
         self.normalization_widget.update_widget(self.scene_widgets[0].shape.features.normalization_features)
         self.mesh_features_widget.update_widget(self.scene_widgets[0].shape.features.mesh_features)
         self.convex_hull_features_widget.update_widget(self.scene_widgets[0].shape.features.convex_hull_features)
+        self.bounding_box_features_widget.update_widget(self.scene_widgets[0].shape.features.axis_aligned_bounding_box_features)
 
         SilhouetteFeatureExtractor.extract_features("data/temp.png", self.scene_widgets[0].shape.features.silhouette_features)
         self.silhouette_features_widget.update_widget(self.scene_widgets[0].shape.features.silhouette_features)
-
-
 
         # # Update normalization
         # NormalizationFeatureExtractor.extract_features(
