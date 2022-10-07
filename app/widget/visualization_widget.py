@@ -43,6 +43,7 @@ class VisualizationWidget(QWidget):
         if not IsMacOS:
             self.hwnd = win32gui.FindWindowEx(0, 0, None, "Open3D")
 
+        self.focusWidget()
         self.update_widget()
 
     def closeEvent(self, *args, **kwargs):
@@ -92,6 +93,13 @@ class VisualizationWidget(QWidget):
         print('intrinsic', ref_view.intrinsic)
 
     def update_widget(self):
+        # if not self.shape:
+        #     return
+        # self._resolve_geometry_state_difference(self.current_settings.show_mesh, (
+        #             self.desired_settings.show_mesh or self.mesh_mode or self.silhouette_mode) and not self.convex_hull_mode,
+        #                                         self.shape.geometries.mesh)
+        # self.vis.update_renderer()
+        # return
         # Set render options
         render_option: o3d.visualization.RenderOption = self.vis.get_render_option()
         render_option.mesh_show_wireframe = self.desired_settings.show_wireframe and not self.desired_settings.show_silhouette and not self.silhouette_mode

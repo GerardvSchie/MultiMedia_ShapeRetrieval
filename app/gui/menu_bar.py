@@ -57,8 +57,13 @@ class MenuBar(QMenuBar):
 
         # Load airplane shape
         load_airplane_action = QAction("&Airplane", self)
-        load_airplane_action.triggered.connect(self.open_airplane_shape)
+        load_airplane_action.triggered.connect(self.open_airplane_shape_1)
         load_airplane_action.setShortcut(QKeySequence("Ctrl+1"))
+        self.shape_menu.addAction(load_airplane_action)
+
+        load_airplane_action = QAction("&Airplane", self)
+        load_airplane_action.triggered.connect(self.open_airplane_shape_2)
+        load_airplane_action.setShortcut(QKeySequence("Ctrl+2"))
         self.shape_menu.addAction(load_airplane_action)
 
     def open_file_action(self):
@@ -83,5 +88,8 @@ class MenuBar(QMenuBar):
         if file_name:
             self.tab_widget.export_image_action(file_name)
 
-    def open_airplane_shape(self):
+    def open_airplane_shape_1(self):
         self.tab_widget.load_shape("data/LabeledDB_new/Airplane/61.off")
+
+    def open_airplane_shape_2(self):
+        self.tab_widget.load_shape("data/LabeledDB_new/Airplane/65.off")

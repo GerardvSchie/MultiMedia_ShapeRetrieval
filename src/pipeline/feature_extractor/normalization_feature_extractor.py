@@ -91,5 +91,5 @@ class NormalizationFeatureExtractor:
             logging.warning("Cannot compute alignment without mesh or point cloud")
             return
 
-        correctly_flipped_axes = sum(np.clip(np.sign(fi), 0, 1))
+        correctly_flipped_axes = sum(np.clip(fi, 0, 1))
         normalization_features.flip = correctly_flipped_axes

@@ -49,3 +49,7 @@ https://developer.apple.com/documentation/appkit/nsworkspace#//apple_ref/occ/ins
 
 Sample points on mesh uniformly fast:
 https://github.com/isl-org/Open3D/issues/2062
+
+Relay keypresses to open3d:
+https://github.com/matplotlib/matplotlib/issues/707
+https://github.com/isl-org/Open3D/blob/master/cpp/open3d/visualization/visualizer/Visualizer.cpp

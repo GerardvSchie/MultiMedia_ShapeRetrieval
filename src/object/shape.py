@@ -49,13 +49,12 @@ class Shape:
         return new_file_path
 
     # Saves the mesh to the given file path
-    def save(self, path, force_save=False):
+    def save(self, path):
         if not self.geometries.mesh:
             logging.error(f"User tried to save whilst there is no mesh")
             return
 
-        if os.path.exists(path) and not force_save:
-            logging.error(f"File at path {path} already exists, will not save")
-            return
+        if os.path.exists(path):
+            logging.warning(f"File at path {path} already existed")
 
         o3d.io.write_triangle_mesh(path, self.geometries.mesh)

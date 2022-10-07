@@ -35,14 +35,9 @@ class Normalizer:
 
         # Depending on the determinant of the rotation matrix
         # rotate with positive or negative matrix
-        print('---------')
-        print(rotation_matrix)
-        print(np.linalg.det(rotation_matrix))
         if np.linalg.det(rotation_matrix) >= 0:
-            print('positive rotation matrix')
             shape.geometries.mesh.rotate(R=rotation_matrix)
         else:
-            print('negative rotation matrix')
             shape.geometries.mesh.rotate(R=-rotation_matrix)
 
         # Verify eigenvalues of new mesh
@@ -66,8 +61,28 @@ class Normalizer:
     def flipper_vertices_center(mesh: o3d.geometry.TriangleMesh):
         fi = Normalizer.compute_fi(mesh)
         flipping_rotation_matrix = np.zeros((3, 3))
-        np.fill_diagonal(flipping_rotation_matrix, np.sign(fi))
-        mesh.rotate(flipping_rotation_matrix)
+        np.fill_diagonal(flipping_rotation_matrix, fi)
+
+        # Depending on the determinant of the rotation matrix
+        # rotate with positive or negative matrix
+        if np.linalg.det(flipping_rotation_matrix) >= 0:
+            print('positive')
+            mesh.rotate(R=flipping_rotation_matrix)
+        else:
+            print('negative')
+            print(np.asarray(mesh.triangle_normals))
+            mesh.rotate(R=flipping_rotation_matrix)
+            print(np.asarray(mesh.triangle_normals))
+            # mesh.triangle_normals = o3d.utility.Vector3dVector(np.asarray(mesh.triangle_normals) * fi)
+            mesh.triangles = o3d.utility.Vector3iVector(np.flip(np.asarray(mesh.triangles), axis=1))
+            print(np.asarray(mesh.triangle_normals))
+            mesh.compute_triangle_normals(False)
+            mesh.compute_vertex_normals(False)
+            print(np.asarray(mesh.triangle_normals))
+
+            # mesh.compute_vertex_normals(True)
+            # mesh.vertices
+            # print(np.asarray(mesh.triangle_normals))
 
     @staticmethod
     def compute_fi(mesh: o3d.geometry.TriangleMesh):
@@ -83,7 +98,7 @@ class Normalizer:
             # Add for each axis to fi
             fi += np.sign(center_of_mass) * np.power(center_of_mass, 2)
 
-        return fi
+        return np.sign(fi)
 
     @staticmethod
     def flipper_vertices(mesh: o3d.geometry.TriangleMesh):
