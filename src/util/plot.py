@@ -84,21 +84,22 @@ def plot_features(feature_list: [ShapeFeatures], databasePaths: [str]):
 
 
 
-    # print(feature_list)
-    # print(feature_list[0])
+    #testId = 0
+    #testPath = databasePaths[testId]
+    #testOriginalVertices = mesh_nr_vertices[testId]
 
-    print('========================= Checking poorly-sampled meshes in whole database ======================')
+    # print(testPath)
+    # print(testOriginalVertices)
+    # refineMesh(testPath, testOriginalVertices, desiredNumberOfVertices)
 
-    # Check if we have any poorly-sampled Shapes that don't appear in as outliers for some reason.
-    for i, elem in enumerate(mesh_nr_vertices):
-        if elem < poorlySampledLimit:
-            print(f'SHAPE AT INDEX {i} IS POORLY-SAMPLED, {elem} ARE NOT ENOUGH VERTICES')
+    print('========================= Refining meshes to desired number of vertices in whole database ======================')
+    for i, pathToOriginalPLYMesh in enumerate(databasePaths):
+        originalVerticesOfPLYMesh = mesh_nr_vertices[i]
 
-            pathToPoorPLYMesh = databasePaths[i]
-            
-            # print(f'databasePaths:\n{databasePaths}')
-            print(f'databasePaths[{i}]:\n{pathToPoorPLYMesh}\n++++++++++++++++++++++++++++++++++++')
-            refineMesh(pathToPoorPLYMesh, elem, desiredNumberOfVertices)
+        print(pathToOriginalPLYMesh)
+        print(originalVerticesOfPLYMesh)
+
+        refineMesh(pathToOriginalPLYMesh, originalVerticesOfPLYMesh, desiredNumberOfVertices)
 
 
     return

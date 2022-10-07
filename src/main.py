@@ -1,9 +1,6 @@
 import os
 
 # Needed to fix ModuleNotFoundError when importing src.util.logger.
-from src.controller.geometries_controller import GeometriesController
-from src.pipeline.feature_extractor.normalization_feature_extractor import NormalizationFeatureExtractor
-
 directoryContainingCurrentFile = os.path.dirname(__file__)
 repoDirectory = os.path.dirname(directoryContainingCurrentFile)
 
@@ -11,6 +8,8 @@ repoDirectory = os.path.dirname(directoryContainingCurrentFile)
 import sys
 sys.path.append(repoDirectory)
 
+from src.controller.geometries_controller import GeometriesController
+from src.pipeline.feature_extractor.normalization_feature_extractor import NormalizationFeatureExtractor
 import src.util.logger as logger
 from src.object.shape import Shape
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
@@ -56,7 +55,7 @@ def main():
     # Collect the paths to the Shapes too for refinement, if needed.
     shapePaths = [shape.geometries.path for shape in shape_collection]
 
-    # src.util.plot.plot_features([shape.features for shape in shape_collection], shapePaths)
+    src.util.plot.plot_features([shape.features for shape in shape_collection], shapePaths)
     DatabaseWriter.write_all_shape_features(shape_collection)
     print("run complete")
 
