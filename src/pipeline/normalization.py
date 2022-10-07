@@ -63,26 +63,10 @@ class Normalizer:
         flipping_rotation_matrix = np.zeros((3, 3))
         np.fill_diagonal(flipping_rotation_matrix, fi)
 
-        # Depending on the determinant of the rotation matrix
-        # rotate with positive or negative matrix
-        if np.linalg.det(flipping_rotation_matrix) >= 0:
-            print('positive')
-            mesh.rotate(R=flipping_rotation_matrix)
-        else:
-            print('negative')
-            print(np.asarray(mesh.triangle_normals))
-            mesh.rotate(R=flipping_rotation_matrix)
-            print(np.asarray(mesh.triangle_normals))
-            # mesh.triangle_normals = o3d.utility.Vector3dVector(np.asarray(mesh.triangle_normals) * fi)
+        mesh.rotate(R=flipping_rotation_matrix)
+        # For a negative determinant the order of the points in the triangles is flipped.
+        if np.linalg.det(flipping_rotation_matrix) < 0:
             mesh.triangles = o3d.utility.Vector3iVector(np.flip(np.asarray(mesh.triangles), axis=1))
-            print(np.asarray(mesh.triangle_normals))
-            mesh.compute_triangle_normals(False)
-            mesh.compute_vertex_normals(False)
-            print(np.asarray(mesh.triangle_normals))
-
-            # mesh.compute_vertex_normals(True)
-            # mesh.vertices
-            # print(np.asarray(mesh.triangle_normals))
 
     @staticmethod
     def compute_fi(mesh: o3d.geometry.TriangleMesh):
