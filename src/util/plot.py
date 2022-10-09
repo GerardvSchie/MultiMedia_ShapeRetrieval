@@ -35,7 +35,6 @@ NORMALIZATION_ALIGNMENT = 'Alignment'
 histBins = 100
 scatterHistBins = 100
 
-poorlySampledLimit = 1500
 desiredNumberOfVertices = 10000
 
 
@@ -257,7 +256,7 @@ def hist_plot(title: str, data, log=False):
 
     patches[averageIndexInHistogram].set_fc('r')
 
-    plt.title(f'Average Shape value of {title}: {shapeClosestToAverage}\n{histBins} bins, poorly-sampled limit: {poorlySampledLimit}', fontdict={'fontsize': BIGGER_SIZE})
+    plt.title(f'Average Shape value of {title}: {shapeClosestToAverage}\n{histBins} bins', fontdict={'fontsize': BIGGER_SIZE})
 
     # data is list of the number of faces/vertices per shape
     plt.xlabel(f'{title} per shape')
@@ -360,10 +359,6 @@ def detectOutliers(featureName, featureData, allFeatures: [ShapeFeatures]):
             f.write(f'shapeFromIdData.mesh_area = {shapeFromIdData.mesh_features.surface_area}\n')
             f.write(f'shapeFromIdData.convex_hull_area = {shapeFromIdData.convex_hull_features.surface_area}\n')
             # f.write(f'shapeFromIdData.boundingbox_area = {shapeFromIdData.bounding_box_area}\n\n')
-
-            if (shapeFromIdData.mesh_features.nr_vertices < poorlySampledLimit or shapeFromIdData.mesh_features.nr_faces < poorlySampledLimit):
-                print("THIS SHAPE IS POORLY-SAMPLED!")
-                f.write('THIS SHAPE IS POORLY-SAMPLED!')
 
     # for elem in outliers:
     #    print(f'{elem} has element id {featureData.index(elem)} in the {featureName} data.')
