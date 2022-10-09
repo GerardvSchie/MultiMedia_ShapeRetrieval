@@ -92,15 +92,23 @@ def plot_features(feature_list: [ShapeFeatures], databasePaths: [str]):
     # print(testOriginalVertices)
     # refineMesh(testPath, testOriginalVertices, desiredNumberOfVertices)
 
+    #refineMesh(databasePaths[0], mesh_nr_vertices[0], desiredNumberOfVertices)
+
     print('========================= Refining meshes to desired number of vertices in whole database ======================')
+
+    finalVertexCounts = []
+
     for i, pathToOriginalPLYMesh in enumerate(databasePaths):
         originalVerticesOfPLYMesh = mesh_nr_vertices[i]
 
-        print(pathToOriginalPLYMesh)
-        print(originalVerticesOfPLYMesh)
+        print(f'item[{i}] = {pathToOriginalPLYMesh}')
+        #print(originalVerticesOfPLYMesh)
 
-        refineMesh(pathToOriginalPLYMesh, originalVerticesOfPLYMesh, desiredNumberOfVertices)
+        finalVertexCountOfThisMesh = refineMesh(pathToOriginalPLYMesh, originalVerticesOfPLYMesh, desiredNumberOfVertices)
+        finalVertexCounts.append(finalVertexCountOfThisMesh)
 
+    # Create a histogram to show how well the algorithm performed.
+    hist_plot('Final vertex counts of refined meshed', finalVertexCounts)
 
     return
 
