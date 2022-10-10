@@ -35,7 +35,6 @@ NORMALIZATION_ALIGNMENT = 'Alignment'
 histBins = 100
 scatterHistBins = 100
 
-poorlySampledLimit = 1500
 desiredNumberOfVertices = 10000
 
 
@@ -84,22 +83,31 @@ def plot_features(feature_list: [ShapeFeatures], databasePaths: [str]):
 
 
 
-    # print(feature_list)
-    # print(feature_list[0])
+    #testId = 0
+    #testPath = databasePaths[testId]
+    #testOriginalVertices = mesh_nr_vertices[testId]
 
-    print('========================= Checking poorly-sampled meshes in whole database ======================')
+    # print(testPath)
+    # print(testOriginalVertices)
+    # refineMesh(testPath, testOriginalVertices, desiredNumberOfVertices)
 
-    # Check if we have any poorly-sampled Shapes that don't appear in as outliers for some reason.
-    for i, elem in enumerate(mesh_nr_vertices):
-        if elem < poorlySampledLimit:
-            print(f'SHAPE AT INDEX {i} IS POORLY-SAMPLED, {elem} ARE NOT ENOUGH VERTICES')
+    #refineMesh(databasePaths[0], mesh_nr_vertices[0], desiredNumberOfVertices)
 
-            pathToPoorPLYMesh = databasePaths[i]
-            
-            # print(f'databasePaths:\n{databasePaths}')
-            print(f'databasePaths[{i}]:\n{pathToPoorPLYMesh}\n++++++++++++++++++++++++++++++++++++')
-            refineMesh(pathToPoorPLYMesh, elem, desiredNumberOfVertices)
+    print('========================= Refining meshes to desired number of vertices in whole database ======================')
 
+    finalVertexCounts = []
+
+    for i, pathToOriginalPLYMesh in enumerate(databasePaths):
+        originalVerticesOfPLYMesh = mesh_nr_vertices[i]
+
+        print(f'item[{i}] = {pathToOriginalPLYMesh}')
+        #print(originalVerticesOfPLYMesh)
+
+        finalVertexCountOfThisMesh = refineMesh(pathToOriginalPLYMesh, originalVerticesOfPLYMesh, desiredNumberOfVertices)
+        finalVertexCounts.append(finalVertexCountOfThisMesh)
+
+    # Create a histogram to show how well the algorithm performed.
+    hist_plot('Final vertex counts of refined meshed', finalVertexCounts)
 
     return
 
@@ -248,7 +256,7 @@ def hist_plot(title: str, data, log=False):
 
     patches[averageIndexInHistogram].set_fc('r')
 
-    plt.title(f'Average Shape value of {title}: {shapeClosestToAverage}\n{histBins} bins, poorly-sampled limit: {poorlySampledLimit}', fontdict={'fontsize': BIGGER_SIZE})
+    plt.title(f'Average Shape value of {title}: {shapeClosestToAverage}\n{histBins} bins', fontdict={'fontsize': BIGGER_SIZE})
 
     # data is list of the number of faces/vertices per shape
     plt.xlabel(f'{title} per shape')
@@ -351,10 +359,6 @@ def detectOutliers(featureName, featureData, allFeatures: [ShapeFeatures]):
             f.write(f'shapeFromIdData.mesh_area = {shapeFromIdData.mesh_features.surface_area}\n')
             f.write(f'shapeFromIdData.convex_hull_area = {shapeFromIdData.convex_hull_features.surface_area}\n')
             # f.write(f'shapeFromIdData.boundingbox_area = {shapeFromIdData.bounding_box_area}\n\n')
-
-            if (shapeFromIdData.mesh_features.nr_vertices < poorlySampledLimit or shapeFromIdData.mesh_features.nr_faces < poorlySampledLimit):
-                print("THIS SHAPE IS POORLY-SAMPLED!")
-                f.write('THIS SHAPE IS POORLY-SAMPLED!')
 
     # for elem in outliers:
     #    print(f'{elem} has element id {featureData.index(elem)} in the {featureName} data.')
