@@ -23,6 +23,8 @@ class ShapeFeatureExtractor:
 
         ShapeFeatureExtractor.extract_mesh_features(shape, force_recompute)
         ShapeFeatureExtractor.extract_convex_hull_features(shape, force_recompute)
+        shape.features.mesh_features.diameter = shape.features.convex_hull_features.diameter
+
         ShapeFeatureExtractor.extract_normalization_features(shape, force_recompute)
 
     @staticmethod
@@ -63,7 +65,7 @@ class ShapeFeatureExtractor:
             return
 
         if GeometriesController.calculate_convex_hull(shape.geometries):
-            MeshFeatureExtractor.extract_features(shape.geometries.convex_hull_mesh, None, shape.features.convex_hull_features, force_recompute)
+            MeshFeatureExtractor.extract_convex_hull_features(shape.geometries.convex_hull_mesh, None, shape.features.convex_hull_features, force_recompute)
         else:
             logging.warning("Could not extract convex hull features")
 

@@ -40,7 +40,7 @@ class DatabaseWriter:
             header = [
                 "path",
                 "nr_of_vertices", "nr_of_faces",
-                "surface_area", "volume",
+                "surface_area", "volume", "diameter",
             ]
             writer.writerow(header)
             for shape in shape_list:
@@ -57,7 +57,7 @@ class DatabaseWriter:
             header = [
                 "path",
                 "nr_of_vertices", "nr_of_faces",
-                "surface_area", "volume",
+                "surface_area", "volume", "diameter",
             ]
             writer.writerow(header)
             for shape in shape_list:
@@ -109,6 +109,7 @@ class DatabaseWriter:
             identifier,
             shape.features.mesh_features.nr_vertices, shape.features.mesh_features.nr_faces,
             shape.features.mesh_features.surface_area, shape.features.mesh_features.volume,
+            shape.features.mesh_features.diameter,
         ]
 
     @staticmethod
@@ -118,6 +119,7 @@ class DatabaseWriter:
             identifier,
             shape.features.convex_hull_features.nr_vertices, shape.features.convex_hull_features.nr_faces,
             shape.features.convex_hull_features.surface_area, shape.features.convex_hull_features.volume,
+            shape.features.convex_hull_features.diameter,
         ]
 
     @staticmethod

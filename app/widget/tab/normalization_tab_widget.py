@@ -76,20 +76,19 @@ class NormalizationTabWidget(QWidget):
         self.features_widget_1.update_widget(self.scene_widgets[0].shape.features)
 
         # Normalized mesh with 3000 points
-        # self.scene_widgets[1].shape.geometries.point_cloud = self.scene_widgets[1].shape.geometries.mesh.sample_points_poisson_disk(3000)
         # self.scene_widgets[1].shape.geometries.point_cloud = self.scene_widgets[1].shape.geometries.mesh.sample_points_uniformly(3000)
-        #
-        # GeometriesController.calculate_all_from_point_cloud(self.scene_widgets[1].shape.geometries, True)
-        # GeometriesController.calculate_mesh_normals(self.scene_widgets[1].shape.geometries, True)
-        # GeometriesController.calculate_point_cloud_normals(self.scene_widgets[1].shape.geometries, True)
 
-        Normalizer.normalize_shape(self.scene_widgets[1].shape)
+        self.scene_widgets[1].shape.geometries.point_cloud = self.scene_widgets[1].shape.geometries.mesh.sample_points_poisson_disk(10000)
+        GeometriesController.calculate_all_from_point_cloud(self.scene_widgets[1].shape.geometries, True)
+        GeometriesController.calculate_mesh_normals(self.scene_widgets[1].shape.geometries, True)
+        GeometriesController.calculate_point_cloud_normals(self.scene_widgets[1].shape.geometries, True)
 
         # Reconstruct all things of the mesh
-        GeometriesController.calculate_all_from_mesh(self.scene_widgets[1].shape.geometries, True)
-        GeometriesController.calculate_point_cloud_normals(self.scene_widgets[1].shape.geometries, True)
-        GeometriesController.calculate_mesh_normals(self.scene_widgets[1].shape.geometries, True)
-        GeometriesController.calculate_gui_geometries(self.scene_widgets[1].shape.geometries, True)
+        # Normalizer.normalize_shape(self.scene_widgets[1].shape)
+        # GeometriesController.calculate_all_from_mesh(self.scene_widgets[1].shape.geometries, True)
+        # GeometriesController.calculate_point_cloud_normals(self.scene_widgets[1].shape.geometries, True)
+        # GeometriesController.calculate_mesh_normals(self.scene_widgets[1].shape.geometries, True)
+        # GeometriesController.calculate_gui_geometries(self.scene_widgets[1].shape.geometries, True)
 
         # Extract features and update the panels
         ShapeFeatureExtractor.extract_all_shape_features(self.scene_widgets[1].shape)

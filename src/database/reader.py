@@ -43,7 +43,7 @@ class DatabaseReader:
             for features in reader:
                 data: MeshFeatures = MeshFeatures()
 
-                identifier, data.nr_vertices, data.nr_faces, data.surface_area, data.volume, \
+                identifier, data.nr_vertices, data.nr_faces, data.surface_area, data.volume, data.diameter \
                     = features
 
                 # Reconstruct environment specific path, used numpy representation to be OS-invariant
@@ -54,6 +54,7 @@ class DatabaseReader:
                 data.nr_faces = int(data.nr_faces)
                 data.surface_area = float(data.surface_area)
                 data.volume = float(data.volume)
+                data.diameter = float(data.diameter)
 
                 # Add to dict
                 _add_if_not_exists(shape_features, path)
@@ -78,7 +79,7 @@ class DatabaseReader:
             for features in reader:
                 data: MeshFeatures = MeshFeatures()
 
-                identifier, data.nr_vertices, data.nr_faces, data.surface_area, data.volume, \
+                identifier, data.nr_vertices, data.nr_faces, data.surface_area, data.volume, data.diameter, \
                     = features
 
                 # Reconstruct environment specific path, used numpy representation to be OS-invariant
@@ -89,6 +90,7 @@ class DatabaseReader:
                 data.nr_faces = int(data.nr_faces)
                 data.surface_area = float(data.surface_area)
                 data.volume = float(data.volume)
+                data.diameter = float(data.diameter)
 
                 # Add to dict
                 _add_if_not_exists(shape_features, path)

@@ -12,6 +12,15 @@ from src.pipeline.normalization import Normalizer
 
 class MeshFeatureExtractor:
     @staticmethod
+    def extract_convex_hull_features(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud, mesh_features: MeshFeatures, force_recompute=False):
+        if not mesh and not point_cloud:
+            logging.warning("Cannot extract any features without mesh and point cloud")
+            return
+
+        MeshFeatureExtractor.calculate_diameter(mesh, point_cloud, mesh_features, force_recompute)
+        MeshFeatureExtractor.extract_features(mesh, point_cloud, mesh_features, force_recompute)
+
+    @staticmethod
     # Only extract the features that are not yet set with values in the shape
     def extract_features(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud, mesh_features: MeshFeatures, force_recompute=False):
         if not mesh and not point_cloud:
@@ -88,6 +97,38 @@ class MeshFeatureExtractor:
             return
 
         mesh_features.volume = volume
+
+    @staticmethod
+    def calculate_diameter(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud, mesh_features: MeshFeatures, force_recompute=False) -> None:
+        if not math.isinf(mesh_features.diameter) and not force_recompute:
+            return
+
+        if point_cloud:
+            points = point_cloud.points
+        elif mesh:
+            points = mesh.vertices
+        else:
+            logging.warning('Cannot compute diameter without mesh or point cloud')
+            return
+
+        points = np.asarray(points)
+
+        if len(points) < 2:
+            logging.warning('Cannot compute diameter with less than 2 points')
+            return
+
+        max_squared_distance = -math.inf
+
+        for point_a_index in range(len(points)):
+            point_a = points[point_a_index]
+            for point_b_index in range(point_a_index + 1, len(points)):
+                point_b = points[point_b_index]
+                squared_distance = np.sum(np.power(point_a - point_b, 2))
+                if squared_distance > max_squared_distance:
+                    max_squared_distance = squared_distance
+
+        max_diameter = np.sqrt(max_squared_distance)
+        mesh_features.diameter = max_diameter
 
     @staticmethod
     def calculate_compactness(mesh: o3d.geometry.TriangleMesh, mesh_features: MeshFeatures, force_recompute=False) -> None:

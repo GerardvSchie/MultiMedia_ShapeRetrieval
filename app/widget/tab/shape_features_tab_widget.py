@@ -7,6 +7,7 @@ from app.widget.features.bounding_box_features_widget import BoundingBoxFeatures
 from app.widget.features.mesh_features_widget import MeshFeaturesWidget
 from app.widget.features.silhouette_features_widget import SilhouetteFeaturesWidget
 from src.object.settings import Settings
+from src.pipeline.feature_extractor.mesh_feature_extractor import MeshFeatureExtractor
 from src.pipeline.feature_extractor.normalization_feature_extractor import NormalizationFeatureExtractor
 
 from app.util.font import BOLD_FONT
@@ -108,7 +109,9 @@ class ShapeFeaturesTabWidget(QWidget):
         # Save silhouette to file
         self.scene_widgets[2].vis.capture_screen_image("data/temp.png")
 
+        # Extract features and set diameter to both mesh features
         ShapeFeatureExtractor.extract_all_shape_features(self.scene_widgets[0].shape)
+
         self.normalization_widget.update_widget(self.scene_widgets[0].shape.features.normalization_features)
         self.mesh_features_widget.update_widget(self.scene_widgets[0].shape.features.mesh_features)
         self.convex_hull_features_widget.update_widget(self.scene_widgets[0].shape.features.convex_hull_features)
