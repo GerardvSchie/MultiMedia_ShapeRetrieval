@@ -11,13 +11,15 @@ class Normalizer:
         GeometriesController.calculate_mesh(shape.geometries)
         # Translate to center
         shape.geometries.mesh.translate(-shape.geometries.mesh.get_center())
-        # Scale shape to unit size
-        Normalizer.scaler(shape)
         # Rotate based on PCA
         Normalizer.rot_pca(shape)
         # Flip based on momentum
         Normalizer.flipper_vertices_center(shape.geometries.mesh)
+        # Scale shape to unit size
+        Normalizer.scaler(shape)
 
+    @staticmethod
+    def reconstruct_shape(shape: Shape):
         # All other parts need to get recomputed
         GeometriesController.calculate_all_from_mesh(shape.geometries, True)
         GeometriesController.calculate_mesh_normals(shape.geometries, True)
@@ -25,8 +27,10 @@ class Normalizer:
 
     @staticmethod
     def scaler(shape):
-        scale = shape.geometries.mesh.get_axis_aligned_bounding_box().get_max_extent()
-        shape.geometries.mesh.scale(1 / scale, shape.geometries.mesh.get_center())
+        scale_before = shape.geometries.mesh.get_axis_aligned_bounding_box().get_max_extent()
+        shape.geometries.mesh.scale(1 / scale_before, shape.geometries.mesh.get_center())
+        scale_after = shape.geometries.mesh.get_axis_aligned_bounding_box().get_max_extent()
+        print(scale_before, '->', scale_after)
 
     @staticmethod
     def rot_pca(shape: Shape):
@@ -83,62 +87,3 @@ class Normalizer:
             fi += np.sign(center_of_mass) * np.power(center_of_mass, 2)
 
         return np.sign(fi)
-
-    @staticmethod
-    def flipper_vertices(mesh: o3d.geometry.TriangleMesh):
-        fx = 0
-        fy = 0
-        fz = 0
-
-        for point in mesh.vertices:
-            fx += np.sign(point[0]) * np.power(point[0], 2)
-            fy += np.sign(point[1]) * np.power(point[1], 2)
-            fz += np.sign(point[2]) * np.power(point[2], 2)
-
-        print(fx, fy, fz)
-
-        # Flipping is done at the end of the calculation
-        if np.sign(fx) == -1:
-            print('point: flipped along X')
-        if np.sign(fy) == -1:
-            print('point: flipped along Y')
-        if np.sign(fz) == -1:
-            print('point: flipped along Z')
-
-        flipping_matrix = np.array([[np.sign(fx), 0, 0], [0, np.sign(fy), 0], [0, 0, np.sign(fz)]])
-        mesh.rotate(flipping_matrix)
-
-    @staticmethod
-    def flipper(mesh: o3d.geometry.TriangleMesh):
-        return
-        faces = ( index, ( xcoord, ycoord, zcoord )  )
-
-        triangles = np.zeros((3, len(faces)))
-        for i, indexes in enumerate(faces):
-            xc, yc, zc = [], [], []
-            for inum in indexes:
-                verts = mesh.vertices[inum]
-                xc.append(verts[0])
-                yc.append(verts[1])
-                zc.append(verts[2])
-            triangles[0][i] = np.sum(xc) / 3
-            triangles[1][i] = np.sum(yc) / 3
-            triangles[2][i] = np.sum(zc) / 3
-
-            sx = 0
-            for x in triangles[0]:
-                sx += np.sign(x) * (x ** 2)
-
-            sy = 0
-            for y in triangles[1]:
-                sy += np.sign(y) * (y ** 2)
-
-            sz = 0
-            for z in triangles[2]:
-                sz += np.sign(z) * (z ** 2)
-
-        flipping = np.array([[np.sign(sx), 0, 0], [0, np.sign(sy), 0], [0, 0, np.sign(sz)]])
-
-        mesh.vertices = np.matmul(mesh.vertices, flipping)
-
-        return mesh

@@ -16,11 +16,13 @@ class DatabaseReader:
         shape_features = dict()
 
         os.makedirs('data/database/original', exist_ok=True)
+        os.makedirs('data/database/normalized', exist_ok=True)
         DatabaseReader.read_mesh_features(shape_features, 'data/database/original')
         DatabaseReader.read_convex_hull_features(shape_features, 'data/database/original')
         DatabaseReader.read_other_features(shape_features, 'data/database/original')
         DatabaseReader.read_normalization_features(shape_features, 'data/database/original')
         DatabaseReader.read_bounding_box_features(shape_features, 'data/database/original')
+        DatabaseReader.read_normalization_features(shape_features, 'data/database/normalized')
 
         return shape_features
 

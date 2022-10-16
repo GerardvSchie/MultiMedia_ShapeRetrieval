@@ -5,9 +5,10 @@ import matplotlib.pyplot as plt
 import src.util.io
 import numpy as np
 from src.object.features.shape_features import ShapeFeatures
+from matplotlib.ticker import PercentFormatter
 
 #from src.database.reader import dataPaths
-from vertex_normalization import refineMesh
+from src.vertex_normalization import refineMesh
 
 
 # Python can't convert variable names to string.
@@ -44,34 +45,6 @@ def plot_features(feature_list: [ShapeFeatures], databasePaths: [str]):
     # Create folder for the plots
     src.util.io.create_dir("plots")
 
-    # A list where each element is the number of faces of a single shape.
-    # There are 380 elements/shapes.
-    mesh_nr_faces = [features.mesh_features.nr_faces for features in feature_list]
-    hist_plot(MESH_FACES, mesh_nr_faces)
-
-    # A list where each element is the number of vertices of a single shape.
-    # There are 380 elements/shapes.
-    mesh_nr_vertices = [features.mesh_features.nr_vertices for features in feature_list]
-    hist_plot(MESH_VERTICES, mesh_nr_vertices)
-
-    mesh_area = [features.mesh_features.surface_area for features in feature_list]
-    hist_plot(MESH_AREA, mesh_area)
-
-    mesh_volume = [features.mesh_features.volume for features in feature_list if not math.isinf(features.mesh_features.volume)]
-    hist_plot(MESH_VOLUME, mesh_volume)
-
-    convex_hull_area = [features.convex_hull_features.surface_area for features in feature_list]
-    hist_plot(CONVEX_HULL_AREA, convex_hull_area)
-
-    distance_to_center = [features.normalization_features.distance_to_center for features in feature_list]
-    hist_plot(NORMALIZATION_DISTANCE_TO_CENTER, distance_to_center)
-
-    scale = [features.normalization_features.scale for features in feature_list]
-    hist_plot(NORMALIZATION_SCALE, scale)
-
-    alignment = [features.normalization_features.alignment for features in feature_list]
-    hist_plot(NORMALIZATION_ALIGNMENT, alignment)
-
     # Bounding box features added soon
     # bounding_box_area = [features.bounding_box_area for features in feature_list]
     # hist_plot(boundingArea, bounding_box_area)
@@ -96,7 +69,7 @@ def plot_features(feature_list: [ShapeFeatures], databasePaths: [str]):
     print('========================= Refining meshes to desired number of vertices in whole database ======================')
 
     finalVertexCounts = []
-
+    mesh_nr_vertices = [feature.mesh_features.nr_vertices for feature in feature_list]
     for i, pathToOriginalPLYMesh in enumerate(databasePaths):
         originalVerticesOfPLYMesh = mesh_nr_vertices[i]
 
@@ -107,7 +80,7 @@ def plot_features(feature_list: [ShapeFeatures], databasePaths: [str]):
         finalVertexCounts.append(finalVertexCountOfThisMesh)
 
     # Create a histogram to show how well the algorithm performed.
-    hist_plot('Final vertex counts of refined meshed', finalVertexCounts)
+    # hist_plot('Final vertex counts of refined meshed', finalVertexCounts)
 
     return
 
@@ -221,48 +194,6 @@ def scatter_hist(x, y, xName, yName, ax, ax_histx, ax_histy):
     drawShapeDotOfSingleFeatureOnPlot(ax, 1, yName, y, xName, x, averageY, f'Shape closest to {yName} average', 'purple')
 
     save_plt(f"{xName} and {yName} of meshes")
-
-
-def hist_plot(title: str, data, log=False):
-    #hist = plt.hist(data, bins=histBins, log=log)
-    n, bins, patches = plt.hist(data, bins = histBins, log=log)
-
-    SMALL_SIZE = 10
-    MEDIUM_SIZE = 12
-    BIGGER_SIZE = 16
-
-    plt.rc('font', size=SMALL_SIZE)  # controls default text sizes
-    plt.rc('axes', titlesize=SMALL_SIZE)  # fontsize of the axes title
-    plt.rc('axes', labelsize=MEDIUM_SIZE)  # fontsize of the x and y labels
-    plt.rc('xtick', labelsize=SMALL_SIZE)  # fontsize of the tick labels
-    plt.rc('ytick', labelsize=SMALL_SIZE)  # fontsize of the tick labels
-    plt.rc('legend', fontsize=SMALL_SIZE)  # legend fontsize
-    plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
-    plt.rc('figure', labelsize=BIGGER_SIZE)  # fontsize of the figure title
-
-    mathAverage = np.mean(data)
-    shapeClosestToAverage = closestValue(data, mathAverage)
-
-    for i, bin in enumerate(bins):
-        if bin < shapeClosestToAverage:
-            continue
-        elif bin >= shapeClosestToAverage:
-            averageIndexInHistogram = i - 1
-            break
-
-    # print(f'averageIndexInHistogram = {averageIndexInHistogram}')
-    # print(f'bins[averageIndexInHistogram] = {bins[averageIndexInHistogram]}')
-    # print(f'bins[averageIndexInHistogram + 1] = {bins[averageIndexInHistogram + 1]}')
-
-    patches[averageIndexInHistogram].set_fc('r')
-
-    plt.title(f'Average Shape value of {title}: {shapeClosestToAverage}\n{histBins} bins', fontdict={'fontsize': BIGGER_SIZE})
-
-    # data is list of the number of faces/vertices per shape
-    plt.xlabel(f'{title} per shape')
-    plt.ylabel('Number of shapes')
-
-    save_plt(title)
 
 
 def save_plt(title: str):
