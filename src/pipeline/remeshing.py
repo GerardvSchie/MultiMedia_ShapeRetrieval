@@ -13,17 +13,23 @@ from src.object.shape import Shape
 class Remesher:
     @staticmethod
     def remesh_shape(shape: Shape):
-        Remesher.fill_holes(shape)
-        Remesher.resample(shape)
-        Remesher.reconstruct_mesh(shape)
+        if False:
+            shape.geometries.mesh = shape.geometries.mesh.simplify_quadric_decimation(
+                target_number_of_triangles=10000)
+        else:
+            Remesher.fill_holes(shape)
+            Remesher.resample(shape)
+            Remesher.reconstruct_mesh(shape)
+            Remesher.remove_small_meshes(shape)
+            Remesher.fill_holes(shape)
 
-        is_watertight = shape.geometries.mesh.is_watertight()
-        print('before:', shape.features.mesh_features.is_watertight, 'after:', is_watertight)
+            is_watertight = shape.geometries.mesh.is_watertight()
+            print('before:', shape.features.mesh_features.is_watertight, 'after:', is_watertight)
 
     @staticmethod
     def resample(shape: Shape):
         GeometriesController.calculate_mesh(shape.geometries)
-        shape.geometries.point_cloud = shape.geometries.mesh.sample_points_poisson_disk(5000)
+        shape.geometries.point_cloud = shape.geometries.mesh.sample_points_poisson_disk(10000)
 
     @staticmethod
     def fill_holes(shape: Shape):
@@ -32,13 +38,9 @@ class Remesher:
 
         tin = pymeshfix._meshfix.PyTMesh()
         tin.load_array(shape.geometries.mesh.vertices, shape.geometries.mesh.triangles)
-
-        # tin = pymeshfix.PyTMesh()
-        # tin.load_file(shape.geometries.path)
-
         print('There are {:d} boundaries'.format(tin.boundaries()))
         tin.fill_small_boundaries()
-        tin.clean(max_iters=10, inner_loops=3)
+        # tin.clean(max_iters=10, inner_loops=3)
         print('There are {:d} boundaries'.format(tin.boundaries()))
 
         new_path = os.path.join(os.path.split(shape.geometries.path)[0], 'remeshed.ply')
@@ -72,4 +74,17 @@ class Remesher:
         if shape.geometries.mesh.is_watertight():
             return
 
-        Remesher.fill_holes(shape)
+    @staticmethod
+    def remove_small_meshes(shape: Shape):
+        triangle_clusters, cluster_n_triangles, cluster_area = (shape.geometries.mesh.cluster_connected_triangles())
+
+        # Numpy arrays
+        triangle_clusters = np.asarray(triangle_clusters)
+        cluster_n_triangles = np.asarray(cluster_n_triangles)
+        cluster_area = np.asarray(cluster_area)
+
+        # Only keep the largest meshes
+        largest_cluster_idx = cluster_n_triangles.argmax()
+        triangles_to_remove = triangle_clusters != largest_cluster_idx
+        shape.geometries.mesh.remove_triangles_by_mask(triangles_to_remove)
+

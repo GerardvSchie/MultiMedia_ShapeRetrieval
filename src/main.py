@@ -5,6 +5,7 @@ from tqdm import tqdm
 from src.object.features.shape_features import ShapeFeatures
 from src.pipeline.feature_extractor.mesh_feature_extractor import MeshFeatureExtractor
 from src.pipeline.remeshing import Remesher
+from src.plot.triangle_area import TriangleAreaPlotter
 
 directoryContainingCurrentFile = os.path.dirname(__file__)
 repoDirectory = os.path.dirname(directoryContainingCurrentFile)
@@ -121,9 +122,14 @@ def main():
 
     print('Remeshing shapes')
     for shape in tqdm(shape_list):
+        if not shape.features.true_class == 'Human':
+            continue
+
         remesh_and_save_shape(shape)
+        TriangleAreaPlotter.plot_triangle_area(shape.geometries)
         return
 
+    # print('Normalizing shapes')
     # How to then change the shape
     # for shape in shape_list:
     #     normalize_and_save_shape(shape)

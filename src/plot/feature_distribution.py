@@ -46,7 +46,7 @@ class FeatureDistributionPlotter:
             data = [item.__getattribute__(feature_name) for item in data]
 
         n = len(data)
-        _, bins, patches = plt.hist(data, bins=int(np.ceil(np.sqrt(n))), range=(0, max(data)), weights=np.full(n, 1 / n))
+        _, bins, patches = plt.hist(data, bins=int(np.sqrt(n)) + 1, range=(0, max(data)), weights=np.full(n, 1 / n))
 
         shape_closest_to_mean = src.util.plot.closestValue(data, np.mean(data))
         for i, bin in enumerate(bins):

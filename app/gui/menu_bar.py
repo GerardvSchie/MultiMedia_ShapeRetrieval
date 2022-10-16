@@ -56,15 +56,20 @@ class MenuBar(QMenuBar):
         self.shape_menu = self.menu.addMenu("&Shapes")
 
         # Load airplane shape
-        load_airplane_action = QAction("&Airplane", self)
+        load_airplane_action = QAction("&Airplane 1", self)
         load_airplane_action.triggered.connect(self.open_airplane_shape_1)
         load_airplane_action.setShortcut(QKeySequence("Ctrl+1"))
         self.shape_menu.addAction(load_airplane_action)
 
-        load_airplane_action = QAction("&Airplane", self)
-        load_airplane_action.triggered.connect(self.open_airplane_shape_2)
-        load_airplane_action.setShortcut(QKeySequence("Ctrl+2"))
-        self.shape_menu.addAction(load_airplane_action)
+        load_airplane_action_1 = QAction("&Airplane 2", self)
+        load_airplane_action_1.triggered.connect(self.open_airplane_shape_2)
+        load_airplane_action_1.setShortcut(QKeySequence("Ctrl+2"))
+        self.shape_menu.addAction(load_airplane_action_1)
+
+        load_human_action = QAction("&Human", self)
+        load_human_action.triggered.connect(self.open_human_shape)
+        load_human_action.setShortcut(QKeySequence("Ctrl+3"))
+        self.shape_menu.addAction(load_human_action)
 
     def open_file_action(self):
         file_filter = "Triangle mesh files (*.ply *.stl *.fbx *.obj *.off *.gltf *.glb);;" \
@@ -93,3 +98,6 @@ class MenuBar(QMenuBar):
 
     def open_airplane_shape_2(self):
         self.tab_widget.load_shape("data/LabeledDB_new/Airplane/65.off")
+
+    def open_human_shape(self):
+        self.tab_widget.load_shape("data/LabeledDB_new/Human/1.off")

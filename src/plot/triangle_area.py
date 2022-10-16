@@ -18,7 +18,7 @@ class TriangleAreaPlotter:
     @staticmethod
     def plot(path: str, mesh: o3d.geometry.TriangleMesh):
         # Choose a backend for matplotlib
-        matplotlib.use('TkAgg')
+        matplotlib.use('AGG')
 
         data = []
         points = np.asarray(mesh.vertices)
@@ -27,10 +27,11 @@ class TriangleAreaPlotter:
             b = points[triangle[1]]
             c = points[triangle[2]]
 
-            area = np.cross(a - b, a - c) / 2
+            area = np.linalg.norm(np.cross(a - b, a - c)) / 2
             data.append(area)
 
-        n, bins, patches = plt.hist(data, bins=100, range=(0, max(data)), weights=np.full(len(data), 1 / len(data)))
+        n = len(data)
+        _, bins, patches = plt.hist(data, bins=int(np.sqrt(n)) + 1, weights=np.full(n, 1 / n))
 
         # Set titles and parameters
         util.set_params()

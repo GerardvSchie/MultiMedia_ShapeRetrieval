@@ -1,3 +1,4 @@
+from app.widget.tab.remeshing_tab_widget import RemeshingTabWidget
 from app.widget.tab.shape_features_tab_widget import ShapeFeaturesTabWidget
 from app.widget.util import color_widget
 
@@ -37,12 +38,19 @@ class TabWidget(QTabWidget):
 
         # Tab 2
         if not IsMacOS:
-            self.tab2_widget = NormalizationTabWidget()
-            self.addTab(self.tab2_widget, "Normalize mesh")
+            self.tab2_widget = RemeshingTabWidget()
+            self.addTab(self.tab2_widget, "Remeshing")
+            self.setCurrentWidget(self.tab2_widget)
 
+        # Tab 3
         if not IsMacOS:
-            self.tab3_widget = ShapeFeaturesTabWidget()
-            self.addTab(self.tab3_widget, "Features")
+            self.tab3_widget = NormalizationTabWidget()
+            self.addTab(self.tab3_widget, "Normalize mesh")
+
+        # Tab 4
+        if not IsMacOS:
+            self.tab4_widget = ShapeFeaturesTabWidget()
+            self.addTab(self.tab4_widget, "Features")
 
     def closeEvent(self, *args, **kwargs):
         self.worker.stop()

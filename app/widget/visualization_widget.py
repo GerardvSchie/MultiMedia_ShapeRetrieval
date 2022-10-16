@@ -67,6 +67,7 @@ class VisualizationWidget(QWidget):
             self.shape.geometries.mesh.paint_uniform_color((0, 0, 0))
         else:
             self.shape.geometries.mesh.paint_uniform_color(self.desired_settings.mesh_color)
+            self.current_settings.mesh_color = self.desired_settings.mesh_color
         self.update_widget()
 
         # bounds = self.shape.geometry.get_axis_aligned_bounding_box()
@@ -93,13 +94,10 @@ class VisualizationWidget(QWidget):
         print('intrinsic', ref_view.intrinsic)
 
     def update_widget(self):
-        # if not self.shape:
-        #     return
-        # self._resolve_geometry_state_difference(self.current_settings.show_mesh, (
-        #             self.desired_settings.show_mesh or self.mesh_mode or self.silhouette_mode) and not self.convex_hull_mode,
-        #                                         self.shape.geometries.mesh)
-        # self.vis.update_renderer()
-        # return
+        # Cannot update widget further if there is no shape
+        if not self.shape:
+            return
+
         # Set render options
         render_option: o3d.visualization.RenderOption = self.vis.get_render_option()
         render_option.mesh_show_wireframe = self.desired_settings.show_wireframe and not self.desired_settings.show_silhouette and not self.silhouette_mode
@@ -110,12 +108,6 @@ class VisualizationWidget(QWidget):
             render_option.background_color = [255] * 3
         else:
             render_option.background_color = self.desired_settings.background_color
-
-        # Cannot update widget further if there is no shape
-        if not self.shape:
-            return
-
-        # self.update_view()
 
         self._resolve_mesh_color_difference(self.current_settings.mesh_color, self.desired_settings.mesh_color)
 
