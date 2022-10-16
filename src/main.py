@@ -4,6 +4,7 @@ from tqdm import tqdm
 # Needed to fix ModuleNotFoundError when importing src.util.logger.
 from src.object.features.shape_features import ShapeFeatures
 from src.pipeline.feature_extractor.mesh_feature_extractor import MeshFeatureExtractor
+from src.pipeline.remeshing import Remesher
 
 directoryContainingCurrentFile = os.path.dirname(__file__)
 repoDirectory = os.path.dirname(directoryContainingCurrentFile)
@@ -78,6 +79,15 @@ def add_shape_features(shape_list: [Shape]) -> None:
             shape.features = features_data[shape.geometries.path]
 
 
+def remesh_and_save_shape(shape: Shape) -> None:
+    GeometriesController.calculate_mesh(shape.geometries)
+
+    Remesher.remesh_shape(shape)
+    new_path = os.path.join(os.path.split(shape.geometries.path)[0], 'remeshed.ply')
+    shape.geometries.path = new_path
+    shape.save(shape.geometries.path)
+
+
 def normalize_and_save_shape(shape: Shape):
     # Calculate
     GeometriesController.calculate_mesh(shape.geometries)
@@ -109,9 +119,10 @@ def main():
     shape_list = read_original_shapes()
     add_shape_features(shape_list)
 
+    print('Remeshing shapes')
     for shape in tqdm(shape_list):
-        GeometriesController.calculate_mesh(shape.geometries)
-        MeshFeatureExtractor.is_watertight(shape.geometries.mesh, shape.features.mesh_features)
+        remesh_and_save_shape(shape)
+        return
 
     # How to then change the shape
     # for shape in shape_list:

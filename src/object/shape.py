@@ -29,7 +29,7 @@ class Shape:
         dir_path, file_name = os.path.split(path)
 
         # If the name of the file is one of these, then we assume its created by the program
-        if file_name == 'original.ply' or file_name == 'normalized.ply':
+        if file_name == 'original.ply' or file_name == 'normalized.ply' or file_name == 'remeshed.ply':
             return path
 
         shape_name, extension = file_name.split('.')
@@ -55,6 +55,6 @@ class Shape:
             return
 
         if os.path.exists(path):
-            logging.warning(f"File at path {path} already existed")
+            logging.debug(f"File at path {path} already existed")
 
         o3d.io.write_triangle_mesh(path, self.geometries.mesh)

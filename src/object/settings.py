@@ -4,7 +4,7 @@ from __future__ import annotations
 class Settings:
     def __init__(self):
         # Colors
-        self.background_color: [float] = (1, 0.89, 0.565)
+        self.background_color: [float] = (1, 1, 1)  # (1, 0.89, 0.565)
         self.mesh_color: [float] = (2/3, 2/3, 1)
         self.point_size: int = 3
 

@@ -13,6 +13,7 @@ class ShapeFeaturesWidget(QWidget):
         self.setFixedWidth(190)
 
         self.class_value_label = QLabel("-")
+        self.is_watertight_label = QLabel("-")
 
         self.mesh_nr_vertices_value_label = QLabel("0")
         self.mesh_nr_faces_value_label = QLabel("0")
@@ -28,6 +29,7 @@ class ShapeFeaturesWidget(QWidget):
         layout: GridLayout = GridLayout()
         layout.add_header("Properties")
         layout.add_row("Class:", [self.class_value_label])
+        layout.add_row("Watertight:", [self.is_watertight_label])
         layout.add_section("Mesh")
         layout.add_row("Nr. Vertices:", [self.mesh_nr_vertices_value_label])
         layout.add_row("Nr. Faces:", [self.mesh_nr_faces_value_label])
@@ -42,6 +44,7 @@ class ShapeFeaturesWidget(QWidget):
 
     def update_widget(self, features: ShapeFeatures):
         self.class_value_label.setText(features.true_class)
+        self.is_watertight_label.setText(str(features.mesh_features.is_watertight))
 
         self.mesh_nr_vertices_value_label.setText('{0}'.format(features.mesh_features.nr_vertices))
         self.mesh_nr_faces_value_label.setText('{0}'.format(features.mesh_features.nr_faces))

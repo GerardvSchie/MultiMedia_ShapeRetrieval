@@ -69,9 +69,7 @@ class GeometriesController:
             logging.warning("Cannot convert point cloud to mesh, point cloud missing")
             return False
 
-        radii = [0.005, 0.01, 0.02, 0.04]
-        geometries.mesh = \
-            o3d.geometry.TriangleMesh().create_from_point_cloud_ball_pivoting(geometries.point_cloud, o3d.utility.DoubleVector(radii))
+        Remesher.reconstruct_mesh(geometries)
 
     @staticmethod
     def calculate_point_cloud(geometries: Geometries, force_reload=False) -> bool:
