@@ -1,4 +1,5 @@
 import csv
+import logging
 import os.path
 import numpy as np
 
@@ -45,7 +46,7 @@ class DatabaseReader:
             for features in reader:
                 data: MeshFeatures = MeshFeatures()
 
-                identifier, data.nr_vertices, data.nr_faces, data.surface_area, data.volume, data.diameter \
+                identifier, data.nr_vertices, data.nr_faces, data.surface_area, data.volume, data.diameter, data.is_watertight \
                     = features
 
                 # Reconstruct environment specific path, used numpy representation to be OS-invariant
@@ -57,6 +58,14 @@ class DatabaseReader:
                 data.surface_area = float(data.surface_area)
                 data.volume = float(data.volume)
                 data.diameter = float(data.diameter)
+
+                if data.is_watertight == 'True':
+                    data.is_watertight = True
+                elif data.is_watertight == 'False':
+                    data.is_watertight = False
+                else:
+                    logging.warning(f'Cannot convert {data.is_watertight} to boolean')
+                    data.is_watertight = None
 
                 # Add to dict
                 _add_if_not_exists(shape_features, path)

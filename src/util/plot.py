@@ -187,7 +187,7 @@ def scatter_hist(x, y, xName, yName, ax, ax_histx, ax_histy):
     # Draw a dot where the average 'Shape' is based on the mathematical average of the features.
     # This doesn't need the dot draw function below because we don't try to draw on top of an existing Shape.
     averageDotColor = 'red'
-    ax.plot(averageX, averageY, 'o', color = averageDotColor)
+    ax.histogram_plot(averageX, averageY, 'o', color = averageDotColor)
     ax.annotate(f'Mathematical average:\n {averageX}\n{averageY}', averagePosition, color = averageDotColor)
 
     drawShapeDotOfSingleFeatureOnPlot(ax, 0, xName, x, yName, y, averageX, f'Shape closest to {xName} average', 'green')
@@ -315,7 +315,7 @@ def drawShapeDotOfSingleFeatureOnPlot(ax, featureID, featureName, featureData, o
         closestPosition = (otherFeatureValue, shapeClosestToFeatureAverage)
 
     # Draw a dot where the average shape based on the mathematical average of the features lies.
-    ax.plot(coordX, coordY, 'o', color = givenColor, alpha = 0.2)
+    ax.histogram_plot(coordX, coordY, 'o', color = givenColor, alpha = 0.2)
     ax.annotate(dotText, closestPosition, color = givenColor)
 
 

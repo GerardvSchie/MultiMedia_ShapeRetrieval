@@ -32,6 +32,7 @@ class MeshFeatureExtractor:
         MeshFeatureExtractor.calculate_eccentricity(mesh, point_cloud, mesh_features, force_recompute)
 
         if mesh:
+            MeshFeatureExtractor.is_watertight(mesh, mesh_features, force_recompute)
             MeshFeatureExtractor.number_of_faces(mesh, mesh_features, force_recompute)
             MeshFeatureExtractor.calculate_surface_area(mesh, mesh_features, force_recompute)
             MeshFeatureExtractor.calculate_volume(mesh, mesh_features, force_recompute)
@@ -39,6 +40,17 @@ class MeshFeatureExtractor:
             MeshFeatureExtractor.calculate_sphericity(mesh, mesh_features, force_recompute)
         else:
             logging.warning("Could not extract some mesh features since mesh was missing")
+
+    @staticmethod
+    def is_watertight(mesh: o3d.geometry.TriangleMesh, mesh_features: MeshFeatures, force_recompute=False) -> None:
+        if mesh_features.is_watertight is not None and not force_recompute:
+            return
+
+        if not mesh:
+            logging.warning("Cannot compute whether it is water tight without mesh")
+            return
+
+        mesh_features.is_watertight = mesh.is_watertight()
 
     @staticmethod
     def number_of_vertices(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud, mesh_features: MeshFeatures, force_recompute=False) -> None:

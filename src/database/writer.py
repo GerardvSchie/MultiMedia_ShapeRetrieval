@@ -41,6 +41,7 @@ class DatabaseWriter:
                 "path",
                 "nr_of_vertices", "nr_of_faces",
                 "surface_area", "volume", "diameter",
+                "is_watertight",
             ]
             writer.writerow(header)
             for shape in shape_list:
@@ -109,7 +110,7 @@ class DatabaseWriter:
             identifier,
             shape.features.mesh_features.nr_vertices, shape.features.mesh_features.nr_faces,
             shape.features.mesh_features.surface_area, shape.features.mesh_features.volume,
-            shape.features.mesh_features.diameter,
+            shape.features.mesh_features.diameter, shape.features.mesh_features.is_watertight,
         ]
 
     @staticmethod

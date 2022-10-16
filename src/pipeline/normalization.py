@@ -79,7 +79,7 @@ class Normalizer:
         vertices = np.asarray(mesh.vertices)
         for point_indices in mesh.triangles:
             # Center of mass == Centroid
-            # Definitely scientific source: https://www.quora.com/What-is-the-difference-between-a-centroid-and-a-centre-of-mass
+            # Source: https://www.quora.com/What-is-the-difference-between-a-centroid-and-a-centre-of-mass
             points = vertices[point_indices]
             # Sum each coordinate and average
             center_of_mass = np.sum(points, axis=0) / 3

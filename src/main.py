@@ -1,7 +1,9 @@
 import os
+from tqdm import tqdm
 
 # Needed to fix ModuleNotFoundError when importing src.util.logger.
 from src.object.features.shape_features import ShapeFeatures
+from src.pipeline.feature_extractor.mesh_feature_extractor import MeshFeatureExtractor
 
 directoryContainingCurrentFile = os.path.dirname(__file__)
 repoDirectory = os.path.dirname(directoryContainingCurrentFile)
@@ -107,6 +109,10 @@ def main():
     shape_list = read_original_shapes()
     add_shape_features(shape_list)
 
+    for shape in tqdm(shape_list):
+        GeometriesController.calculate_mesh(shape.geometries)
+        MeshFeatureExtractor.is_watertight(shape.geometries.mesh, shape.features.mesh_features)
+
     # How to then change the shape
     # for shape in shape_list:
     #     normalize_and_save_shape(shape)
@@ -133,7 +139,7 @@ def main():
     # src.util.plot.plot_features([shape.features for shape in shape_collection], shapePaths)
 
     plot_feature_data(shape_list)
-    # write_shape_features(shape_collection)
+    # write_shape_features(shape_list)
 
 
 # Example loads an .off and .ply file

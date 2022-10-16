@@ -1,8 +1,17 @@
-numpy
-open3d==0.15.1
-matplotlib
+# General imports
+numpy      # Vector computations
+matplotlib # plotting
+tqdm       # progress bars
+
+# GUI
 PyQt6
 pywin32
+
+# 3D libraries
+open3d==0.15.1
+pymeshlab
+pymeshfix
+
+# 2D Feature extraction
 feret
 opencv-python==4.6.0.66
-pymeshlab
