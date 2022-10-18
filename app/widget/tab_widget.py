@@ -10,11 +10,15 @@ from app.gui.menu_bar import MenuBar
 from app.widget.tab.viewer_widget import ViewerWidget
 from app.widget.tab.normalization_tab_widget import NormalizationTabWidget
 from app.util.os import IsMacOS
+from src.database.reader import DatabaseReader
+from src.object.features.shape_features import ShapeFeatures
 
 
 class TabWidget(QTabWidget):
     def __init__(self):
         super(TabWidget, self).__init__()
+
+        shape_features: dict[str, ShapeFeatures] = DatabaseReader.read_all_shape_features()
 
         # Connect tab to menu bar
         all_widgets = QApplication.topLevelWidgets()
@@ -33,23 +37,23 @@ class TabWidget(QTabWidget):
         color_widget(self, [255, 0, 0])
 
         # Tab 1
-        self.tab1_widget = ViewerWidget()
+        self.tab1_widget = ViewerWidget(shape_features)
         self.addTab(self.tab1_widget, "Mesh inspect")
 
         # Tab 2
         if not IsMacOS:
-            self.tab2_widget = RemeshingTabWidget()
+            self.tab2_widget = RemeshingTabWidget(shape_features)
             self.addTab(self.tab2_widget, "Remeshing")
             self.setCurrentWidget(self.tab2_widget)
 
         # Tab 3
         if not IsMacOS:
-            self.tab3_widget = NormalizationTabWidget()
+            self.tab3_widget = NormalizationTabWidget(shape_features)
             self.addTab(self.tab3_widget, "Normalize mesh")
 
         # Tab 4
         if not IsMacOS:
-            self.tab4_widget = ShapeFeaturesTabWidget()
+            self.tab4_widget = ShapeFeaturesTabWidget(shape_features)
             self.addTab(self.tab4_widget, "Features")
 
     def closeEvent(self, *args, **kwargs):

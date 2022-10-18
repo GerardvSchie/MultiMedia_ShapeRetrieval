@@ -6,6 +6,7 @@ from PyQt6.QtGui import QWindow
 from app.widget.features.bounding_box_features_widget import BoundingBoxFeaturesWidget
 from app.widget.features.mesh_features_widget import MeshFeaturesWidget
 from app.widget.features.silhouette_features_widget import SilhouetteFeaturesWidget
+from src.object.features.shape_features import ShapeFeatures
 from src.object.settings import Settings
 from src.pipeline.feature_extractor.mesh_feature_extractor import MeshFeatureExtractor
 from src.pipeline.feature_extractor.normalization_feature_extractor import NormalizationFeatureExtractor
@@ -21,9 +22,10 @@ from src.pipeline.feature_extractor.silhouette_feature_extractor import Silhouet
 
 
 class ShapeFeaturesTabWidget(QWidget):
-    def __init__(self):
+    def __init__(self, shape_features: dict[str, ShapeFeatures]):
         super(ShapeFeaturesTabWidget, self).__init__()
         color_widget(self, [0, 255, 0])
+        self.shape_features = shape_features
 
         # Left panel
         self.settings: Settings = Settings()
@@ -110,6 +112,8 @@ class ShapeFeaturesTabWidget(QWidget):
         self.scene_widgets[2].vis.capture_screen_image("data/temp.png")
 
         # Extract features and set diameter to both mesh features
+        if self.shape_features.__contains__(self.scene_widgets[0].shape.geometries.path):
+            self.scene_widgets[0].shape.features = self.shape_features[self.scene_widgets[0].shape.geometries.path]
         ShapeFeatureExtractor.extract_all_shape_features(self.scene_widgets[0].shape)
 
         self.normalization_widget.update_widget(self.scene_widgets[0].shape.features.normalization_features)

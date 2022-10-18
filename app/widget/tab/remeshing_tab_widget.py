@@ -8,6 +8,7 @@ from app.widget.util import color_widget
 from app.widget.settings_widget import SettingsWidget
 from app.widget.features.shape_features_widget import ShapeFeaturesWidget
 from app.widget.visualization_widget import VisualizationWidget
+from src.object.features.shape_features import ShapeFeatures
 
 from src.object.settings import Settings
 from app.util.os import IsMacOS
@@ -17,9 +18,10 @@ from src.pipeline.remeshing import Remesher
 
 
 class RemeshingTabWidget(QWidget):
-    def __init__(self):
+    def __init__(self, shape_features: dict[str, ShapeFeatures]):
         super(RemeshingTabWidget, self).__init__()
         color_widget(self, [0, 255, 0])
+        self.shape_features = shape_features
 
         # Left panel
         self.settings: Settings = Settings()
@@ -67,6 +69,8 @@ class RemeshingTabWidget(QWidget):
         self.scene_widgets[1].shape = deepcopy(self.scene_widgets[0].shape)
 
         # Extract features of first shape
+        if self.shape_features.__contains__(self.scene_widgets[0].shape.geometries.path):
+            self.scene_widgets[0].shape.features = self.shape_features[self.scene_widgets[0].shape.geometries.path]
         ShapeFeatureExtractor.extract_all_shape_features(self.scene_widgets[0].shape)
         self.features_widget_1.update_widget(self.scene_widgets[0].shape.features)
 

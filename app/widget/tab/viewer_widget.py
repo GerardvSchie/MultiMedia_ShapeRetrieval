@@ -6,16 +6,17 @@ from app.widget.util import color_widget
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout
 from PyQt6.QtGui import QWindow
 
-
+from src.object.features.shape_features import ShapeFeatures
 from src.object.settings import Settings
 from app.util.os import IsMacOS
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
 
 
 class ViewerWidget(QWidget):
-    def __init__(self):
+    def __init__(self, shape_features: dict[str, ShapeFeatures]):
         super(ViewerWidget, self).__init__()
         color_widget(self, [0, 255, 0])
+        self.shape_features = shape_features
 
         # Left panel
         self.settings: Settings = Settings()
@@ -44,6 +45,9 @@ class ViewerWidget(QWidget):
 
     def load_shape(self, file_path: str):
         self.scene_widgets[0].load_shape(file_path)
+        if self.shape_features.__contains__(self.scene_widgets[0].shape.geometries.path):
+            self.scene_widgets[0].shape.features = self.shape_features[self.scene_widgets[0].shape.geometries.path]
+
         ShapeFeatureExtractor.extract_all_shape_features(self.scene_widgets[0].shape)
         self.features_widget.update_widget(self.scene_widgets[0].shape.features)
 
