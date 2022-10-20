@@ -73,7 +73,7 @@ class DatabaseReader:
             return shape_descriptors
 
         with open(path, "r") as f:
-            # Create reader and skip header
+            # Read csv file and skip header
             reader = csv.reader(f)
             next(reader)
 
