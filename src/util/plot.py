@@ -8,7 +8,7 @@ from src.object.features.shape_features import ShapeFeatures
 from matplotlib.ticker import PercentFormatter
 
 #from src.database.reader import dataPaths
-from src.vertex_normalization import refineMesh
+from src.vertex_normalization import refine_mesh
 
 
 # Python can't convert variable names to string.
@@ -64,7 +64,12 @@ def plot_features(feature_list: [ShapeFeatures], databasePaths: [str]):
     # print(testOriginalVertices)
     # refineMesh(testPath, testOriginalVertices, desiredNumberOfVertices)
 
-    #refineMesh(databasePaths[0], mesh_nr_vertices[0], desiredNumberOfVertices)
+    print("plot.py")
+
+    # mesh_nr_vertices = [feature.mesh_features.nr_vertices for feature in feature_list]
+    # refine_mesh(databasePaths[0], mesh_nr_vertices[0], desiredNumberOfVertices)
+
+    return
 
     print('========================= Refining meshes to desired number of vertices in whole database ======================')
 

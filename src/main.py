@@ -2,12 +2,6 @@ import os
 from tqdm import tqdm
 
 # Needed to fix ModuleNotFoundError when importing src.util.logger.
-from src.object.features.shape_features import ShapeFeatures
-from src.pipeline.compute_descriptors import compute_descriptors
-from src.pipeline.feature_extractor.mesh_feature_extractor import MeshFeatureExtractor
-from src.pipeline.remeshing import Remesher
-from src.plot.triangle_area import TriangleAreaPlotter
-
 directoryContainingCurrentFile = os.path.dirname(__file__)
 repoDirectory = os.path.dirname(directoryContainingCurrentFile)
 
@@ -15,6 +9,11 @@ repoDirectory = os.path.dirname(directoryContainingCurrentFile)
 import sys
 sys.path.append(repoDirectory)
 
+from src.object.features.shape_features import ShapeFeatures
+from src.pipeline.compute_descriptors import compute_descriptors
+from src.pipeline.feature_extractor.mesh_feature_extractor import MeshFeatureExtractor
+from src.pipeline.remeshing import Remesher
+from src.plot.triangle_area import TriangleAreaPlotter
 from src.controller.geometries_controller import GeometriesController
 from src.pipeline.feature_extractor.normalization_feature_extractor import NormalizationFeatureExtractor
 import src.util.logger as logger
@@ -26,6 +25,7 @@ from src.database.reader import DatabaseReader
 from src.util.io import check_working_dir
 from src.pipeline.normalization import Normalizer
 from src.plot.feature_distribution import FeatureDistributionPlotter
+from src.vertex_normalization import refine_mesh
 
 
 def read_original_shapes() -> [Shape]:
@@ -119,6 +119,39 @@ def plot_feature_data(shape_collection: [Shape]) -> None:
     FeatureDistributionPlotter.plot_features(shape_features)
 
 
+def refine_meshes(shape_collection: [Shape]) -> None:
+    desired_number_of_vertices = 20000
+
+    testShape = shape_collection[0]
+    old_shape_path = testShape.geometries.path
+    old_shape_vertices = testShape.features.mesh_features.nr_vertices
+
+    #print(testShape)
+    #print(old_shape_path)
+    #print(old_shape_vertices)
+
+    #refine_mesh(old_shape_path, old_shape_vertices, desired_number_of_vertices)
+
+    print('========================= Refining meshes to desired number of vertices in the whole database ======================')
+
+    finalVertexCounts = []
+
+    for current_shape in shape_collection:
+        current_shape_path = current_shape.geometries.path
+        current_shape_vertices = current_shape.features.mesh_features.nr_vertices
+
+        #print(f'item[{i}] = {pathToOriginalPLYMesh}')
+        #print(originalVerticesOfPLYMesh)
+
+        finalVertexCountOfThisMesh = refine_mesh(current_shape_path, current_shape_vertices, desired_number_of_vertices)
+        finalVertexCounts.append(finalVertexCountOfThisMesh)
+
+    # Create a histogram to show how well the algorithm performed.
+    # hist_plot('Final vertex counts of refined meshed', finalVertexCounts)
+
+    #print(f"Final vertex counts:\n{finalVertexCounts}")
+
+
 def main():
     # Offline computed features
     shape_list = read_original_shapes()
@@ -143,6 +176,8 @@ def main():
     # shapePaths = [shape.geometries.path for shape in shape_collection]
 
     plot_feature_data(shape_list)
+
+    refine_meshes(shape_list)
 
 
 # Example loads an .off and .ply file
