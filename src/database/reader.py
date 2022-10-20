@@ -3,210 +3,96 @@ import logging
 import os.path
 import numpy as np
 
-from src.object.features.bounding_box_features import BoundingBoxFeatures
-from src.object.features.mesh_features import MeshFeatures
+from src.object.descriptors import Descriptors
 from src.object.features.shape_features import ShapeFeatures
-from src.object.features.normalization_features import NormalizationFeatures
 
 dataPaths = list()
 
 
 class DatabaseReader:
     @staticmethod
-    def read_all_shape_features() -> dict[str, ShapeFeatures]:
+    def read_features(path: str) -> dict[str, ShapeFeatures]:
         shape_features = dict()
+        if not os.path.exists(path):
+            logging.warning(f'Features path: {path} does not exist')
+            return shape_features
 
-        os.makedirs('data/database/original', exist_ok=True)
-        os.makedirs('data/database/normalized', exist_ok=True)
-        DatabaseReader.read_mesh_features(shape_features, 'data/database/original')
-        DatabaseReader.read_convex_hull_features(shape_features, 'data/database/original')
-        DatabaseReader.read_other_features(shape_features, 'data/database/original')
-        DatabaseReader.read_normalization_features(shape_features, 'data/database/original')
-        DatabaseReader.read_bounding_box_features(shape_features, 'data/database/original')
-        DatabaseReader.read_normalization_features(shape_features, 'data/database/normalized')
+        with open(path, "r") as f:
+            # Create reader and skip header
+            reader = csv.reader(f)
+            next(reader)
+
+            for features in reader:
+                data = ShapeFeatures()
+
+                # Global features
+                identifier = features[0]
+                data.true_class = features[1]
+                data.is_watertight = features[2].lower() == 'true'
+                data.diameter = float(features[3])
+
+                # Mesh features
+                data.mesh_features.nr_vertices = int(features[4])
+                data.mesh_features.nr_faces = int(features[5])
+                data.mesh_features.surface_area = float(features[6])
+                data.mesh_features.volume = float(features[7])
+
+                # Convex hull features
+                data.convex_hull_features.nr_vertices = int(features[8])
+                data.convex_hull_features.nr_faces = int(features[9])
+                data.convex_hull_features.surface_area = float(features[10])
+                data.convex_hull_features.volume = float(features[11])
+
+                # AABB features
+                data.axis_aligned_bounding_box_features.min_bound = _read_np_array(features[12])
+                data.axis_aligned_bounding_box_features.max_bound = _read_np_array(features[13])
+                data.axis_aligned_bounding_box_features.surface_area = float(features[14])
+                data.axis_aligned_bounding_box_features.volume = float(features[15])
+                data.axis_aligned_bounding_box_features.diameter = float(features[16])
+
+                # Normalization features
+                data.normalization_features.distance_to_center = float(features[17])
+                data.normalization_features.scale = float(features[18])
+                data.normalization_features.alignment = float(features[19])
+                data.normalization_features.flip = int(features[20])
+                data.normalization_features.eigenvalue_s1 = float(features[21])
+                data.normalization_features.eigenvalue_s2 = float(features[22])
+                data.normalization_features.eigenvalue_s3 = float(features[23])
+
+                # Set path
+                path = os.path.join(*(_read_np_array(identifier)))
+                shape_features[path] = data
 
         return shape_features
 
     @staticmethod
-    def read_mesh_features(shape_features: dict[str, ShapeFeatures], database_dir):
-        database_path = os.path.join(database_dir, "mesh.csv")
+    def read_descriptors(path: str) -> dict[str, Descriptors]:
+        shape_descriptors = dict()
+        if not os.path.exists(path):
+            logging.warning(f'Descriptors path: {path} does not exist')
+            return shape_descriptors
 
-        # Features file does not exist
-        if not os.path.exists(database_path):
-            return
-
-        # File exists, load all features
-        with open(database_path, "r") as f:
+        with open(path, "r") as f:
+            # Create reader and skip header
             reader = csv.reader(f)
-
-            # Skip header
             next(reader)
 
-            # Read the lines from the file
             for features in reader:
-                data: MeshFeatures = MeshFeatures()
+                data = Descriptors()
 
-                identifier, data.nr_vertices, data.nr_faces, data.surface_area, data.volume, data.diameter, data.is_watertight \
-                    = features
+                # Descriptors
+                identifier = features[0]
+                data.surface_area = float(features[1])
+                data.compactness = float(features[2])
+                data.rectangularity = float(features[3])
+                data.diameter = float(features[4])
+                data.eccentricity = float(features[5])
 
-                # Reconstruct environment specific path, used numpy representation to be OS-invariant
+                # Set path
                 path = os.path.join(*(_read_np_array(identifier)))
+                shape_descriptors[path] = data
 
-                # Cast to types
-                data.nr_vertices = int(data.nr_vertices)
-                data.nr_faces = int(data.nr_faces)
-                data.surface_area = float(data.surface_area)
-                data.volume = float(data.volume)
-                data.diameter = float(data.diameter)
-
-                if data.is_watertight == 'True':
-                    data.is_watertight = True
-                elif data.is_watertight == 'False':
-                    data.is_watertight = False
-                else:
-                    logging.warning(f'Cannot convert {data.is_watertight} to boolean')
-                    data.is_watertight = None
-
-                # Add to dict
-                _add_if_not_exists(shape_features, path)
-                shape_features[path].mesh_features = data
-
-    @staticmethod
-    def read_convex_hull_features(shape_features: dict[str, ShapeFeatures], database_dir):
-        database_path = os.path.join(database_dir, "convex_hull.csv")
-
-        # Features file does not exist
-        if not os.path.exists(database_path):
-            return
-
-        # File exists, load all features
-        with open(database_path, "r") as f:
-            reader = csv.reader(f)
-
-            # Skip header
-            next(reader)
-
-            # Read the lines from the file
-            for features in reader:
-                data: MeshFeatures = MeshFeatures()
-
-                identifier, data.nr_vertices, data.nr_faces, data.surface_area, data.volume, data.diameter, \
-                    = features
-
-                # Reconstruct environment specific path, used numpy representation to be OS-invariant
-                path = os.path.join(*(_read_np_array(identifier)))
-
-                # Cast to types
-                data.nr_vertices = int(data.nr_vertices)
-                data.nr_faces = int(data.nr_faces)
-                data.surface_area = float(data.surface_area)
-                data.volume = float(data.volume)
-                data.diameter = float(data.diameter)
-
-                # Add to dict
-                _add_if_not_exists(shape_features, path)
-                shape_features[path].convex_hull_features = data
-
-    @staticmethod
-    def read_other_features(shape_features: dict[str, ShapeFeatures], database_dir):
-        database_path = os.path.join(database_dir, "other.csv")
-
-        # Features file does not exist
-        if not os.path.exists(database_path):
-            return
-
-        # File exists, load all features
-        with open(database_path, "r") as f:
-            reader = csv.reader(f)
-
-            # Skip header
-            next(reader)
-
-            # Read the lines from the file
-            for features in reader:
-                data: ShapeFeatures = ShapeFeatures()
-
-                identifier, data.true_class = features
-
-                # Reconstruct environment specific path, used numpy representation to be OS-invariant
-                path = os.path.join(*(_read_np_array(identifier)))
-                _add_if_not_exists(shape_features, path)
-
-                # Assign to features
-                shape_features[path].true_class = data.true_class
-
-    @staticmethod
-    def read_normalization_features(shape_features: dict[str, ShapeFeatures], database_dir):
-        database_path = os.path.join(database_dir, "normalization.csv")
-
-        # Features file does not exist
-        if not os.path.exists(database_path):
-            return
-
-        # File exists, load all features
-        with open(database_path, "r") as f:
-            reader = csv.reader(f)
-
-            # Skip header
-            next(reader)
-
-            # Read the lines from the file
-            for features in reader:
-                data: NormalizationFeatures = NormalizationFeatures()
-
-                identifier, data.distance_to_center, data.scale, data.alignment, data.flip = features
-
-                # Reconstruct environment specific path, used numpy representation to be OS-invariant
-                path = os.path.join(*(_read_np_array(identifier)))
-                _add_if_not_exists(shape_features, path)
-
-                # Cast to types
-                data.distance_to_center = float(data.distance_to_center)
-                data.scale = float(data.scale)
-                data.alignment = float(data.alignment)
-                data.flip = float(data.flip)
-
-                shape_features[path].normalization_features = data
-
-    @staticmethod
-    def read_bounding_box_features(shape_features: dict[str, ShapeFeatures], database_dir):
-        database_path = os.path.join(database_dir, "bounding_box.csv")
-
-        # Features file does not exist
-        if not os.path.exists(database_path):
-            return
-
-        # File exists, load all features
-        with open(database_path, "r") as f:
-            reader = csv.reader(f)
-
-            # Skip header
-            next(reader)
-
-            # Read the lines from the file
-            for features in reader:
-                data: BoundingBoxFeatures = BoundingBoxFeatures()
-
-                identifier, data.min_bound, data.max_bound, data.surface_area, data.volume, data.diameter = features
-
-                # Reconstruct environment specific path, used numpy representation to be OS-invariant
-                path = os.path.join(*(_read_np_array(identifier)))
-                _add_if_not_exists(shape_features, path)
-
-                data.min_bound = _read_np_array(data.min_bound)
-                data.max_bound = _read_np_array(data.max_bound)
-                data.surface_area = float(data.surface_area)
-                data.volume = float(data.volume)
-                data.diameter = float(data.diameter)
-
-                shape_features[path].axis_aligned_bounding_box_features = data
-
-
-def _add_if_not_exists(shape_collection: dict[str, ShapeFeatures], path: str):
-    if path in shape_collection:
-        return
-
-    shape_collection[path] = ShapeFeatures()
+        return shape_descriptors
 
 
 def _read_np_array(array_str: str) -> np.array:

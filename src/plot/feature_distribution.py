@@ -17,13 +17,13 @@ class FeatureDistributionPlotter:
         FeatureDistributionPlotter.histogram_plot(data, ['normalization_features', 'flip'], 'Correctly directed axes')
         FeatureDistributionPlotter.histogram_plot(data, ['mesh_features', 'nr_faces'], 'Number of faces')
         FeatureDistributionPlotter.histogram_plot(data, ['mesh_features', 'nr_vertices'], 'Number of vertices')
-        FeatureDistributionPlotter.pie_plot(data, ['mesh_features', 'is_watertight'], 'watertight')
+        FeatureDistributionPlotter.pie_plot(data, ['is_watertight'], 'watertight')
 
     @staticmethod
     def pie_plot(data: [ShapeFeatures], feature_names: [str], title: str):
         # Source: https://matplotlib.org/stable/gallery/pie_and_polar_charts/pie_features.html
         # Choose a backend for matplotlib
-        matplotlib.use('TkAgg')
+        matplotlib.use('Agg')
 
         for feature_name in feature_names:
             data = [item.__getattribute__(feature_name) for item in data]
@@ -40,7 +40,7 @@ class FeatureDistributionPlotter:
     @staticmethod
     def histogram_plot(data: [ShapeFeatures], feature_names: [str], title: str):
         # Choose a backend for matplotlib
-        matplotlib.use('TkAgg')
+        matplotlib.use('Agg')
 
         for feature_name in feature_names:
             data = [item.__getattribute__(feature_name) for item in data]

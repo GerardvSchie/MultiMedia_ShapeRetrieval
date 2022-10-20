@@ -11,7 +11,6 @@ from app.widget.visualization_widget import VisualizationWidget
 from src.object.features.shape_features import ShapeFeatures
 
 from src.object.settings import Settings
-from app.util.os import IsMacOS
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
 from src.controller.geometries_controller import GeometriesController
 from src.pipeline.remeshing import Remesher
@@ -30,15 +29,13 @@ class RemeshingTabWidget(QWidget):
 
         # Widget 1
         self.scene_widget_1 = VisualizationWidget(self.settings)
-        if not IsMacOS:
-            window_1 = QWindow.fromWinId(self.scene_widget_1.hwnd)
-            window_container_1 = self.createWindowContainer(window_1, self.scene_widget_1)
+        window_1 = QWindow.fromWinId(self.scene_widget_1.hwnd)
+        window_container_1 = self.createWindowContainer(window_1, self.scene_widget_1)
 
         # Widget 2
         self.scene_widget_2 = VisualizationWidget(self.settings)
-        if not IsMacOS:
-            window_2 = QWindow.fromWinId(self.scene_widget_2.hwnd)
-            window_container_2 = self.createWindowContainer(window_2, self.scene_widget_2)
+        window_2 = QWindow.fromWinId(self.scene_widget_2.hwnd)
+        window_container_2 = self.createWindowContainer(window_2, self.scene_widget_2)
 
         # Right panel
         self.features_widget_2 = ShapeFeaturesWidget()
@@ -55,9 +52,8 @@ class RemeshingTabWidget(QWidget):
         layout = QHBoxLayout(self)
         layout.addLayout(left_layout)
 
-        if not IsMacOS:
-            layout.addWidget(window_container_1)
-            layout.addWidget(window_container_2)
+        layout.addWidget(window_container_1)
+        layout.addWidget(window_container_2)
 
         layout.addWidget(self.features_widget_2)
         self.setLayout(layout)

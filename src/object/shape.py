@@ -3,6 +3,7 @@ import logging
 import open3d as o3d
 
 from src.controller.geometries_controller import GeometriesController
+from src.object.descriptors import Descriptors
 from src.object.features.shape_features import ShapeFeatures
 from src.object.geometries import Geometries
 
@@ -17,6 +18,8 @@ class Shape:
             self.features: ShapeFeatures = pre_computed_features
         else:
             self.features: ShapeFeatures = ShapeFeatures()
+
+        self.descriptors: Descriptors = Descriptors()
 
         # Convert shape file to .ply format, so we can extract point cloud
         path = self.convert_to_ply(os.path.relpath(shape_path))

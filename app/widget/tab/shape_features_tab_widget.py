@@ -12,7 +12,6 @@ from src.pipeline.feature_extractor.mesh_feature_extractor import MeshFeatureExt
 from src.pipeline.feature_extractor.normalization_feature_extractor import NormalizationFeatureExtractor
 
 from app.util.font import BOLD_FONT
-from app.util.os import IsMacOS
 from app.widget.features.normalization_features_widget import NormalizationFeaturesWidget
 from app.widget.util import color_widget
 from app.widget.settings_widget import SettingsWidget
@@ -34,21 +33,18 @@ class ShapeFeaturesTabWidget(QWidget):
 
         # Widget 1
         self.scene_widget_1 = VisualizationWidget(self.settings, mesh_mode=True)
-        if not IsMacOS:
-            window_1 = QWindow.fromWinId(self.scene_widget_1.hwnd)
-            window_container_1 = self.createWindowContainer(window_1, self.scene_widget_1)
+        window_1 = QWindow.fromWinId(self.scene_widget_1.hwnd)
+        window_container_1 = self.createWindowContainer(window_1, self.scene_widget_1)
 
         # Widget 2
         self.scene_widget_2 = VisualizationWidget(self.settings, convex_hull_mode=True)
-        if not IsMacOS:
-            window_2 = QWindow.fromWinId(self.scene_widget_2.hwnd)
-            window_container_2 = self.createWindowContainer(window_2, self.scene_widget_2)
+        window_2 = QWindow.fromWinId(self.scene_widget_2.hwnd)
+        window_container_2 = self.createWindowContainer(window_2, self.scene_widget_2)
 
         # Widget 3
         self.scene_widget_3 = VisualizationWidget(self.settings, silhouette_mode=True)
-        if not IsMacOS:
-            window_3 = QWindow.fromWinId(self.scene_widget_3.hwnd)
-            window_container_3 = self.createWindowContainer(window_3, self.scene_widget_3)
+        window_3 = QWindow.fromWinId(self.scene_widget_3.hwnd)
+        window_container_3 = self.createWindowContainer(window_3, self.scene_widget_3)
 
         # Connect the settings to the widget
         self.scene_widgets = [self.scene_widget_1, self.scene_widget_2, self.scene_widget_3]
@@ -64,10 +60,9 @@ class ShapeFeaturesTabWidget(QWidget):
         grid_layout.addWidget(ShapeFeaturesTabWidget._create_header("Convex Hull View"), 0, 1, 1, 1)
         grid_layout.addWidget(ShapeFeaturesTabWidget._create_header("Silhouette View"), 0, 2, 1, 1)
 
-        if not IsMacOS:
-            grid_layout.addWidget(window_container_1, 1, 0, 1, 1)
-            grid_layout.addWidget(window_container_2, 1, 1, 1, 1)
-            grid_layout.addWidget(window_container_3, 1, 2, 1, 1)
+        grid_layout.addWidget(window_container_1, 1, 0, 1, 1)
+        grid_layout.addWidget(window_container_2, 1, 1, 1, 1)
+        grid_layout.addWidget(window_container_3, 1, 2, 1, 1)
 
         self.mesh_features_widget = MeshFeaturesWidget()
         self.convex_hull_features_widget = MeshFeaturesWidget()

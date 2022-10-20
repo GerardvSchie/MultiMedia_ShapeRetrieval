@@ -17,6 +17,7 @@ class NormalizationFeatureExtractor:
         NormalizationFeatureExtractor.distance_to_center(mesh, point_cloud, normalization_features, force_recompute)
         NormalizationFeatureExtractor.mesh_scale(mesh, point_cloud, bounding_box, normalization_features, force_recompute)
         NormalizationFeatureExtractor.mesh_alignment(mesh, point_cloud, normalization_features, force_recompute)
+        NormalizationFeatureExtractor.mesh_eigenvalues(mesh, point_cloud, normalization_features, force_recompute)
 
         if mesh:
             NormalizationFeatureExtractor.mesh_flip(mesh, normalization_features, force_recompute)
@@ -81,7 +82,7 @@ class NormalizationFeatureExtractor:
 
     @staticmethod
     def mesh_flip(mesh: o3d.geometry.TriangleMesh, normalization_features: NormalizationFeatures, force_recompute=False) -> None:
-        if not math.isinf(normalization_features.flip) and not force_recompute:
+        if normalization_features.flip is not None and not force_recompute:
             return
 
         # Computed over the point cloud
@@ -93,3 +94,21 @@ class NormalizationFeatureExtractor:
 
         correctly_flipped_axes = sum(np.clip(fi, 0, 1))
         normalization_features.flip = correctly_flipped_axes
+
+    @staticmethod
+    def mesh_eigenvalues(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud, normalization_features: NormalizationFeatures, force_recompute=False) -> None:
+        if (not math.isinf(normalization_features.eigenvalue_s1) or not math.isinf(normalization_features.eigenvalue_s2) or not math.isinf(normalization_features.eigenvalue_s3)) and not force_recompute:
+            return
+
+        # Computed over the point cloud
+        if point_cloud:
+            eigenvalues_eigenvectors = Normalizer.get_eigenvalues_and_eigenvectors(point_cloud)
+        elif mesh:
+            eigenvalues_eigenvectors = Normalizer.get_eigenvalues_and_eigenvectors(o3d.geometry.PointCloud(mesh.vertices))
+        else:
+            logging.warning("Cannot compute alignment without mesh or point cloud")
+            return
+
+        normalization_features.eigenvalue_s1 = eigenvalues_eigenvectors[0][0]
+        normalization_features.eigenvalue_s2 = eigenvalues_eigenvectors[1][0]
+        normalization_features.eigenvalue_s3 = eigenvalues_eigenvectors[2][0]

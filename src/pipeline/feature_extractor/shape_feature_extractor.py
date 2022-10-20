@@ -1,6 +1,7 @@
 import os
 import logging
 import numpy as np
+import math
 
 from src.database.writer import path_to_array
 from src.object.shape import Shape
@@ -18,14 +19,61 @@ class ShapeFeatureExtractor:
             logging.warning("Cannot extract features from None shape")
             return
 
+        # Global features
         ShapeFeatureExtractor.extract_class_feature(shape, force_recompute)
-        ShapeFeatureExtractor.extract_axis_aligned_bounding_box(shape, force_recompute)
+        ShapeFeatureExtractor.is_watertight(shape, force_recompute)
+        ShapeFeatureExtractor.calculate_diameter(shape, force_recompute)
 
+        # Mesh features
         ShapeFeatureExtractor.extract_mesh_features(shape, force_recompute)
         ShapeFeatureExtractor.extract_convex_hull_features(shape, force_recompute)
-        shape.features.mesh_features.diameter = shape.features.convex_hull_features.diameter
+        ShapeFeatureExtractor.extract_axis_aligned_bounding_box(shape, force_recompute)
 
+        # Normalization features
         ShapeFeatureExtractor.extract_normalization_features(shape, force_recompute)
+
+    @staticmethod
+    def is_watertight(shape: Shape, force_recompute=False) -> None:
+        if shape.features.is_watertight is not None and not force_recompute:
+            return
+
+        if not shape.geometries.mesh:
+            GeometriesController.calculate_mesh(shape.geometries)
+
+        shape.features.is_watertight = shape.geometries.mesh.is_watertight()
+
+    @staticmethod
+    def calculate_diameter(shape: Shape, force_recompute=False) -> None:
+        if not math.isinf(shape.features.diameter) and not force_recompute:
+            return
+
+        GeometriesController.calculate_mesh(shape.geometries)
+        if not shape.geometries.convex_hull_mesh:
+            GeometriesController.calculate_convex_hull(shape.geometries)
+
+        if not shape.geometries.convex_hull_mesh:
+            return
+
+        points = shape.geometries.convex_hull_mesh.vertices
+        points = np.asarray(points)
+
+        if len(points) < 2:
+            logging.warning('Cannot compute diameter with less than 2 points')
+            return
+
+        max_squared_distance = -math.inf
+
+        # Using only np operations to make it faster
+        for point in points:
+            relative_vector = points - point
+            components_squared = np.power(relative_vector, 2)
+            distance_squared = np.sum(components_squared, axis=1)
+            maximum = np.max(distance_squared)
+            if maximum > max_squared_distance:
+                max_squared_distance = maximum
+
+        max_diameter = np.sqrt(max_squared_distance)
+        shape.features.diameter = max_diameter
 
     @staticmethod
     def extract_class_feature(shape: Shape, force_recompute=False):

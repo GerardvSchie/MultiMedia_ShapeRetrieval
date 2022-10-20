@@ -3,6 +3,7 @@ from tqdm import tqdm
 
 # Needed to fix ModuleNotFoundError when importing src.util.logger.
 from src.object.features.shape_features import ShapeFeatures
+from src.pipeline.compute_descriptors import compute_descriptors
 from src.pipeline.feature_extractor.mesh_feature_extractor import MeshFeatureExtractor
 from src.pipeline.remeshing import Remesher
 from src.plot.triangle_area import TriangleAreaPlotter
@@ -72,12 +73,20 @@ def read_normalized_shapes() -> [Shape]:
     return shape_list
 
 
-def add_shape_features(shape_list: [Shape]) -> None:
-    features_data = DatabaseReader.read_all_shape_features()
+def add_shape_features(shape_list: [Shape], path: str) -> None:
+    features_data = DatabaseReader.read_features(path)
 
     for shape in shape_list:
         if shape.geometries.path in features_data:
             shape.features = features_data[shape.geometries.path]
+
+
+def add_shape_descriptors(shape_list: [Shape], path: str) -> None:
+    descriptors_data = DatabaseReader.read_descriptors(path)
+
+    for shape in shape_list:
+        if shape.geometries.path in descriptors_data:
+            shape.descriptors = descriptors_data[shape.geometries.path]
 
 
 def remesh_and_save_shape(shape: Shape) -> None:
@@ -105,10 +114,6 @@ def normalize_and_save_shape(shape: Shape):
     NormalizationFeatureExtractor.extract_features(shape.geometries.mesh, shape.geometries.point_cloud, shape.geometries.axis_aligned_bounding_box, shape.features.normalization_features, True)
 
 
-def write_shape_features(shape_collection: [Shape]) -> None:
-    DatabaseWriter.write_all_shape_features(shape_collection)
-
-
 def plot_feature_data(shape_collection: [Shape]) -> None:
     shape_features = [shape.features for shape in shape_collection]
     FeatureDistributionPlotter.plot_features(shape_features)
@@ -116,47 +121,28 @@ def plot_feature_data(shape_collection: [Shape]) -> None:
 
 def main():
     # Offline computed features
-    # shape_list = read_normalized_shapes()
     shape_list = read_original_shapes()
-    add_shape_features(shape_list)
+    add_shape_features(shape_list, 'data/database/original_features.csv')
+    add_shape_descriptors(shape_list, 'data/database/original_descriptors.csv')
 
-    print('Remeshing shapes')
-    for shape in tqdm(shape_list):
-        if not shape.features.true_class == 'Human':
-            continue
-
-        remesh_and_save_shape(shape)
-        TriangleAreaPlotter.plot_triangle_area(shape.geometries)
-        return
+    # Compute the features and descriptors
+    # for shape in tqdm(shape_list):
+    #     ShapeFeatureExtractor.extract_all_shape_features(shape)
+    #     compute_descriptors(shape)
+    #
+    # DatabaseWriter.write_features(shape_list, 'data/database/original_features.csv')
+    # DatabaseWriter.write_descriptors(shape_list, 'data/database/original_descriptors.csv')
 
     # print('Normalizing shapes')
     # How to then change the shape
     # for shape in shape_list:
     #     normalize_and_save_shape(shape)
-
-    # GeometriesController.calculate_mesh(shape.geometries)
-    # GeometriesController.calculate_point_cloud(shape.geometries)
-    # GeometriesController.calculate_aligned_bounding_box(shape.geometries)
-    # normalize_and_save_shape(shape)
-    # GeometriesController.calculate_point_cloud(shape.geometries, True)
-    # GeometriesController.calculate_aligned_bounding_box(shape.geometries, True)
-    # NormalizationFeatureExtractor.extract_features(shape.geometries.mesh, shape.geometries.point_cloud, shape.geometries.axis_aligned_bounding_box, shape.features.normalization_features, True)
-    # print('done extracting')
-
-    # Disable additional feature extraction, meshes are not watertight
-    # ShapeFeatureExtractor.extract_axis_aligned_bounding_box(shape)
-    # ShapeFeatureExtractor.extract_mesh_features(shape)
-    # ShapeFeatureExtractor.extract_convex_hull_features(shape)
-    # ShapeFeatureExtractor.extract_normalization_features(shape)
-    # ShapeFeatureExtractor.extract_axis_aligned_bounding_box(shape)
-    # ShapeFeatureExtractor.extract_normalization_features(shape)
+    # shape_list = read_normalized_shapes()
 
     # Collect the paths to the Shapes too for refinement, if needed.
     # shapePaths = [shape.geometries.path for shape in shape_collection]
-    # src.util.plot.plot_features([shape.features for shape in shape_collection], shapePaths)
 
     plot_feature_data(shape_list)
-    # write_shape_features(shape_list)
 
 
 # Example loads an .off and .ply file

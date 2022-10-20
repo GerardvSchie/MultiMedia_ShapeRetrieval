@@ -13,5 +13,4 @@ class BoundingBoxFeatures:
     def misses_values(self) -> bool:
         misses_floats = any([math.isinf(self.surface_area), math.isinf(self.volume), math.isinf(self.diameter)])
         misses_points = any(np.isinf(self.min_bound)) and any(np.isinf(self.max_bound))
-
         return misses_floats or misses_points

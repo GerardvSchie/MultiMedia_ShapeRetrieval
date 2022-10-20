@@ -8,7 +8,6 @@ from PyQt6.QtWidgets import QWidget
 from src.controller.geometries_controller import GeometriesController
 from src.object.shape import Shape
 from src.object.settings import Settings
-from app.util.os import IsMacOS
 
 
 class VisualizationWidget(QWidget):
@@ -38,10 +37,8 @@ class VisualizationWidget(QWidget):
         self.vis: open3d.visualization.Visualizer = o3d.visualization.Visualizer()
 
         # Visible=False so it does not open separate window for a moment
-        self.vis.create_window(visible=IsMacOS)
-
-        if not IsMacOS:
-            self.hwnd = win32gui.FindWindowEx(0, 0, None, "Open3D")
+        self.vis.create_window(visible=False)
+        self.hwnd = win32gui.FindWindowEx(0, 0, None, "Open3D")
 
         self.focusWidget()
         self.update_widget()
