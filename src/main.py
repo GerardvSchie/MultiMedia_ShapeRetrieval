@@ -5,6 +5,9 @@ import open3d as o3d
 import shutil
 import logging
 
+from matplotlib import pyplot as plt
+import numpy as np
+
 # Needed to fix ModuleNotFoundError when importing src.util.logger.
 directoryContainingCurrentFile = os.path.dirname(__file__)
 repoDirectory = os.path.dirname(directoryContainingCurrentFile)
@@ -118,36 +121,31 @@ def plot_feature_data(shape_collection: [Shape]) -> None:
     FeatureDistributionPlotter.plot_features(shape_features)
 
 
-def refine_meshes(shape_collection: [Shape]) -> None:
-    desired_number_of_vertices = 10000
-
-    testShape = shape_collection[0]
+def refine_meshes(shape_collection: [Shape], final_vertices) -> None:
+    testShape = shape_collection[140]
     old_shape_path = testShape.geometries.path
-    old_shape_vertices = testShape.features.mesh_features.nr_vertices
 
-    #print(testShape)
-    #print(old_shape_path)
-    #print(old_shape_vertices)
+    #print(f'{old_shape_path}\n')
 
-    # refine_mesh(old_shape_path, old_shape_vertices, desired_number_of_vertices)
-
-    print(f'========================= Refining meshes to {desired_number_of_vertices} vertices in the whole database ======================')
+    #refine_mesh(old_shape_path, final_vertices)
+    #prin()
 
     finalVertexCounts = []
     for current_shape in tqdm(shape_collection):
         current_shape_path = current_shape.geometries.path
-        current_shape_vertices = current_shape.features.mesh_features.nr_vertices
 
-        #print(f'item[{i}] = {pathToOriginalPLYMesh}')
-        #print(originalVerticesOfPLYMesh)
-
-        finalVertexCountOfThisMesh = refine_mesh(current_shape_path, current_shape_vertices, desired_number_of_vertices)
+        finalVertexCountOfThisMesh = refine_mesh(current_shape_path, final_vertices)
         finalVertexCounts.append(finalVertexCountOfThisMesh)
 
-    # Create a histogram to show how well the algorithm performed.
-    # hist_plot('Final vertex counts of refined meshed', finalVertexCounts)
+    # Create a histogram to check if the simplification performed well.
+    final_counts = np.array(finalVertexCounts)
 
-    #print(f"Final vertex counts:\n{finalVertexCounts}")
+    #print(f'final_counts = {final_counts}')
+
+    plt.hist(final_counts, bins = 100)
+    plt.title('Final vertex counts of simplified meshes')
+
+    plt.show()
 
 
 def main():
@@ -201,12 +199,12 @@ def main():
 
         # Stop after first mesh
         shape.set_new_ply_path(new_path)
-        sys.exit()
+        #sys.exit()
 
-    # Collect the paths to the Shapes too for refinement, if needed.
-    # shapePaths = [shape.geometries.path for shape in shape_collection]
+    desired_number_of_vertices = 10000
 
-    refine_meshes(shape_list)
+    print(f'Simplifying normalized meshes to {desired_number_of_vertices} vertices')
+    refine_meshes(shape_list, desired_number_of_vertices)
     # plot_feature_data(shape_list)
 
 
