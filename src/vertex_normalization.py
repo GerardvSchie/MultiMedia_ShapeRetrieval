@@ -9,7 +9,7 @@ def refine_mesh(poorPLYPath: str, originalVertices: str, desiredVertices: int):
     #print(f'newPath = {newPath}')
     #prin()
 
-    montecarloMeshSet = upsampleMesh(poorPLYPath, originalVertices, desiredVertices)
+    montecarloMeshSet = upsampleMesh(poorPLYPath, newPath, originalVertices, desiredVertices)
     saveRefinedMesh(montecarloMeshSet, newPath, 'montecarlo')
 
     #prin()
@@ -23,7 +23,7 @@ def refine_mesh(poorPLYPath: str, originalVertices: str, desiredVertices: int):
     return finalVertexCount
 
 
-def upsampleMesh(originalPath: str, originalVertices: int, desiredVertices: int):
+def upsampleMesh(originalPath: str, newPath: str, originalVertices: int, desiredVertices: int):
     # create a new MeshSet
     ms = pymeshlab.MeshSet()
 
@@ -44,10 +44,8 @@ def upsampleMesh(originalPath: str, originalVertices: int, desiredVertices: int)
 
 
 
-    # Increase gently until number of points in the cloud is bigger than desired.
+    # Montecarlo gives an exact number of samples.
     montecarloSamples = desiredVertices
-
-    #print(f'Trying {poissonSamples} Poisson sample size:')
 
     # Create an uniformly sampled point cloud.
     ms.apply_filter('generate_sampling_montecarlo', samplenum = montecarloSamples)
@@ -57,6 +55,9 @@ def upsampleMesh(originalPath: str, originalVertices: int, desiredVertices: int)
 
     # Small check to see if the point cloud has the right number of samples.
     assert ms.current_mesh().vertex_number() == desiredVertices
+
+    # Save the point cloud before surface reconstruction.
+    saveRefinedMesh(ms, newPath, 'point cloud')
 
     #print(f'Point cloud has {ms.current_mesh().vertex_number()} vertices')
     #print(f'Current mesh = {ms.current_mesh()}\n')
@@ -113,11 +114,12 @@ def simplifyMesh(newPath: str, desiredVertices: int):
     # Small check to see if the mesh's vertices are now the desired amount.
     newVertices = ms.current_mesh().vertex_number()
     #print(f'{newVertices} =?= {desiredVertices}\n')
-    # TODO Allow vertex counts close to desired?
-    #assert newVertices == desiredVertices
 
     if (newVertices < desiredVertices):
         print(f"This mesh has {newVertices} instead of {desiredVertices}")
+
+    # TODO Allow vertex counts close to desired?
+    assert newVertices == desiredVertices
 
     return ms, newVertices
     #prin()
@@ -133,7 +135,7 @@ def saveRefinedMesh(refinedMeshSet, path, fileName):
     # save the current selected mesh
     refinedMeshSet.save_current_mesh(refinedPLYComplete)
 
-    #print(f'\nSaving the new PLY mesh to:\n{refinedPLYComplete}')
+    print(f'\nSaving the new PLY mesh to:\n{refinedPLYComplete}')
 
 
 def createRefinedSavePathLocation(oldPath: str):

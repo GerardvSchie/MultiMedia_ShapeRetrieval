@@ -119,7 +119,7 @@ def plot_feature_data(shape_collection: [Shape]) -> None:
 
 
 def refine_meshes(shape_collection: [Shape]) -> None:
-    desired_number_of_vertices = 20000
+    desired_number_of_vertices = 10000
 
     testShape = shape_collection[0]
     old_shape_path = testShape.geometries.path
@@ -129,9 +129,9 @@ def refine_meshes(shape_collection: [Shape]) -> None:
     #print(old_shape_path)
     #print(old_shape_vertices)
 
-    #refine_mesh(old_shape_path, old_shape_vertices, desired_number_of_vertices)
+    # refine_mesh(old_shape_path, old_shape_vertices, desired_number_of_vertices)
 
-    print('========================= Refining meshes to desired number of vertices in the whole database ======================')
+    print(f'========================= Refining meshes to {desired_number_of_vertices} vertices in the whole database ======================')
 
     finalVertexCounts = []
     for current_shape in tqdm(shape_collection):
