@@ -1,12 +1,10 @@
 from PyQt6.QtWidgets import QTableWidget, QTableWidgetItem
 from PyQt6.QtCore import Qt
 import numpy as np
+import os
 
 
 class TableWidget(QTableWidget):
-    DESCRIPTOR_INDICES = ['surface_area', 'compactness', 'rectangularity', 'diameter', 'eccentricity']
-    FEATURE_INDICES = []
-
     def __init__(self, shape_list, get_row, headers: list[str]):
         super(TableWidget, self).__init__()
 
@@ -32,6 +30,9 @@ class TableWidget(QTableWidget):
             column_nr = 0
             for row_value in get_row(shape):
                 do_str = type(row_value) is np.ndarray or (type(row_value) is float and np.isinf(row_value))
+
+                if column_nr == 0:
+                    row_value = os.path.join(*row_value)
 
                 # Source numerical https://stackoverflow.com/questions/60512920/sorting-numbers-in-qtablewidget-work-doesnt-right-pyqt5
                 item: QTableWidgetItem = QTableWidgetItem()

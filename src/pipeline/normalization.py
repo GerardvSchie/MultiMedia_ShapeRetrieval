@@ -8,15 +8,19 @@ from src.object.shape import Shape
 class Normalizer:
     @staticmethod
     def normalize_shape(shape: Shape):
-        GeometriesController.calculate_mesh(shape.geometries)
+        if not shape.geometries.point_cloud:
+            return False
+
         # Translate to center
-        shape.geometries.mesh.translate(-shape.geometries.mesh.get_center())
+        shape.geometries.mesh.translate(-shape.geometries.point_cloud.get_center())
         # Rotate based on PCA
         Normalizer.rot_pca(shape)
         # Flip based on momentum
-        Normalizer.flipper_vertices_center(shape.geometries.mesh)
+        Normalizer.flipper_vertices_center(shape.geometries.point_cloud)
         # Scale shape to unit size
         Normalizer.scaler(shape)
+
+        return True
 
     @staticmethod
     def reconstruct_shape(shape: Shape):
@@ -27,10 +31,8 @@ class Normalizer:
 
     @staticmethod
     def scaler(shape):
-        scale_before = shape.geometries.mesh.get_axis_aligned_bounding_box().get_max_extent()
-        shape.geometries.mesh.scale(1 / scale_before, shape.geometries.mesh.get_center())
-        scale_after = shape.geometries.mesh.get_axis_aligned_bounding_box().get_max_extent()
-        print(scale_before, '->', scale_after)
+        scale_before = shape.geometries.point_cloud.get_axis_aligned_bounding_box().get_max_extent()
+        shape.geometries.point_cloud.scale(1 / scale_before, shape.geometries.point_cloud.get_center())
 
     @staticmethod
     def rot_pca(shape: Shape):
@@ -40,13 +42,12 @@ class Normalizer:
         # Depending on the determinant of the rotation matrix
         # rotate with positive or negative matrix
         if np.linalg.det(rotation_matrix) >= 0:
-            shape.geometries.mesh.rotate(R=rotation_matrix)
+            shape.geometries.point_cloud.rotate(R=rotation_matrix)
         else:
-            shape.geometries.mesh.rotate(R=-rotation_matrix)
+            shape.geometries.point_cloud.rotate(R=-rotation_matrix)
 
         # Verify eigenvalues of new mesh
-        point_cloud = o3d.geometry.PointCloud(shape.geometries.mesh.vertices)
-        Normalizer.get_eigenvalues_and_eigenvectors(point_cloud)
+        Normalizer.get_eigenvalues_and_eigenvectors(shape.geometries.point_cloud)
 
     @staticmethod
     def get_eigenvalues_and_eigenvectors(pcd: o3d.geometry.PointCloud):
@@ -62,28 +63,22 @@ class Normalizer:
         return sorted(zipped, key=lambda x: x[0], reverse=True)
 
     @staticmethod
-    def flipper_vertices_center(mesh: o3d.geometry.TriangleMesh):
-        fi = Normalizer.compute_fi(mesh)
+    def flipper_vertices_center(pcd: o3d.geometry.PointCloud):
+        fi = Normalizer.compute_fi(pcd)
         flipping_rotation_matrix = np.zeros((3, 3))
         np.fill_diagonal(flipping_rotation_matrix, fi)
 
-        mesh.rotate(R=flipping_rotation_matrix)
+        pcd.rotate(R=flipping_rotation_matrix)
         # For a negative determinant the order of the points in the triangles is flipped.
-        if np.linalg.det(flipping_rotation_matrix) < 0:
-            mesh.triangles = o3d.utility.Vector3iVector(np.flip(np.asarray(mesh.triangles), axis=1))
+        # if np.linalg.det(flipping_rotation_matrix) < 0:
+        #     mesh.triangles = o3d.utility.Vector3iVector(np.flip(np.asarray(mesh.triangles), axis=1))
 
     @staticmethod
-    def compute_fi(mesh: o3d.geometry.TriangleMesh):
+    def compute_fi(pcd: o3d.geometry.PointCloud):
         fi = np.array([0, 0, 0], dtype=float)
 
-        vertices = np.asarray(mesh.vertices)
-        for point_indices in mesh.triangles:
-            # Center of mass == Centroid
-            # Source: https://www.quora.com/What-is-the-difference-between-a-centroid-and-a-centre-of-mass
-            points = vertices[point_indices]
-            # Sum each coordinate and average
-            center_of_mass = np.sum(points, axis=0) / 3
-            # Add for each axis to fi
-            fi += np.sign(center_of_mass) * np.power(center_of_mass, 2)
+        points = np.asarray(pcd.points)
+        for point in points:
+            fi += np.sign(point) * np.power(point, 2)
 
         return np.sign(fi)

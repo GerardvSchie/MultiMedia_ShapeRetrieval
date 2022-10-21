@@ -98,7 +98,7 @@ class NormalizationTabWidget(QWidget):
         self.scene_widgets[1].update_widget()
 
     def save_shape(self, file_path: str):
-        self.scene_widgets[1].shape.save(file_path)
+        self.scene_widgets[1].shape.save_ply(file_path)
 
     def export_image_action(self, file_path: str):
         self.scene_widgets[1].vis.capture_screen_image(file_path)

@@ -44,7 +44,7 @@ class ShapeFeaturesWidget(QWidget):
 
     def update_widget(self, features: ShapeFeatures):
         self.class_value_label.setText(features.true_class)
-        self.is_watertight_label.setText(str(features.mesh_features.is_watertight))
+        self.is_watertight_label.setText(str(features.is_watertight))
 
         self.mesh_nr_vertices_value_label.setText('{0}'.format(features.mesh_features.nr_vertices))
         self.mesh_nr_faces_value_label.setText('{0}'.format(features.mesh_features.nr_faces))

@@ -49,7 +49,7 @@ class ViewerWidget(QWidget):
         self.features_widget.update_widget(self.scene_widgets[0].shape.features)
 
     def save_shape(self, file_path: str):
-        self.scene_widgets[0].shape.save(file_path)
+        self.scene_widgets[0].shape.save_ply(file_path)
 
     def export_image_action(self, file_path: str):
         self.scene_widgets[0].vis.capture_screen_image(file_path)

@@ -1,12 +1,15 @@
 import os
 from tqdm import tqdm
+import sys
+import open3d as o3d
+import shutil
+import logging
 
 # Needed to fix ModuleNotFoundError when importing src.util.logger.
 directoryContainingCurrentFile = os.path.dirname(__file__)
 repoDirectory = os.path.dirname(directoryContainingCurrentFile)
 
 # Add repo to list of possible paths
-import sys
 sys.path.append(repoDirectory)
 
 from src.object.features.shape_features import ShapeFeatures
@@ -47,6 +50,8 @@ def read_original_shapes() -> [Shape]:
             shape = Shape(os.path.relpath(item.path))
             shape_list.append(shape)
 
+    add_shape_features(shape_list, 'data/database/original_features.csv')
+    add_shape_descriptors(shape_list, 'data/database/original_descriptors.csv')
     return shape_list
 
 
@@ -95,23 +100,17 @@ def remesh_and_save_shape(shape: Shape) -> None:
     Remesher.remesh_shape(shape)
     new_path = os.path.join(os.path.split(shape.geometries.path)[0], 'remeshed.ply')
     shape.geometries.path = new_path
-    shape.save(shape.geometries.path)
+    shape.save_ply(shape.geometries.path)
 
 
-def normalize_and_save_shape(shape: Shape):
-    # Calculate
-    GeometriesController.calculate_mesh(shape.geometries)
-    GeometriesController.calculate_point_cloud(shape.geometries)
-    GeometriesController.calculate_aligned_bounding_box(shape.geometries)
+def normalize_and_save_pcd(shape: Shape, new_path: str):
+    if os.path.exists(new_path):
+        return
 
-    Normalizer.normalize_shape(shape)
-    new_path = os.path.join(os.path.split(shape.geometries.path)[0], 'normalized.ply')
-    shape.geometries.path = new_path
-    shape.save(shape.geometries.path)
-
-    GeometriesController.calculate_point_cloud(shape.geometries, True)
-    GeometriesController.calculate_aligned_bounding_box(shape.geometries, True)
-    NormalizationFeatureExtractor.extract_features(shape.geometries.mesh, shape.geometries.point_cloud, shape.geometries.axis_aligned_bounding_box, shape.features.normalization_features, True)
+    # When normalization is successful
+    if Normalizer.normalize_shape(shape):
+        shape.save_pcd(new_path)
+        shape.geometries.path = new_path
 
 
 def plot_feature_data(shape_collection: [Shape]) -> None:
@@ -135,8 +134,7 @@ def refine_meshes(shape_collection: [Shape]) -> None:
     print('========================= Refining meshes to desired number of vertices in the whole database ======================')
 
     finalVertexCounts = []
-
-    for current_shape in shape_collection:
+    for current_shape in tqdm(shape_collection):
         current_shape_path = current_shape.geometries.path
         current_shape_vertices = current_shape.features.mesh_features.nr_vertices
 
@@ -155,8 +153,6 @@ def refine_meshes(shape_collection: [Shape]) -> None:
 def main():
     # Offline computed features
     shape_list = read_original_shapes()
-    add_shape_features(shape_list, 'data/database/original_features.csv')
-    add_shape_descriptors(shape_list, 'data/database/original_descriptors.csv')
 
     # Compute the features and descriptors
     # for shape in tqdm(shape_list):
@@ -166,18 +162,52 @@ def main():
     # DatabaseWriter.write_features(shape_list, 'data/database/original_features.csv')
     # DatabaseWriter.write_descriptors(shape_list, 'data/database/original_descriptors.csv')
 
-    # print('Normalizing shapes')
-    # How to then change the shape
-    # for shape in shape_list:
-    #     normalize_and_save_shape(shape)
-    # shape_list = read_normalized_shapes()
+    # Remesh shapes
+    print('Resample shapes + normalize')
+    for shape in tqdm(shape_list):
+        if not shape.geometries.path.endswith('original.ply'):
+            continue
+
+        new_path = os.path.join(os.path.split(shape.geometries.path)[0], 'normalized.pcd')
+
+        # Path already exists, set path of shape to point cloud
+        if os.path.exists(new_path):
+            shape.geometries.path = new_path
+            continue
+
+        GeometriesController.set_mesh_from_file(shape.geometries)
+        shape.geometries.point_cloud = shape.geometries.mesh.sample_points_poisson_disk(10000)
+        normalize_and_save_pcd(shape, new_path)
+
+    # Go from a normalized point cloud to a mesh
+    print('Create normalized meshes')
+    for shape in tqdm(shape_list):
+        if not shape.geometries.path.endswith('normalized.pcd'):
+            continue
+
+        new_path = os.path.join(os.path.split(shape.geometries.path)[0], 'normalized.ply')
+        if os.path.exists(new_path):
+            shape.geometries.path = new_path
+            shape.set_new_ply_path(new_path)
+            continue
+
+        point_cloud: o3d.geometry.PointCloud = o3d.io.read_point_cloud(shape.geometries.path)
+        point_cloud.estimate_normals()
+        point_cloud.orient_normals_consistent_tangent_plane(10)
+
+        mesh, _ = o3d.geometry.TriangleMesh().create_from_point_cloud_poisson(point_cloud)
+        mesh: o3d.geometry.TriangleMesh = mesh
+        o3d.io.write_triangle_mesh(new_path, mesh)
+
+        # Stop after first mesh
+        shape.set_new_ply_path(new_path)
+        sys.exit()
 
     # Collect the paths to the Shapes too for refinement, if needed.
     # shapePaths = [shape.geometries.path for shape in shape_collection]
 
-    plot_feature_data(shape_list)
-
     refine_meshes(shape_list)
+    # plot_feature_data(shape_list)
 
 
 # Example loads an .off and .ply file

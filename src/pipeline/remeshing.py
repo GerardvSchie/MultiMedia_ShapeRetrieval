@@ -13,23 +13,8 @@ from src.object.shape import Shape
 class Remesher:
     @staticmethod
     def remesh_shape(shape: Shape):
-        if False:
-            shape.geometries.mesh = shape.geometries.mesh.simplify_quadric_decimation(
-                target_number_of_triangles=10000)
-        else:
-            Remesher.fill_holes(shape)
-            Remesher.resample(shape)
-            Remesher.reconstruct_mesh(shape)
-            Remesher.remove_small_meshes(shape)
-            Remesher.fill_holes(shape)
-
-            is_watertight = shape.geometries.mesh.is_watertight()
-            print('before:', shape.features.mesh_features.is_watertight, 'after:', is_watertight)
-
-    @staticmethod
-    def resample(shape: Shape):
-        GeometriesController.calculate_mesh(shape.geometries)
-        shape.geometries.point_cloud = shape.geometries.mesh.sample_points_poisson_disk(10000)
+        shape.geometries.point_cloud: o3d.geometry.PointCloud = shape.geometries.mesh.sample_points_poisson_disk(10000)
+        shape.geometries.mesh.create_from_point_cloud_poisson(shape.geometries.point_cloud)
 
     @staticmethod
     def fill_holes(shape: Shape):
@@ -70,9 +55,6 @@ class Remesher:
         GeometriesController.calculate_point_cloud_normals(shape.geometries, True)
         shape.geometries.mesh = \
             shape.geometries.mesh.create_from_point_cloud_ball_pivoting(shape.geometries.point_cloud, o3d.utility.DoubleVector(radii))
-
-        if shape.geometries.mesh.is_watertight():
-            return
 
     @staticmethod
     def remove_small_meshes(shape: Shape):

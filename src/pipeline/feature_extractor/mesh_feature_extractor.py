@@ -1,5 +1,7 @@
 import logging
 import math
+import time
+
 import open3d as o3d
 import numpy as np
 from numpy.linalg import norm
@@ -72,7 +74,12 @@ class MeshFeatureExtractor:
             return
 
         if mesh:
+            # print(time.time())
             surface_area = mesh.get_surface_area()
+            # print(time.time())
+            # np_area = MeshFeatureExtractor.np_surface_area(mesh, mesh_features, force_recompute)
+            # print(time.time())
+            # print('np_area:', np_area, 'surface_area:', surface_area)
         else:
             logging.warning("Cannot give surface area without mesh")
             return
@@ -95,6 +102,38 @@ class MeshFeatureExtractor:
             return
 
         mesh_features.volume = volume
+
+    @staticmethod
+    def np_surface_area(mesh: o3d.geometry.TriangleMesh, mesh_features: MeshFeatures, force_recompute=False) -> None:
+        data = []
+        points = np.asarray(mesh.vertices)
+        for triangle in mesh.triangles:
+            a = points[triangle[0]]
+            b = points[triangle[1]]
+            c = points[triangle[2]]
+            data.append([a, b, c])
+
+        data = np.array(data)
+        vecsAB = data[:, 0] - data[:, 1]
+        vecsAC = data[:, 0] - data[:, 2]
+
+        dots = np.cross(vecsAB, vecsAC)
+        norm = np.linalg.norm(dots, axis=1)
+        area = np.sum(norm) / 2
+        return area
+
+    @staticmethod
+    def np_volume(mesh: o3d.geometry.TriangleMesh, mesh_features: MeshFeatures, force_recompute=False) -> None:
+        data = []
+        points = np.asarray(mesh.vertices)
+        for triangle in mesh.triangles:
+            a = points[triangle[0]]
+            b = points[triangle[1]]
+            c = points[triangle[2]]
+            data.append([a, b, c])
+
+        data = np.array(data)
+
 
     @staticmethod
     def calculate_angle_3_vertices(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud, mesh_features: MeshFeatures, force_recompute=False) -> None:
