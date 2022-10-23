@@ -4,9 +4,14 @@ import sys
 import open3d as o3d
 import shutil
 import logging
+import math
 
 from matplotlib import pyplot as plt
 import numpy as np
+
+from src.database.querier import DatabaseQuerier
+from src.object.descriptors import Descriptors
+from src.pipeline.normalize_descriptors import normalize_descriptors, compute_normalized_descriptor
 
 # Needed to fix ModuleNotFoundError when importing src.util.logger.
 directoryContainingCurrentFile = os.path.dirname(__file__)
@@ -31,8 +36,10 @@ from src.database.reader import DatabaseReader
 from src.util.io import check_working_dir
 from src.pipeline.normalization import Normalizer
 from src.plot.feature_distribution import FeatureDistributionPlotter
-from src.vertex_normalization import refine_mesh
+from src.vertex_normalization import refine_mesh, simplifyMesh, saveRefinedMesh
 
+
+NR_VERTICES = 10000
 
 def read_original_shapes() -> [Shape]:
     shape_list = []
@@ -58,29 +65,6 @@ def read_original_shapes() -> [Shape]:
     return shape_list
 
 
-def read_normalized_shapes() -> [Shape]:
-    shape_list = []
-
-    # Walk through labeledDB directory
-    for category in os.scandir(os.path.join("data", "LabeledDB_new")):
-        if not category.is_dir():
-            continue
-
-        for number in os.scandir(category.path):
-            if not number.is_dir():
-                continue
-
-            for item in os.scandir(number.path):
-                if item.is_dir() or item.name != 'normalized.ply':
-                    continue
-
-                # Database depends on relative paths
-                shape = Shape(os.path.relpath(item.path))
-                shape_list.append(shape)
-
-    return shape_list
-
-
 def add_shape_features(shape_list: [Shape], path: str) -> None:
     features_data = DatabaseReader.read_features(path)
 
@@ -95,15 +79,6 @@ def add_shape_descriptors(shape_list: [Shape], path: str) -> None:
     for shape in shape_list:
         if shape.geometries.path in descriptors_data:
             shape.descriptors = descriptors_data[shape.geometries.path]
-
-
-def remesh_and_save_shape(shape: Shape) -> None:
-    GeometriesController.calculate_mesh(shape.geometries)
-
-    Remesher.remesh_shape(shape)
-    new_path = os.path.join(os.path.split(shape.geometries.path)[0], 'remeshed.ply')
-    shape.geometries.path = new_path
-    shape.save_ply(shape.geometries.path)
 
 
 def normalize_and_save_pcd(shape: Shape, new_path: str):
@@ -149,19 +124,34 @@ def refine_meshes(shape_collection: [Shape], final_vertices) -> None:
 
 
 def main():
-    # Offline computed features
+    # Compute offline features
     shape_list = read_original_shapes()
 
     # Compute the features and descriptors
-    # for shape in tqdm(shape_list):
-    #     ShapeFeatureExtractor.extract_all_shape_features(shape)
-    #     compute_descriptors(shape)
+    print('\nCompute features of original shapes:\n')
+    for shape in tqdm(shape_list):
+        ShapeFeatureExtractor.extract_all_shape_features(shape)
+        compute_descriptors(shape)
+
+    DatabaseWriter.write_features(shape_list, 'data/database/original_features.csv')
+    DatabaseWriter.write_descriptors(shape_list, 'data/database/original_descriptors.csv')
+
+    normalize_descriptors('data/database/original_descriptors.csv')
+
+    # querier = DatabaseQuerier('data/database/original_descriptors_normalized.csv')
     #
-    # DatabaseWriter.write_features(shape_list, 'data/database/original_features.csv')
-    # DatabaseWriter.write_descriptors(shape_list, 'data/database/original_descriptors.csv')
+    # descriptor = Descriptors()
+    # descriptor.surface_area = 0
+    # descriptor.eccentricity = 0
+    # descriptor.diameter = 1
+    # descriptor.rectangularity = math.inf
+    # descriptor.compactness = 2
+    # compute_normalized_descriptor(descriptor)
+    #
+    # querier.query_normalized_descriptor(descriptor)
 
     # Remesh shapes
-    print('Resample shapes + normalize')
+    print('\n--------------\nResample shapes + normalize')
     for shape in tqdm(shape_list):
         if not shape.geometries.path.endswith('original.ply'):
             continue
@@ -174,11 +164,11 @@ def main():
             continue
 
         GeometriesController.set_mesh_from_file(shape.geometries)
-        shape.geometries.point_cloud = shape.geometries.mesh.sample_points_poisson_disk(10000)
+        shape.geometries.point_cloud = shape.geometries.mesh.sample_points_poisson_disk(NR_VERTICES)
         normalize_and_save_pcd(shape, new_path)
 
     # Go from a normalized point cloud to a mesh
-    print('Create normalized meshes')
+    print('\n--------------\nCreate normalized meshes')
     for shape in tqdm(shape_list):
         if not shape.geometries.path.endswith('normalized.pcd'):
             continue
@@ -197,14 +187,25 @@ def main():
         mesh: o3d.geometry.TriangleMesh = mesh
         o3d.io.write_triangle_mesh(new_path, mesh)
 
-        # Stop after first mesh
         shape.set_new_ply_path(new_path)
-        #sys.exit()
 
-    desired_number_of_vertices = 10000
+    # Creating a mesh with 10k vertices from the normalized point cloud (with a poisson surface)
+    print(f'\n--------------\nSimplifying normalized meshes to {NR_VERTICES} vertices')
+    for shape in tqdm(shape_list):
+        if not shape.geometries.path.endswith('normalized.ply'):
+            continue
 
-    print(f'Simplifying normalized meshes to {desired_number_of_vertices} vertices')
-    refine_meshes(shape_list, desired_number_of_vertices)
+        new_path = os.path.join(os.path.split(shape.geometries.path)[0], 'refined.ply')
+        if os.path.exists(new_path):
+            shape.geometries.path = new_path
+            shape.set_new_ply_path(new_path)
+            continue
+
+        refined_mesh, _ = simplifyMesh(shape.geometries.path, NR_VERTICES)
+        refined_mesh.save_current_mesh(new_path)
+
+        shape.set_new_ply_path(new_path)
+
     # plot_feature_data(shape_list)
 
 

@@ -55,9 +55,7 @@ class DatabaseReader:
                 data.normalization_features.scale = float(features[18])
                 data.normalization_features.alignment = float(features[19])
                 data.normalization_features.flip = int(features[20])
-                data.normalization_features.eigenvalue_s1 = float(features[21])
-                data.normalization_features.eigenvalue_s2 = float(features[22])
-                data.normalization_features.eigenvalue_s3 = float(features[23])
+                data.normalization_features.eigenvalues = _read_np_array(features[21])
 
                 # Set path
                 path = os.path.join(*(_read_np_array(identifier)))
@@ -77,16 +75,16 @@ class DatabaseReader:
             reader = csv.reader(f)
             next(reader)
 
-            for features in reader:
+            for descriptor in reader:
                 data = Descriptors()
 
                 # Descriptors
-                identifier = features[0]
-                data.surface_area = float(features[1])
-                data.compactness = float(features[2])
-                data.rectangularity = float(features[3])
-                data.diameter = float(features[4])
-                data.eccentricity = float(features[5])
+                identifier = descriptor[0]
+                data.surface_area = float(descriptor[1])
+                data.compactness = float(descriptor[2])
+                data.rectangularity = float(descriptor[3])
+                data.diameter = float(descriptor[4])
+                data.eccentricity = float(descriptor[5])
 
                 # Set path
                 path = os.path.join(*(_read_np_array(identifier)))

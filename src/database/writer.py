@@ -11,8 +11,7 @@ class DatabaseWriter:
         'mesh_nr_vertices', 'mesh_nr_faces', 'mesh_surface_area', 'mesh_volume',
         'convex_hull_nr_vertices', 'convex_hull_nr_faces', 'convex_hull_surface_area', 'convex_hull_volume',
         'bounding_box_p0', 'bounding_box_p1', 'bounding_box_surface_area', 'bounding_box_volume', 'bounding_box_diameter',
-        'distance_to_center', 'scale', 'alignment', 'correctly_oriented_axes',
-        'eigenvalue_s1', 'eigenvalue_s2', 'eigenvalue_s3',
+        'distance_to_center', 'scale', 'alignment', 'correctly_oriented_axes', 'eigenvalues',
     ]
 
     @staticmethod
@@ -74,9 +73,7 @@ class DatabaseWriter:
             shape.features.normalization_features.scale,
             shape.features.normalization_features.alignment,
             shape.features.normalization_features.flip,
-            shape.features.normalization_features.eigenvalue_s1,
-            shape.features.normalization_features.eigenvalue_s2,
-            shape.features.normalization_features.eigenvalue_s3,
+            shape.features.normalization_features.eigenvalues,
         ]
 
     @staticmethod
@@ -92,6 +89,7 @@ class DatabaseWriter:
             shape.descriptors.diameter,
             shape.descriptors.eccentricity,
         ]
+
 
 def path_to_array(path: str):
     identifier = []

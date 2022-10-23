@@ -7,7 +7,6 @@ import numpy as np
 from numpy.linalg import norm
 
 from src.object.features.mesh_features import MeshFeatures
-from src.pipeline.normalization import Normalizer
 
 
 class MeshFeatureExtractor:
@@ -17,7 +16,6 @@ class MeshFeatureExtractor:
             logging.warning("Cannot extract any features without mesh and point cloud")
             return
 
-        # MeshFeatureExtractor.calculate_diameter(mesh, point_cloud, mesh_features, force_recompute)
         MeshFeatureExtractor.extract_features(mesh, point_cloud, mesh_features, force_recompute)
 
     @staticmethod
@@ -27,16 +25,12 @@ class MeshFeatureExtractor:
             logging.warning("Cannot extract any features without mesh and point cloud")
             return
 
-        # MeshFeatureExtractor.calculate_angle_3_vertices(mesh, point_cloud, mesh_features, force_recompute)
         MeshFeatureExtractor.number_of_vertices(mesh, point_cloud, mesh_features, force_recompute)
-        # MeshFeatureExtractor.calculate_eccentricity(mesh, point_cloud, mesh_features, force_recompute)
 
         if mesh:
             MeshFeatureExtractor.number_of_faces(mesh, mesh_features, force_recompute)
             MeshFeatureExtractor.calculate_surface_area(mesh, mesh_features, force_recompute)
             MeshFeatureExtractor.calculate_volume(mesh, mesh_features, force_recompute)
-            # MeshFeatureExtractor.calculate_compactness(mesh, mesh_features, force_recompute)
-            # MeshFeatureExtractor.calculate_sphericity(mesh, mesh_features, force_recompute)
         else:
             logging.warning("Could not extract some mesh features since mesh was missing")
 
@@ -74,12 +68,7 @@ class MeshFeatureExtractor:
             return
 
         if mesh:
-            # print(time.time())
             surface_area = mesh.get_surface_area()
-            # print(time.time())
-            # np_area = MeshFeatureExtractor.np_surface_area(mesh, mesh_features, force_recompute)
-            # print(time.time())
-            # print('np_area:', np_area, 'surface_area:', surface_area)
         else:
             logging.warning("Cannot give surface area without mesh")
             return
@@ -92,11 +81,10 @@ class MeshFeatureExtractor:
             return
 
         if mesh:
-            if mesh.is_watertight():
-                volume = mesh.get_volume()
-            else:
-                logging.warning("Could not calculate volume, mesh not watertight")
-                return
+            # Make sure all triangles are facing the same direction
+            # Does not use Open3D volume implementation since it may not be watertight
+            mesh.orient_triangles()
+            volume = MeshFeatureExtractor.np_volume(mesh)
         else:
             logging.warning("Cannot calculate volume without mesh")
             return
@@ -104,7 +92,7 @@ class MeshFeatureExtractor:
         mesh_features.volume = volume
 
     @staticmethod
-    def np_surface_area(mesh: o3d.geometry.TriangleMesh, mesh_features: MeshFeatures, force_recompute=False) -> None:
+    def np_surface_area(mesh: o3d.geometry.TriangleMesh) -> float:
         data = []
         points = np.asarray(mesh.vertices)
         for triangle in mesh.triangles:
@@ -123,7 +111,7 @@ class MeshFeatureExtractor:
         return area
 
     @staticmethod
-    def np_volume(mesh: o3d.geometry.TriangleMesh, mesh_features: MeshFeatures, force_recompute=False) -> None:
+    def np_volume(mesh: o3d.geometry.TriangleMesh) -> float:
         data = []
         points = np.asarray(mesh.vertices)
         for triangle in mesh.triangles:
@@ -134,6 +122,10 @@ class MeshFeatureExtractor:
 
         data = np.array(data)
 
+        crosses = np.cross(data[:, 0], data[:, 1])
+        form = crosses * data[:, 2]
+        volume = np.abs(np.sum(form)) / 6
+        return volume
 
     @staticmethod
     def calculate_angle_3_vertices(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud, mesh_features: MeshFeatures, force_recompute=False) -> None:

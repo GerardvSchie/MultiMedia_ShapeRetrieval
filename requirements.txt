@@ -15,3 +15,6 @@ pymeshfix
 # 2D Feature extraction
 feret
 opencv-python==4.6.0.66
+
+# ANN library
+pynndescent==0.5.7

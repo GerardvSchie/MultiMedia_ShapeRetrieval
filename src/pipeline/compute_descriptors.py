@@ -12,6 +12,6 @@ def compute_descriptors(shape: Shape):
     descriptors.compactness = np.power(shape.features.mesh_features.surface_area, 3) / (36 * math.pi * np.power(shape.features.mesh_features.volume, 2))
     descriptors.rectangularity = shape.features.mesh_features.volume / shape.features.axis_aligned_bounding_box_features.volume
     descriptors.diameter = shape.features.diameter
-    descriptors.eccentricity = shape.features.normalization_features.eigenvalue_s1 / shape.features.normalization_features.eigenvalue_s3
+    descriptors.eccentricity = shape.features.normalization_features.eigenvalues[0] / shape.features.normalization_features.eigenvalues[2]
 
     shape.descriptors = descriptors

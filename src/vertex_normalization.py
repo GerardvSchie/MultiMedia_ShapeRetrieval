@@ -6,6 +6,7 @@ def refine_mesh(normalizedPLYPath: str, desiredVertices: int):
 
     refinedMeshSet, finalVertexCount = simplifyMesh(normalizedPLYPath, desiredVertices)
 
+
     newPath = createRefinedSavePathLocation(normalizedPLYPath)
 
     saveRefinedMesh(refinedMeshSet, newPath, 'refined')
@@ -54,6 +55,7 @@ def simplifyMesh(oldPath: str, desiredVertices: int):
 
 def saveRefinedMesh(refinedMeshSet, path, fileName):
     refinedPLYComplete = f"{path}/{fileName}.ply"
+
 
     # Refined PLY folder does not exist
     if not os.path.exists(path):

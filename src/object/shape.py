@@ -42,7 +42,7 @@ class Shape:
         dir_path, file_name = os.path.split(path)
 
         # If the name of the file is one of these, then we assume its created by the program itself
-        if file_name == 'original.ply' or file_name == 'normalized.pcd' or file_name == 'normalized.ply':
+        if file_name == 'original.ply' or file_name == 'normalized.pcd' or file_name == 'normalized.ply' or file_name == 'refined.ply':
             return path
 
         shape_name, extension = file_name.split('.')
