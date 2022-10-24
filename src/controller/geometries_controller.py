@@ -2,11 +2,12 @@ import os.path
 import logging
 import open3d as o3d
 import numpy as np
+
 from src.object.geometries import Geometries
 
 
 class GeometriesController:
-    # A big portion of these two methods comes from the open3d example, see license in app folder.
+    # A big portion of these two methods comes from the Open3D example, see license in app folder.
     @staticmethod
     def load_all_from_file(geometries: Geometries) -> None:
         GeometriesController.set_mesh_from_file(geometries, True)

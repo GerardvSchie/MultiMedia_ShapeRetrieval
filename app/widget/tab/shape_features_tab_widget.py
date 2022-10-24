@@ -1,4 +1,5 @@
 from copy import deepcopy
+import os
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QGridLayout
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QWindow
@@ -6,10 +7,8 @@ from PyQt6.QtGui import QWindow
 from app.widget.features.bounding_box_features_widget import BoundingBoxFeaturesWidget
 from app.widget.features.mesh_features_widget import MeshFeaturesWidget
 from app.widget.features.silhouette_features_widget import SilhouetteFeaturesWidget
-from src.object.features.shape_features import ShapeFeatures
+from src.database.reader import DatabaseReader
 from src.object.settings import Settings
-from src.pipeline.feature_extractor.mesh_feature_extractor import MeshFeatureExtractor
-from src.pipeline.feature_extractor.normalization_feature_extractor import NormalizationFeatureExtractor
 
 from app.util.font import BOLD_FONT
 from app.widget.features.normalization_features_widget import NormalizationFeaturesWidget
@@ -18,13 +17,19 @@ from app.widget.settings_widget import SettingsWidget
 from app.widget.visualization_widget import VisualizationWidget
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
 from src.pipeline.feature_extractor.silhouette_feature_extractor import SilhouetteFeatureExtractor
+from src.util.configs import *
 
 
 class ShapeFeaturesTabWidget(QWidget):
-    def __init__(self, shape_features: dict[str, ShapeFeatures]):
+    def __init__(self):
         super(ShapeFeaturesTabWidget, self).__init__()
         color_widget(self, [0, 255, 0])
-        self.shape_features = shape_features
+
+        # Load all shape features
+        self.shape_features = DatabaseReader.read_features_paths([
+            os.path.join(DATABASE_ORIGINAL_DIR, DATABASE_FEATURES_FILENAME),
+            os.path.join(DATABASE_REFINED_DIR, DATABASE_FEATURES_FILENAME)
+        ])
 
         # Left panel
         self.settings: Settings = Settings()
@@ -118,14 +123,6 @@ class ShapeFeaturesTabWidget(QWidget):
 
         SilhouetteFeatureExtractor.extract_features("data/temp.png", self.scene_widgets[0].shape.features.silhouette_features)
         self.silhouette_features_widget.update_widget(self.scene_widgets[0].shape.features.silhouette_features)
-
-        # # Update normalization
-        # NormalizationFeatureExtractor.extract_features(
-        #     self.scene_widgets[0].shape.geometries.mesh,
-        #     self.scene_widgets[0].shape.geometries.point_cloud,
-        #     self.scene_widgets[0].shape.geometries.axis_aligned_bounding_box,
-        #     self.scene_widgets[0].shape.features.normalization_features,
-        # )
 
     def save_shape(self, file_path: str):
         self.scene_widgets[1].shape.save_ply(file_path)

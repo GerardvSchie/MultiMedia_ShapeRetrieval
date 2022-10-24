@@ -18,6 +18,6 @@ class MainWindow(QMainWindow):
         self.tab_widget: TabWidget = TabWidget()
         self.setCentralWidget(self.tab_widget)
 
-    # Need to close the open3d handlers separately
+    # Need to close the Open3D handlers separately
     def closeEvent(self, *args, **kwargs):
         self.tab_widget.closeEvent(*args, **kwargs)

@@ -16,7 +16,7 @@ class DatabaseWriter:
 
     @staticmethod
     def write_features(shape_list: [Shape], path: str):
-        os.makedirs('data/database', exist_ok=True)
+        os.makedirs(os.path.split(path)[0], exist_ok=True)
 
         with open(path, "w", newline='') as f:
             writer = csv.writer(f)
@@ -28,7 +28,7 @@ class DatabaseWriter:
 
     @staticmethod
     def write_descriptors(shape_list: [Shape], path: str):
-        os.makedirs('data/database', exist_ok=True)
+        os.makedirs(os.path.split(path)[0], exist_ok=True)
 
         with open(path, "w", newline='') as f:
             writer = csv.writer(f)

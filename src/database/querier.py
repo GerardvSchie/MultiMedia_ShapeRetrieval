@@ -16,7 +16,7 @@ class DatabaseQuerier:
 
         logging.info('Create ANN structure and prepare it for querying')
         values = list(self.descriptors.values())
-        self.values = np.array([value.to_list() for value in values])
+        self.values = np.array([value.to_list() for value in values])[:50]
         self.index = NNDescent(self.values, verbose=True)
         self.index.prepare()
         logging.info('Done with the ANN structure')

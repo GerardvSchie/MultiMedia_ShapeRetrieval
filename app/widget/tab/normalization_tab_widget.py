@@ -1,3 +1,4 @@
+import os
 from copy import deepcopy
 
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout
@@ -8,19 +9,26 @@ from app.widget.util import color_widget
 from app.widget.settings_widget import SettingsWidget
 from app.widget.features.shape_features_widget import ShapeFeaturesWidget
 from app.widget.visualization_widget import VisualizationWidget
+from src.database.reader import DatabaseReader
 from src.object.features.shape_features import ShapeFeatures
 
 from src.object.settings import Settings
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
 from src.pipeline.normalization import Normalizer
 from src.controller.geometries_controller import GeometriesController
+from src.util.configs import *
 
 
 class NormalizationTabWidget(QWidget):
-    def __init__(self, shape_features: dict[str, ShapeFeatures]):
+    def __init__(self):
         super(NormalizationTabWidget, self).__init__()
         color_widget(self, [0, 255, 0])
-        self.shape_features = shape_features
+
+        # Load all shape features
+        self.shape_features = DatabaseReader.read_features_paths([
+            os.path.join(DATABASE_ORIGINAL_DIR, DATABASE_FEATURES_FILENAME),
+            os.path.join(DATABASE_REFINED_DIR, DATABASE_FEATURES_FILENAME)
+        ])
 
         # Left panel
         self.settings: Settings = Settings()

@@ -6,6 +6,7 @@ from src.controller.geometries_controller import GeometriesController
 from src.object.descriptors import Descriptors
 from src.object.features.shape_features import ShapeFeatures
 from src.object.geometries import Geometries
+from src.util.configs import *
 
 
 class Shape:
@@ -42,11 +43,11 @@ class Shape:
         dir_path, file_name = os.path.split(path)
 
         # If the name of the file is one of these, then we assume its created by the program itself
-        if file_name == 'original.ply' or file_name == 'normalized.pcd' or file_name == 'normalized.ply' or file_name == 'refined.ply':
+        if file_name == FILENAME_ORIGINAL or file_name == FILENAME_NORMALIZED_PCD or file_name == FILENAME_NORMALIZED_PLY or file_name == FILENAME_REFINED:
             return path
 
         shape_name, extension = file_name.split('.')
-        new_file_path = os.path.join(dir_path, shape_name, 'original.ply')
+        new_file_path = os.path.join(dir_path, shape_name, FILENAME_ORIGINAL)
 
         # Ply file already computed, set path to the ply file
         if os.path.exists(new_file_path):

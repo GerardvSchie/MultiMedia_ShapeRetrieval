@@ -2,9 +2,7 @@ import os
 from tqdm import tqdm
 import sys
 import open3d as o3d
-import shutil
 import logging
-import math
 
 from matplotlib import pyplot as plt
 import numpy as np
@@ -22,7 +20,6 @@ sys.path.append(repoDirectory)
 
 from src.object.features.shape_features import ShapeFeatures
 from src.pipeline.compute_descriptors import compute_descriptors
-from src.pipeline.feature_extractor.mesh_feature_extractor import MeshFeatureExtractor
 from src.pipeline.remeshing import Remesher
 from src.plot.triangle_area import TriangleAreaPlotter
 from src.controller.geometries_controller import GeometriesController
@@ -38,8 +35,8 @@ from src.pipeline.normalization import Normalizer
 from src.plot.feature_distribution import FeatureDistributionPlotter
 from src.vertex_normalization import refine_mesh, simplifyMesh, saveRefinedMesh
 
+from src.util.configs import *
 
-NR_VERTICES = 10000
 
 def read_original_shapes() -> [Shape]:
     shape_list = []
@@ -60,8 +57,7 @@ def read_original_shapes() -> [Shape]:
             shape = Shape(os.path.relpath(item.path))
             shape_list.append(shape)
 
-    add_shape_features(shape_list, 'data/database/original_features.csv')
-    add_shape_descriptors(shape_list, 'data/database/original_descriptors.csv')
+    add_shape_features(shape_list, os.path.join(DATABASE_ORIGINAL_DIR, DATABASE_FEATURES_FILENAME))
     return shape_list
 
 
@@ -131,17 +127,16 @@ def main():
     print('\nCompute features of original shapes:\n')
     for shape in tqdm(shape_list):
         ShapeFeatureExtractor.extract_all_shape_features(shape)
-        compute_descriptors(shape)
 
-    # DatabaseWriter.write_features(shape_list, 'data/database/original_features.csv')
+    DatabaseWriter.write_features(shape_list, os.path.join(DATABASE_ORIGINAL_DIR, DATABASE_FEATURES_FILENAME))
 
     # Remesh shapes
     print('\n--------------\nResample shapes + normalize')
     for shape in tqdm(shape_list):
-        if not shape.geometries.path.endswith('original.ply'):
+        if not shape.geometries.path.endswith(FILENAME_ORIGINAL):
             continue
 
-        new_path = os.path.join(os.path.split(shape.geometries.path)[0], 'normalized.pcd')
+        new_path = os.path.join(os.path.split(shape.geometries.path)[0], FILENAME_NORMALIZED_PCD)
 
         # Path already exists, set path of shape to point cloud
         if os.path.exists(new_path):
@@ -155,10 +150,10 @@ def main():
     # Go from a normalized point cloud to a mesh
     print('\n--------------\nCreate normalized meshes')
     for shape in tqdm(shape_list):
-        if not shape.geometries.path.endswith('normalized.pcd'):
+        if not shape.geometries.path.endswith(FILENAME_NORMALIZED_PCD):
             continue
 
-        new_path = os.path.join(os.path.split(shape.geometries.path)[0], 'normalized.ply')
+        new_path = os.path.join(os.path.split(shape.geometries.path)[0], FILENAME_NORMALIZED_PLY)
         if os.path.exists(new_path):
             shape.geometries.path = new_path
             shape.set_new_ply_path(new_path)
@@ -177,10 +172,10 @@ def main():
     # Creating a mesh with 10k vertices from the normalized point cloud (with a poisson surface)
     print(f'\n--------------\nSimplifying normalized meshes to {NR_VERTICES} vertices')
     for shape in tqdm(shape_list):
-        if not shape.geometries.path.endswith('normalized.ply'):
+        if not shape.geometries.path.endswith(FILENAME_NORMALIZED_PLY):
             continue
 
-        new_path = os.path.join(os.path.split(shape.geometries.path)[0], 'refined.ply')
+        new_path = os.path.join(os.path.split(shape.geometries.path)[0], FILENAME_REFINED)
         if os.path.exists(new_path):
             shape.geometries.path = new_path
             shape.set_new_ply_path(new_path)
@@ -191,14 +186,14 @@ def main():
 
         shape.set_new_ply_path(new_path)
 
-    add_shape_features(shape_list, 'data/database/normalized_features.csv')
-    add_shape_descriptors(shape_list, 'data/database/normalized_descriptors.csv')
+    add_shape_features(shape_list, os.path.join(DATABASE_REFINED_DIR, DATABASE_FEATURES_FILENAME))
+    add_shape_descriptors(shape_list, os.path.join(DATABASE_REFINED_DIR, DATABASE_DESCRIPTORS_FILENAME))
 
     print('\nCompute features of normalized shapes:\n')
     for shape in tqdm(shape_list):
         # First extract the normalization features from the pcd
         if shape.features.normalization_features.misses_values:
-            pcd_name = os.path.join(os.path.split(shape.geometries.path)[0], 'normalized.pcd')
+            pcd_name = os.path.join(os.path.split(shape.geometries.path)[0], FILENAME_NORMALIZED_PCD)
             normalized_point_cloud = o3d.io.read_point_cloud(pcd_name)
             NormalizationFeatureExtractor.extract_features(normalized_point_cloud, shape.features.normalization_features)
 
@@ -206,10 +201,10 @@ def main():
         ShapeFeatureExtractor.extract_all_shape_features(shape)
         compute_descriptors(shape)
 
-    DatabaseWriter.write_features(shape_list, 'data/database/normalized_features.csv')
-    DatabaseWriter.write_descriptors(shape_list, 'data/database/normalized_descriptors.csv')
+    DatabaseWriter.write_features(shape_list, os.path.join(DATABASE_REFINED_DIR, DATABASE_FEATURES_FILENAME))
+    DatabaseWriter.write_descriptors(shape_list, os.path.join(DATABASE_REFINED_DIR, DATABASE_DESCRIPTORS_FILENAME))
 
-    normalize_descriptors('data/database/normalized_descriptors.csv')
+    normalize_descriptors(os.path.join(DATABASE_REFINED_DIR, DATABASE_DESCRIPTORS_FILENAME))
 
     # querier = DatabaseQuerier('data/database/normalized_descriptors_normalized.csv')
 

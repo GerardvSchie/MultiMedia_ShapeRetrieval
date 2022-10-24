@@ -59,7 +59,7 @@ def normalize_descriptors(path: str) -> None:
         shape_list.append(shape)
 
     split_filename = filename.split('.')
-    output_file_name = split_filename[0] + '_normalized' + split_filename[1]
+    output_file_name = split_filename[0] + '_normalized.' + split_filename[1]
     DatabaseWriter.write_descriptors(shape_list, os.path.join(dir_name, output_file_name))
 
 

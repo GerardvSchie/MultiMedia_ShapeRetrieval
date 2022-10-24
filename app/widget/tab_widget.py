@@ -1,5 +1,6 @@
 from app.widget.tab.descriptors_table_tab_widget import DescriptorsTableTabWidget
 from app.widget.tab.features_table_tab_widget import FeaturesTableTabWidget
+from app.widget.tab.query_tab_widget import QueryTabWidget
 from app.widget.tab.remeshing_tab_widget import RemeshingTabWidget
 from app.widget.tab.shape_features_tab_widget import ShapeFeaturesTabWidget
 from app.widget.util import color_widget
@@ -31,28 +32,24 @@ class TabWidget(QTabWidget):
         self.thread.started.connect(lambda: self.worker.run())
         self.thread.start()
 
-        shape_features = DatabaseReader.read_features('data/database/original_features.csv')
-
-        # Connect functionto
+        # Connect function before tab is created
         self.currentChanged.connect(lambda _: self.current_tab_changed())
 
         # Tab widgets
-        self.tab1_widget = ViewerWidget(shape_features)
-        self.tab2_widget = RemeshingTabWidget(shape_features)
-        self.tab3_widget = NormalizationTabWidget(shape_features)
-        self.tab4_widget = ShapeFeaturesTabWidget(shape_features)
-        self.tab5_widget = FeaturesTableTabWidget()
-        self.tab6_widget = DescriptorsTableTabWidget()
+        self.viewer_widget = ViewerWidget()
+        self.normalization_widget = NormalizationTabWidget()
+        self.shape_features_widget = ShapeFeaturesTabWidget()
+        self.features_table_widget = FeaturesTableTabWidget()
+        self.descriptors_table_widget = DescriptorsTableTabWidget()
+        self.query_widget = QueryTabWidget()
 
         # Add the tabs
-        self.addTab(self.tab1_widget, "Mesh inspect")
-        self.addTab(self.tab2_widget, "Remeshing")
-        self.addTab(self.tab3_widget, "Normalize mesh")
-        self.addTab(self.tab4_widget, "Features")
-        self.addTab(self.tab5_widget, "Features table")
-        self.addTab(self.tab6_widget, "Descriptors table")
-
-        self.setCurrentWidget(self.tab6_widget)
+        self.addTab(self.viewer_widget, "Mesh inspect")
+        self.addTab(self.normalization_widget, "Normalize mesh")
+        self.addTab(self.shape_features_widget, "Features")
+        self.addTab(self.features_table_widget, "Features table")
+        self.addTab(self.descriptors_table_widget, "Descriptors table")
+        self.addTab(self.query_widget, "Query")
 
     def closeEvent(self, *args, **kwargs):
         self.worker.stop()

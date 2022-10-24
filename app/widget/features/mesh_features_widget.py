@@ -16,10 +16,6 @@ class MeshFeaturesWidget(QWidget):
         self.nr_faces_value_label = QLabel("0")
         self.surface_area_value_label = QLabel("0")
         self.volume_value_label = QLabel("0")
-        # self.compactness_value_label = QLabel("0")
-        # self.sphericity_value_label = QLabel("0")
-        # self.eccentricity_value_label = QLabel("0")
-        # self.diameter_value_label = QLabel("0")
 
         # Create layout
         layout: GridLayout = GridLayout()
@@ -27,10 +23,6 @@ class MeshFeaturesWidget(QWidget):
         layout.add_row("Nr. Faces:", [self.nr_faces_value_label])
         layout.add_row("Area:", [self.surface_area_value_label])
         layout.add_row("Volume:", [self.volume_value_label])
-        # layout.add_row("Compactness:", [self.compactness_value_label])
-        # layout.add_row("Sphericity:", [self.sphericity_value_label])
-        # layout.add_row("Eccentricity:", [self.eccentricity_value_label])
-        # layout.add_row("Diameter:", [self.diameter_value_label])
         self.setLayout(layout)
 
     def update_widget(self, mesh_features: MeshFeatures):
@@ -38,7 +30,3 @@ class MeshFeaturesWidget(QWidget):
         self.nr_faces_value_label.setText('{0}'.format(mesh_features.nr_faces))
         self.surface_area_value_label.setText('{0:.6}'.format(mesh_features.surface_area))
         self.volume_value_label.setText('{0:.6}'.format(mesh_features.volume))
-        # self.compactness_value_label.setText('{0:.6}'.format(mesh_features.compactness))
-        # self.sphericity_value_label.setText('{0:.6}'.format(mesh_features.sphericity))
-        # self.eccentricity_value_label.setText('{0:.6}'.format(mesh_features.eccentricity))
-        # self.diameter_value_label.setText('{0:.6}'.format(mesh_features.diameter))

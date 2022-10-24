@@ -72,15 +72,14 @@ class MenuBar(QMenuBar):
         self.shape_menu.addAction(load_human_action)
 
     def open_file_action(self):
-        file_filter = "Triangle mesh files (*.ply *.stl *.fbx *.obj *.off *.gltf *.glb);;" \
-                      "Point cloud files (*.xyz *.xyzn *.xyzrgb *.ply *.pcd *.pts)"
+        file_filter = "Triangle mesh files (*.ply *.off)"
         file_name, _ = QFileDialog.getOpenFileName(self, "Open shape", "data", file_filter)
 
         if file_name:
             self.tab_widget.load_shape(file_name)
 
     def save_shape_action(self):
-        file_filter = "Triangle mesh files (*.ply *.stl *.fbx *.obj *.off *.gltf *.glb)"
+        file_filter = "Triangle mesh files (*.ply *.off)"
         file_name, _ = QFileDialog.getSaveFileName(self, "Save mesh file", "data", file_filter)
 
         if file_name:

@@ -11,6 +11,15 @@ dataPaths = list()
 
 class DatabaseReader:
     @staticmethod
+    def read_features_paths(paths: [str]) -> dict[str, ShapeFeatures]:
+        shape_features = dict()
+
+        for path in paths:
+            shape_features = shape_features | DatabaseReader.read_features(path)
+
+        return shape_features
+
+    @staticmethod
     def read_features(path: str) -> dict[str, ShapeFeatures]:
         shape_features = dict()
         if not os.path.exists(path):
