@@ -18,11 +18,6 @@ class GeometriesController:
         GeometriesController.calculate_all_other_geometries(geometries, force_reload)
 
     @staticmethod
-    def calculate_all_from_point_cloud(geometries: Geometries, force_reload=False) -> None:
-        GeometriesController.point_cloud_to_mesh(geometries, force_reload)
-        GeometriesController.calculate_all_other_geometries(geometries, force_reload)
-
-    @staticmethod
     def calculate_all_other_geometries(geometries: Geometries, force_reload=False) -> None:
         GeometriesController.calculate_convex_hull(geometries, force_reload)
         GeometriesController.calculate_aligned_bounding_box(geometries, force_reload)
@@ -59,17 +54,6 @@ class GeometriesController:
             return False
 
         return True
-
-    @staticmethod
-    def point_cloud_to_mesh(geometries: Geometries, force_reload=False) -> bool:
-        if geometries.mesh and not force_reload:
-            return True
-
-        if not geometries.point_cloud:
-            logging.warning("Cannot convert point cloud to mesh, point cloud missing")
-            return False
-
-        Remesher.reconstruct_mesh(geometries)
 
     @staticmethod
     def calculate_point_cloud(geometries: Geometries, force_reload=False) -> bool:

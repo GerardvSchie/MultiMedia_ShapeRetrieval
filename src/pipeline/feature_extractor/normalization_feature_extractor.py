@@ -9,13 +9,13 @@ from src.object.features.normalization_features import NormalizationFeatures
 
 class NormalizationFeatureExtractor:
     @staticmethod
-    def extract_features(point_cloud: o3d.geometry.PointCloud, bounding_box: o3d.geometry.AxisAlignedBoundingBox, normalization_features: NormalizationFeatures, force_recompute=False):
+    def extract_features(point_cloud: o3d.geometry.PointCloud, normalization_features: NormalizationFeatures, force_recompute=False):
         if not point_cloud:
             logging.warning("Cannot extract any normalization features without point cloud")
             return
 
         NormalizationFeatureExtractor.distance_to_center(point_cloud, normalization_features, force_recompute)
-        NormalizationFeatureExtractor.mesh_scale(point_cloud, bounding_box, normalization_features, force_recompute)
+        NormalizationFeatureExtractor.mesh_scale(point_cloud, normalization_features, force_recompute)
         NormalizationFeatureExtractor.mesh_alignment(point_cloud, normalization_features, force_recompute)
         NormalizationFeatureExtractor.mesh_eigenvalues(point_cloud, normalization_features, force_recompute)
         NormalizationFeatureExtractor.mesh_flip(point_cloud, normalization_features, force_recompute)
@@ -35,13 +35,11 @@ class NormalizationFeatureExtractor:
         normalization_features.distance_to_center = distance
 
     @staticmethod
-    def mesh_scale(point_cloud: o3d.geometry.PointCloud, bounding_box: o3d.geometry.AxisAlignedBoundingBox, normalization_features: NormalizationFeatures, force_recompute=False) -> None:
+    def mesh_scale(point_cloud: o3d.geometry.PointCloud, normalization_features: NormalizationFeatures, force_recompute=False) -> None:
         if not math.isinf(normalization_features.scale) and not force_recompute:
             return
 
-        if bounding_box:
-            scale = bounding_box.get_max_extent()
-        elif point_cloud:
+        if point_cloud:
             scale = point_cloud.get_axis_aligned_bounding_box().get_max_extent()
         else:
             logging.warning("Cannot compute scale without mesh, bounding box or point cloud")
@@ -83,11 +81,11 @@ class NormalizationFeatureExtractor:
             return
 
         correctly_flipped_axes = sum(np.clip(fi, 0, 1))
-        normalization_features.flip = correctly_flipped_axes
+        normalization_features.flip = int(correctly_flipped_axes)
 
     @staticmethod
     def mesh_eigenvalues(point_cloud: o3d.geometry.PointCloud, normalization_features: NormalizationFeatures, force_recompute=False) -> None:
-        if (not math.isinf(normalization_features.eigenvalue_s1) or not math.isinf(normalization_features.eigenvalue_s2) or not math.isinf(normalization_features.eigenvalue_s3)) and not force_recompute:
+        if not any(np.isinf(normalization_features.eigenvalues)) and not force_recompute:
             return
 
         # Computed over the point cloud
@@ -97,6 +95,5 @@ class NormalizationFeatureExtractor:
             logging.warning("Cannot compute alignment without mesh or point cloud")
             return
 
-        normalization_features.eigenvalue_s1 = eigenvalues_eigenvectors[0][0]
-        normalization_features.eigenvalue_s2 = eigenvalues_eigenvectors[1][0]
-        normalization_features.eigenvalue_s3 = eigenvalues_eigenvectors[2][0]
+        normalization_features.eigenvalues = \
+            np.array([eigenvalues_eigenvectors[0][0], eigenvalues_eigenvectors[1][0], eigenvalues_eigenvectors[2][0]])

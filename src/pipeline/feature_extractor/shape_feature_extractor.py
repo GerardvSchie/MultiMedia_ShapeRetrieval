@@ -122,7 +122,7 @@ class ShapeFeatureExtractor:
         if not shape.features.normalization_features.misses_values() and not force_recompute:
             return
 
-        if not shape.geometries.mesh and not shape.geometries.point_cloud:
-            GeometriesController.calculate_mesh(shape.geometries)
+        if not shape.geometries.point_cloud:
+            GeometriesController.calculate_point_cloud(shape.geometries)
 
-        NormalizationFeatureExtractor.extract_features(shape.geometries.point_cloud, shape.geometries.axis_aligned_bounding_box, shape.features.normalization_features, force_recompute)
+        NormalizationFeatureExtractor.extract_features(shape.geometries.point_cloud, shape.features.normalization_features, force_recompute)

@@ -6,6 +6,9 @@ from src.object.shape import Shape
 
 
 def compute_descriptors(shape: Shape):
+    if not shape.descriptors.missing_values():
+        return
+
     descriptors: Descriptors = Descriptors()
 
     descriptors.surface_area = shape.features.mesh_features.surface_area

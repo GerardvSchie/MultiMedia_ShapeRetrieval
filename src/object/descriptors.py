@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 
 class Descriptors:
@@ -8,6 +9,10 @@ class Descriptors:
         self.rectangularity: float = math.inf
         self.diameter: float = math.inf
         self.eccentricity: float = math.inf
+
+    def missing_values(self):
+        return np.isinf(self.surface_area) or np.isinf(self.compactness) or np.isinf(self.rectangularity) or \
+               np.isinf(self.diameter) or np.isinf(self.eccentricity)
 
     def to_list(self):
         return [self.surface_area, self.compactness, self.rectangularity, self.diameter, self.eccentricity]

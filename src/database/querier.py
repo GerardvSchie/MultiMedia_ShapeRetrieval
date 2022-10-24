@@ -14,12 +14,14 @@ class DatabaseQuerier:
             logging.error('Querier empty')
             return
 
+        logging.info('Create ANN structure and prepare it for querying')
         values = list(self.descriptors.values())
-        values = np.array([value.to_list() for value in values])
-        self.index = NNDescent(values)
+        self.values = np.array([value.to_list() for value in values])
+        self.index = NNDescent(self.values, verbose=True)
         self.index.prepare()
+        logging.info('Done with the ANN structure')
 
     def query_normalized_descriptor(self, descriptors: Descriptors):
         descriptors = np.array(descriptors.to_list())
-        k10_neighbours = self.index.query(descriptors, k=10)
+        k10_neighbours, k10_distances = self.index.query([descriptors], k=10)
         print(k10_neighbours)

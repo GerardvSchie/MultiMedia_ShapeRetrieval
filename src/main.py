@@ -133,22 +133,7 @@ def main():
         ShapeFeatureExtractor.extract_all_shape_features(shape)
         compute_descriptors(shape)
 
-    DatabaseWriter.write_features(shape_list, 'data/database/original_features.csv')
-    DatabaseWriter.write_descriptors(shape_list, 'data/database/original_descriptors.csv')
-
-    normalize_descriptors('data/database/original_descriptors.csv')
-
-    # querier = DatabaseQuerier('data/database/original_descriptors_normalized.csv')
-    #
-    # descriptor = Descriptors()
-    # descriptor.surface_area = 0
-    # descriptor.eccentricity = 0
-    # descriptor.diameter = 1
-    # descriptor.rectangularity = math.inf
-    # descriptor.compactness = 2
-    # compute_normalized_descriptor(descriptor)
-    #
-    # querier.query_normalized_descriptor(descriptor)
+    # DatabaseWriter.write_features(shape_list, 'data/database/original_features.csv')
 
     # Remesh shapes
     print('\n--------------\nResample shapes + normalize')
@@ -206,6 +191,37 @@ def main():
 
         shape.set_new_ply_path(new_path)
 
+    add_shape_features(shape_list, 'data/database/normalized_features.csv')
+    add_shape_descriptors(shape_list, 'data/database/normalized_descriptors.csv')
+
+    print('\nCompute features of normalized shapes:\n')
+    for shape in tqdm(shape_list):
+        # First extract the normalization features from the pcd
+        if shape.features.normalization_features.misses_values:
+            pcd_name = os.path.join(os.path.split(shape.geometries.path)[0], 'normalized.pcd')
+            normalized_point_cloud = o3d.io.read_point_cloud(pcd_name)
+            NormalizationFeatureExtractor.extract_features(normalized_point_cloud, shape.features.normalization_features)
+
+        # All other features can be computed afterwards
+        ShapeFeatureExtractor.extract_all_shape_features(shape)
+        compute_descriptors(shape)
+
+    DatabaseWriter.write_features(shape_list, 'data/database/normalized_features.csv')
+    DatabaseWriter.write_descriptors(shape_list, 'data/database/normalized_descriptors.csv')
+
+    normalize_descriptors('data/database/normalized_descriptors.csv')
+
+    # querier = DatabaseQuerier('data/database/normalized_descriptors_normalized.csv')
+
+    # descriptor = Descriptors()
+    # descriptor.surface_area = 1
+    # descriptor.eccentricity = 0
+    # descriptor.diameter = 2
+    # descriptor.rectangularity = 1
+    # descriptor.compactness = 2
+    # compute_normalized_descriptor(descriptor)
+    #
+    # querier.query_normalized_descriptor(descriptor)
     # plot_feature_data(shape_list)
 
 

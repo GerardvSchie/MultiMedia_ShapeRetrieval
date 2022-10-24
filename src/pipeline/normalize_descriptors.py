@@ -1,4 +1,5 @@
 import numpy as np
+import os
 from configparser import ConfigParser
 
 from src.database.reader import DatabaseReader
@@ -9,6 +10,7 @@ from src.object.shape import Shape
 
 def normalize_descriptors(path: str) -> None:
     descriptors = DatabaseReader.read_descriptors(path)
+    dir_name, filename = os.path.split(path)
 
     # Initialize lists
     identifiers = []
@@ -38,7 +40,8 @@ def normalize_descriptors(path: str) -> None:
     diameter = _normalize_descriptor(diameter, config, 'diameter')
     eccentricity = _normalize_descriptor(eccentricity, config, 'eccentricity')
 
-    with open('data/database/original_descriptors.ini', 'w') as configfile:
+    config_name = filename.split('.')[0] + '.ini'
+    with open(os.path.join(dir_name, config_name), 'w') as configfile:
         config.write(configfile)
 
     shape_list = []
@@ -55,7 +58,9 @@ def normalize_descriptors(path: str) -> None:
         shape.descriptors = descriptors[identifier]
         shape_list.append(shape)
 
-    DatabaseWriter.write_descriptors(shape_list, 'data/database/original_descriptors_normalized.csv')
+    split_filename = filename.split('.')
+    output_file_name = split_filename[0] + '_normalized' + split_filename[1]
+    DatabaseWriter.write_descriptors(shape_list, os.path.join(dir_name, output_file_name))
 
 
 def _normalize_descriptor(data: [float], config: ConfigParser, name: str):

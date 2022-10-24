@@ -1,3 +1,5 @@
+import logging
+
 import open3d as o3d
 import numpy as np
 
@@ -9,10 +11,11 @@ class Normalizer:
     @staticmethod
     def normalize_shape(shape: Shape):
         if not shape.geometries.point_cloud:
+            logging.warning('Failed to normalize shape')
             return False
 
         # Translate to center
-        shape.geometries.mesh.translate(-shape.geometries.point_cloud.get_center())
+        Normalizer.translater(shape)
         # Rotate based on PCA
         Normalizer.rot_pca(shape)
         # Flip based on momentum
@@ -28,6 +31,11 @@ class Normalizer:
         GeometriesController.calculate_all_from_mesh(shape.geometries, True)
         GeometriesController.calculate_mesh_normals(shape.geometries, True)
         GeometriesController.calculate_point_cloud_normals(shape.geometries, True)
+
+    @staticmethod
+    def translater(shape):
+        bary_center = shape.geometries.point_cloud.get_center()
+        shape.geometries.point_cloud.translate(-bary_center)
 
     @staticmethod
     def scaler(shape):
@@ -67,11 +75,7 @@ class Normalizer:
         fi = Normalizer.compute_fi(pcd)
         flipping_rotation_matrix = np.zeros((3, 3))
         np.fill_diagonal(flipping_rotation_matrix, fi)
-
         pcd.rotate(R=flipping_rotation_matrix)
-        # For a negative determinant the order of the points in the triangles is flipped.
-        # if np.linalg.det(flipping_rotation_matrix) < 0:
-        #     mesh.triangles = o3d.utility.Vector3iVector(np.flip(np.asarray(mesh.triangles), axis=1))
 
     @staticmethod
     def compute_fi(pcd: o3d.geometry.PointCloud):
