@@ -11,19 +11,19 @@ from src.object.features.mesh_features import MeshFeatures
 
 class MeshFeatureExtractor:
     @staticmethod
-    def extract_convex_hull_features(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud, mesh_features: MeshFeatures, force_recompute=False):
+    def extract_convex_hull_features(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud, mesh_features: MeshFeatures, force_recompute=False) -> bool:
         if not mesh and not point_cloud:
             logging.warning("Cannot extract any features without mesh and point cloud")
-            return
+            return False
 
-        MeshFeatureExtractor.extract_features(mesh, point_cloud, mesh_features, force_recompute)
+        return MeshFeatureExtractor.extract_features(mesh, point_cloud, mesh_features, force_recompute)
 
     @staticmethod
     # Only extract the features that are not yet set with values in the shape
-    def extract_features(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud, mesh_features: MeshFeatures, force_recompute=False):
+    def extract_features(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud, mesh_features: MeshFeatures, force_recompute=False) -> bool:
         if not mesh and not point_cloud:
             logging.warning("Cannot extract any features without mesh and point cloud")
-            return
+            return False
 
         MeshFeatureExtractor.number_of_vertices(mesh, point_cloud, mesh_features, force_recompute)
 
@@ -31,13 +31,15 @@ class MeshFeatureExtractor:
             MeshFeatureExtractor.number_of_faces(mesh, mesh_features, force_recompute)
             MeshFeatureExtractor.calculate_surface_area(mesh, mesh_features, force_recompute)
             MeshFeatureExtractor.calculate_volume(mesh, mesh_features, force_recompute)
+            return True
         else:
             logging.warning("Could not extract some mesh features since mesh was missing")
+            return False
 
     @staticmethod
-    def number_of_vertices(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud, mesh_features: MeshFeatures, force_recompute=False) -> None:
+    def number_of_vertices(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud, mesh_features: MeshFeatures, force_recompute=False) -> bool:
         if mesh_features.nr_vertices and not force_recompute:
-            return
+            return False
 
         if point_cloud:
             nr_points = len(point_cloud.points)
@@ -45,40 +47,43 @@ class MeshFeatureExtractor:
             nr_points = len(mesh.vertices)
         else:
             logging.warning("Cannot give number of vertices without point cloud and mesh")
-            return
+            return False
 
         mesh_features.nr_vertices = nr_points
+        return True
 
     @staticmethod
-    def number_of_faces(mesh: o3d.geometry.TriangleMesh, mesh_features: MeshFeatures, force_recompute=False) -> None:
+    def number_of_faces(mesh: o3d.geometry.TriangleMesh, mesh_features: MeshFeatures, force_recompute=False) -> bool:
         if mesh_features.nr_faces and not force_recompute:
-            return
+            return False
 
         if mesh:
             nr_faces = len(mesh.triangles)
         else:
             logging.warning("Cannot give number of faces without mesh")
-            return
+            return False
 
         mesh_features.nr_faces = nr_faces
+        return True
 
     @staticmethod
-    def calculate_surface_area(mesh: o3d.geometry.TriangleMesh, mesh_features: MeshFeatures, force_recompute=False) -> None:
+    def calculate_surface_area(mesh: o3d.geometry.TriangleMesh, mesh_features: MeshFeatures, force_recompute=False) -> bool:
         if not math.isinf(mesh_features.surface_area) and not force_recompute:
-            return
+            return False
 
         if mesh:
             surface_area = mesh.get_surface_area()
         else:
             logging.warning("Cannot give surface area without mesh")
-            return
+            return False
 
         mesh_features.surface_area = surface_area
+        return True
 
     @staticmethod
-    def calculate_volume(mesh: o3d.geometry.TriangleMesh, mesh_features: MeshFeatures, force_recompute=False) -> None:
+    def calculate_volume(mesh: o3d.geometry.TriangleMesh, mesh_features: MeshFeatures, force_recompute=False) -> bool:
         if not math.isinf(mesh_features.volume) and not force_recompute:
-            return
+            return False
 
         if mesh:
             # Make sure all triangles are facing the same direction
@@ -87,9 +92,10 @@ class MeshFeatureExtractor:
             volume = MeshFeatureExtractor.np_volume(mesh)
         else:
             logging.warning("Cannot calculate volume without mesh")
-            return
+            return False
 
         mesh_features.volume = volume
+        return True
 
     @staticmethod
     def np_surface_area(mesh: o3d.geometry.TriangleMesh) -> float:

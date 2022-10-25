@@ -11,30 +11,35 @@ from src.object.features.bounding_box_features import BoundingBoxFeatures
 class BoundingBoxFeatureExtractor:
     @staticmethod
     # Only extract the features that are not yet set with values in the shape
-    def extract_features(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud, bounding_box: o3d.geometry.AxisAlignedBoundingBox, bounding_box_features: BoundingBoxFeatures, force_recompute=False):
+    def extract_features(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud, bounding_box: o3d.geometry.AxisAlignedBoundingBox, bounding_box_features: BoundingBoxFeatures, force_recompute=False) -> bool:
         if not mesh and not point_cloud and not bounding_box:
             logging.warning("Cannot extract bounding box features without mesh, point cloud, and bounding box")
-            return
+            return False
 
-        BoundingBoxFeatureExtractor.extract_axis_aligned_bounding_box(mesh, point_cloud, bounding_box, bounding_box_features, force_recompute)
-        BoundingBoxFeatureExtractor.extract_surface_area(mesh, point_cloud, bounding_box, bounding_box_features, force_recompute)
-        BoundingBoxFeatureExtractor.extract_volume(mesh, point_cloud, bounding_box, bounding_box_features, force_recompute)
-        BoundingBoxFeatureExtractor.extract_diameter(mesh, point_cloud, bounding_box, bounding_box_features, force_recompute)
+        computed_features = [
+            BoundingBoxFeatureExtractor.extract_axis_aligned_bounding_box(mesh, point_cloud, bounding_box, bounding_box_features, force_recompute),
+            BoundingBoxFeatureExtractor.extract_surface_area(mesh, point_cloud, bounding_box, bounding_box_features, force_recompute),
+            BoundingBoxFeatureExtractor.extract_volume(mesh, point_cloud, bounding_box, bounding_box_features, force_recompute),
+            BoundingBoxFeatureExtractor.extract_diameter(mesh, point_cloud, bounding_box, bounding_box_features, force_recompute),
+        ]
+
+        return any(computed_features)
 
     @staticmethod
-    def extract_axis_aligned_bounding_box(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud, bounding_box: o3d.geometry.AxisAlignedBoundingBox, bounding_box_features: BoundingBoxFeatures, force_recompute=False):
+    def extract_axis_aligned_bounding_box(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud, bounding_box: o3d.geometry.AxisAlignedBoundingBox, bounding_box_features: BoundingBoxFeatures, force_recompute=False) -> bool:
         if not any(np.isinf(bounding_box_features.min_bound)) and not any(np.isinf(bounding_box_features.max_bound)) and not force_recompute:
-            return
+            return False
 
         bounding_box = BoundingBoxFeatureExtractor._calculate_bounding_box(mesh, point_cloud, bounding_box)
 
         bounding_box_features.min_bound = bounding_box.min_bound
         bounding_box_features.max_bound = bounding_box.max_bound
+        return True
 
     @staticmethod
-    def extract_surface_area(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud, bounding_box: o3d.geometry.AxisAlignedBoundingBox, bounding_box_features: BoundingBoxFeatures, force_recompute=False):
+    def extract_surface_area(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud, bounding_box: o3d.geometry.AxisAlignedBoundingBox, bounding_box_features: BoundingBoxFeatures, force_recompute=False) -> bool:
         if not math.isinf(bounding_box_features.surface_area) and not force_recompute:
-            return
+            return False
 
         BoundingBoxFeatureExtractor.extract_axis_aligned_bounding_box(mesh, point_cloud, bounding_box, bounding_box_features, force_recompute)
 
@@ -44,24 +49,26 @@ class BoundingBoxFeatureExtractor:
         z = abs(bounding_box_features.max_bound[2] - bounding_box_features.min_bound[2])
         area = 2 * x * y + 2 * x * z + 2 * y * z
         bounding_box_features.surface_area = area
+        return True
 
     @staticmethod
     def extract_volume(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud,
                              bounding_box: o3d.geometry.AxisAlignedBoundingBox,
-                             bounding_box_features: BoundingBoxFeatures, force_recompute=False):
+                             bounding_box_features: BoundingBoxFeatures, force_recompute=False) -> bool:
         if not math.isinf(bounding_box_features.volume) and not force_recompute:
-            return
+            return False
 
         bounding_box = BoundingBoxFeatureExtractor._calculate_bounding_box(mesh, point_cloud, bounding_box, force_recompute)
         volume = bounding_box.volume()
         bounding_box_features.volume = volume
+        return True
 
     @staticmethod
     def extract_diameter(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud,
                              bounding_box: o3d.geometry.AxisAlignedBoundingBox,
-                             bounding_box_features: BoundingBoxFeatures, force_recompute=False):
+                             bounding_box_features: BoundingBoxFeatures, force_recompute=False) -> bool:
         if not math.isinf(bounding_box_features.diameter) and not force_recompute:
-            return
+            return False
 
         BoundingBoxFeatureExtractor.extract_axis_aligned_bounding_box(mesh, point_cloud, bounding_box,
                                                                                      bounding_box_features,
@@ -74,6 +81,7 @@ class BoundingBoxFeatureExtractor:
 
         diameter = np.sqrt(x2 + y2 + z2)
         bounding_box_features.diameter = diameter
+        return True
 
     @staticmethod
     def _calculate_bounding_box(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud, bounding_box: o3d.geometry.AxisAlignedBoundingBox, force_recompute=False):

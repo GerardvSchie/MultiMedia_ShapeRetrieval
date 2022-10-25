@@ -2,14 +2,11 @@ import os
 from tqdm import tqdm
 import sys
 import open3d as o3d
-import logging
-
 from matplotlib import pyplot as plt
 import numpy as np
 
-from src.database.querier import DatabaseQuerier
-from src.object.descriptors import Descriptors
-from src.pipeline.normalize_descriptors import normalize_descriptors, compute_normalized_descriptor
+from src.pipeline.normalize_descriptors import normalize_descriptors
+from src.plot.distance_matrix import DistanceMatrixPlotter
 
 # Needed to fix ModuleNotFoundError when importing src.util.logger.
 directoryContainingCurrentFile = os.path.dirname(__file__)
@@ -18,10 +15,7 @@ repoDirectory = os.path.dirname(directoryContainingCurrentFile)
 # Add repo to list of possible paths
 sys.path.append(repoDirectory)
 
-from src.object.features.shape_features import ShapeFeatures
 from src.pipeline.compute_descriptors import compute_descriptors
-from src.pipeline.remeshing import Remesher
-from src.plot.triangle_area import TriangleAreaPlotter
 from src.controller.geometries_controller import GeometriesController
 from src.pipeline.feature_extractor.normalization_feature_extractor import NormalizationFeatureExtractor
 import src.util.logger as logger
@@ -125,10 +119,17 @@ def main():
 
     # Compute the features and descriptors
     print('\nCompute features of original shapes:\n')
+    recomputed_features = []
+    recomputed_descriptors = []
     for shape in tqdm(shape_list):
-        ShapeFeatureExtractor.extract_all_shape_features(shape)
+        recomputed_features.append(ShapeFeatureExtractor.extract_all_shape_features(shape))
+        recomputed_descriptors.append(compute_descriptors(shape))
 
-    DatabaseWriter.write_features(shape_list, os.path.join(DATABASE_ORIGINAL_DIR, DATABASE_FEATURES_FILENAME))
+    # Only write file if new features are computed
+    if any(recomputed_features):
+        DatabaseWriter.write_features(shape_list, os.path.join(DATABASE_ORIGINAL_DIR, DATABASE_FEATURES_FILENAME))
+    if any(recomputed_descriptors):
+        DatabaseWriter.write_descriptors(shape_list, os.path.join(DATABASE_ORIGINAL_DIR, DATABASE_DESCRIPTORS_FILENAME))
 
     # Remesh shapes
     print('\n--------------\nResample shapes + normalize')
@@ -190,21 +191,27 @@ def main():
     add_shape_descriptors(shape_list, os.path.join(DATABASE_REFINED_DIR, DATABASE_DESCRIPTORS_FILENAME))
 
     print('\nCompute features of normalized shapes:\n')
+    recomputed_features = []
+    recomputed_descriptors = []
     for shape in tqdm(shape_list):
         # First extract the normalization features from the pcd
         if shape.features.normalization_features.misses_values():
             pcd_name = os.path.join(os.path.split(shape.geometries.path)[0], FILENAME_NORMALIZED_PCD)
             normalized_point_cloud = o3d.io.read_point_cloud(pcd_name)
-            NormalizationFeatureExtractor.extract_features(normalized_point_cloud, shape.features.normalization_features)
+            recomputed_features.append(NormalizationFeatureExtractor.extract_features(normalized_point_cloud, shape.features.normalization_features))
 
         # All other features can be computed afterwards
-        ShapeFeatureExtractor.extract_all_shape_features(shape)
-        compute_descriptors(shape)
+        recomputed_features.append(ShapeFeatureExtractor.extract_all_shape_features(shape))
+        recomputed_descriptors.append(compute_descriptors(shape))
 
-    DatabaseWriter.write_features(shape_list, os.path.join(DATABASE_REFINED_DIR, DATABASE_FEATURES_FILENAME))
-    DatabaseWriter.write_descriptors(shape_list, os.path.join(DATABASE_REFINED_DIR, DATABASE_DESCRIPTORS_FILENAME))
+    if any(recomputed_features):
+        DatabaseWriter.write_features(shape_list, os.path.join(DATABASE_REFINED_DIR, DATABASE_FEATURES_FILENAME))
+    if any(recomputed_descriptors):
+        DatabaseWriter.write_descriptors(shape_list, os.path.join(DATABASE_REFINED_DIR, DATABASE_DESCRIPTORS_FILENAME))
+        normalize_descriptors(os.path.join(DATABASE_REFINED_DIR, DATABASE_DESCRIPTORS_FILENAME))
 
-    normalize_descriptors(os.path.join(DATABASE_REFINED_DIR, DATABASE_DESCRIPTORS_FILENAME))
+    normalized_descriptors = DatabaseReader.read_descriptors(os.path.join(DATABASE_REFINED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
+    DistanceMatrixPlotter.plot(normalized_descriptors)
 
 
 # Example loads an .off and .ply file

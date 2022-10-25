@@ -5,9 +5,9 @@ from src.object.descriptors import Descriptors
 from src.object.shape import Shape
 
 
-def compute_descriptors(shape: Shape):
+def compute_descriptors(shape: Shape) -> bool:
     if not shape.descriptors.missing_values():
-        return
+        return False
 
     descriptors: Descriptors = Descriptors()
 
@@ -18,3 +18,4 @@ def compute_descriptors(shape: Shape):
     descriptors.eccentricity = shape.features.normalization_features.eigenvalues[0] / shape.features.normalization_features.eigenvalues[2]
 
     shape.descriptors = descriptors
+    return True

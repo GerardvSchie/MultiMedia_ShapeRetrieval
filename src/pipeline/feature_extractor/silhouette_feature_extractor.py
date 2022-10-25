@@ -12,13 +12,13 @@ from src.object.features.silhouette_features import SilhouetteFeatures
 class SilhouetteFeatureExtractor:
     @staticmethod
     # Only extract the features that are not yet set with values in the shape
-    def extract_features(path: str, silhouette_features: SilhouetteFeatures, force_recompute=False):
+    def extract_features(path: str, silhouette_features: SilhouetteFeatures, force_recompute=False) -> bool:
         if not os.path.exists(path):
             logging.warning(f"Path to silhouette image not found. {os.path.abspath(path)}")
-            return
+            return False
 
         if not silhouette_features.misses_values() and not force_recompute:
-            return
+            return False
 
         # Source: https://docs.opencv.org/4.x/dd/d49/tutorial_py_contour_features.html
         img = cv.imread(path)
@@ -31,7 +31,7 @@ class SilhouetteFeatureExtractor:
 
         if len(contours) == 0:
             logging.warning(f'found no non-image contour {os.path.abspath(path)}')
-            return
+            return False
         elif len(contours) > 2:
             logging.warning(
                 f'A total of {len(contours)} contours found, please verify image {os.path.abspath(path)}')
@@ -71,6 +71,7 @@ class SilhouetteFeatureExtractor:
 
         # Write debug image
         SilhouetteFeatureExtractor.write_debug_image(path, silhouette_features)
+        return True
 
     @staticmethod
     def write_debug_image(path: str, silhouette_features: SilhouetteFeatures):

@@ -1,3 +1,6 @@
+Heatmap:
+https://matplotlib.org/stable/gallery/images_contours_and_fields/image_annotated_heatmap.html#sphx-glr-gallery-images-contours-and-fields-image-annotated-heatmap-py
+
 Embed in PyQt:
 https://github.com/isl-org/Open3D/discussions/4668
 
