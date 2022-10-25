@@ -19,7 +19,6 @@ class SilhouetteFeatures:
                     math.isinf(self.diameter), math.isinf(self.eccentricity)
                     ])
         # math.isinf(self.axis_aligned_bounding_box)),
-        # Centroid
 
     def __str__(self):
         return f'c:{self.centroid}, A:{self.area}, P:{self.perimeter}, comp:{self.compactness}, ' \

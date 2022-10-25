@@ -1,7 +1,6 @@
 from app.widget.tab.descriptors_table_tab_widget import DescriptorsTableTabWidget
 from app.widget.tab.features_table_tab_widget import FeaturesTableTabWidget
 from app.widget.tab.query_tab_widget import QueryTabWidget
-from app.widget.tab.remeshing_tab_widget import RemeshingTabWidget
 from app.widget.tab.shape_features_tab_widget import ShapeFeaturesTabWidget
 from app.widget.util import color_widget
 
@@ -41,7 +40,7 @@ class TabWidget(QTabWidget):
         self.shape_features_widget = ShapeFeaturesTabWidget()
         self.features_table_widget = FeaturesTableTabWidget()
         self.descriptors_table_widget = DescriptorsTableTabWidget()
-        self.query_widget = QueryTabWidget()
+        # self.query_widget = QueryTabWidget()
 
         # Add the tabs
         self.addTab(self.viewer_widget, "Mesh inspect")
@@ -49,7 +48,7 @@ class TabWidget(QTabWidget):
         self.addTab(self.shape_features_widget, "Features")
         self.addTab(self.features_table_widget, "Features table")
         self.addTab(self.descriptors_table_widget, "Descriptors table")
-        self.addTab(self.query_widget, "Query")
+        # self.addTab(self.query_widget, "Query")
 
     def closeEvent(self, *args, **kwargs):
         self.worker.stop()
@@ -61,8 +60,8 @@ class TabWidget(QTabWidget):
             self.worker.set_scenes(self.currentWidget().scene_widgets)
             self.update()
 
-    def load_shape(self, file_path):
-        self.currentWidget().load_shape(file_path)
+    def load_shape_from_path(self, file_path):
+        self.currentWidget().load_shape_from_path(file_path)
 
     def save_shape(self, file_path):
         self.currentWidget().save_shape(file_path)

@@ -68,7 +68,6 @@ class SilhouetteFeatureExtractor:
 
         maxf = feret.max(thresh, edge=True)
         silhouette_features.diameter = maxf
-        print(silhouette_features)
 
         # Write debug image
         SilhouetteFeatureExtractor.write_debug_image(path, silhouette_features)
@@ -101,8 +100,6 @@ class SilhouetteFeatureExtractor:
 
         debug_path = path.split('.')[0] + '_debug.png'
         cv.imwrite(debug_path, img)
-
-        print(silhouette_features)
 
 
 if __name__ == '__main__':

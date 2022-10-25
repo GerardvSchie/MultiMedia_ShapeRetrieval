@@ -192,7 +192,7 @@ def main():
     print('\nCompute features of normalized shapes:\n')
     for shape in tqdm(shape_list):
         # First extract the normalization features from the pcd
-        if shape.features.normalization_features.misses_values:
+        if shape.features.normalization_features.misses_values():
             pcd_name = os.path.join(os.path.split(shape.geometries.path)[0], FILENAME_NORMALIZED_PCD)
             normalized_point_cloud = o3d.io.read_point_cloud(pcd_name)
             NormalizationFeatureExtractor.extract_features(normalized_point_cloud, shape.features.normalization_features)

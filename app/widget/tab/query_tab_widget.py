@@ -1,3 +1,4 @@
+import os
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QGridLayout
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QWindow
@@ -5,6 +6,7 @@ from PyQt6.QtGui import QWindow
 from src.database.querier import DatabaseQuerier
 from src.object.features.shape_features import ShapeFeatures
 from src.object.settings import Settings
+from src.util.configs import *
 
 from app.util.font import BOLD_FONT
 from app.widget.util import color_widget
@@ -42,7 +44,7 @@ class QueryTabWidget(QWidget):
         window_3 = QWindow.fromWinId(self.scene_widget_3.hwnd)
         window_container_3 = self.createWindowContainer(window_3, self.scene_widget_3)
 
-        self.querier = DatabaseQuerier('data/database/normalized_descriptors_normalized.csv')
+        self.querier = DatabaseQuerier(os.path.join(DATABASE_REFINED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
 
         # Connect the settings to the widget
         self.scene_widgets = [self.scene_widget_0, self.scene_widget_1, self.scene_widget_2, self.scene_widget_3]
@@ -76,9 +78,9 @@ class QueryTabWidget(QWidget):
         header_label.setMaximumHeight(20)
         return header_label
 
-    def load_shape(self, file_path: str):
+    def load_shape_from_path(self, file_path: str):
         # Load the shapes
-        self.scene_widget_0.load_shape(file_path)
+        self.scene_widget_0.load_shape_from_path(file_path)
 
         # Query
         queried_shape_paths = []

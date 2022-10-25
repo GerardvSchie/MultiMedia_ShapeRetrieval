@@ -48,12 +48,16 @@ class VisualizationWidget(QWidget):
         self.vis.destroy_window()
 
     # Part of the scene, what is in the window
-    def load_shape(self, path):
+    def load_shape_from_path(self, path):
+        self.load_shape(Shape(path, load_geometries=True))
+
+    # Part of the scene, what is in the window
+    def load_shape(self, shape):
         # Clear geometries and update state
         self.clear()
 
         # Load shape + the geometries needed for GUI drawing
-        self.shape = Shape(path, load_geometries=True)
+        self.shape = shape
         GeometriesController.calculate_gui_geometries(self.shape.geometries, True)
 
         # Compute normals
@@ -66,10 +70,6 @@ class VisualizationWidget(QWidget):
             self.shape.geometries.mesh.paint_uniform_color(self.desired_settings.mesh_color)
             self.current_settings.mesh_color = self.desired_settings.mesh_color
         self.update_widget()
-
-        # bounds = self.shape.geometry.get_axis_aligned_bounding_box()
-        # self.widget.setup_camera(60, bounds, bounds.get_center())
-        # self.property_widget.update_properties(self.shape.features)
 
     def clear(self):
         self.vis.clear_geometries()

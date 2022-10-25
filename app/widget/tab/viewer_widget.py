@@ -48,8 +48,8 @@ class ViewerWidget(QWidget):
         layout.addWidget(window_container)
         self.setLayout(layout)
 
-    def load_shape(self, file_path: str):
-        self.scene_widgets[0].load_shape(file_path)
+    def load_shape_from_path(self, file_path: str):
+        self.scene_widgets[0].load_shape_from_path(file_path)
         if self.shape_features.__contains__(self.scene_widgets[0].shape.geometries.path):
             self.scene_widgets[0].shape.features = self.shape_features[self.scene_widgets[0].shape.geometries.path]
 

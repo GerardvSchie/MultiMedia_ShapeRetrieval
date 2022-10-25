@@ -1,8 +1,7 @@
-from app.widget.util import color_widget
-from src.object.features.mesh_features import MeshFeatures
-
 from PyQt6.QtWidgets import QWidget, QLabel
 
+from src.object.features.mesh_features import MeshFeatures
+from app.widget.util import color_widget
 from app.layout.grid_layout import GridLayout
 
 
@@ -10,7 +9,7 @@ class MeshFeaturesWidget(QWidget):
     def __init__(self):
         super(MeshFeaturesWidget, self).__init__()
         color_widget(self, [122, 122, 122])
-        self.setMaximumHeight(160)
+        self.setMaximumHeight(110)
 
         self.nr_vertices_value_label = QLabel("0")
         self.nr_faces_value_label = QLabel("0")

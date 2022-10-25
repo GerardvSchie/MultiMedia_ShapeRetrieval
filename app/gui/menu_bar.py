@@ -76,7 +76,7 @@ class MenuBar(QMenuBar):
         file_name, _ = QFileDialog.getOpenFileName(self, "Open shape", "data", file_filter)
 
         if file_name:
-            self.tab_widget.load_shape(file_name)
+            self.tab_widget.load_shape_from_path(file_name)
 
     def save_shape_action(self):
         file_filter = "Triangle mesh files (*.ply *.off)"
@@ -93,10 +93,10 @@ class MenuBar(QMenuBar):
             self.tab_widget.export_image_action(file_name)
 
     def open_airplane_shape_1(self):
-        self.tab_widget.load_shape("data/LabeledDB_new/Airplane/61.off")
+        self.tab_widget.load_shape_from_path("data/LabeledDB_new/Airplane/61.off")
 
     def open_airplane_shape_2(self):
-        self.tab_widget.load_shape("data/LabeledDB_new/Airplane/65.off")
+        self.tab_widget.load_shape_from_path("data/LabeledDB_new/Airplane/65.off")
 
     def open_human_shape(self):
-        self.tab_widget.load_shape("data/LabeledDB_new/Human/1.off")
+        self.tab_widget.load_shape_from_path("data/LabeledDB_new/Human/1.off")

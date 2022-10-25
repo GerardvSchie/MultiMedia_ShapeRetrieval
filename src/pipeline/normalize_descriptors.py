@@ -6,6 +6,7 @@ from src.database.reader import DatabaseReader
 from src.database.writer import DatabaseWriter
 from src.object.descriptors import Descriptors
 from src.object.shape import Shape
+from src.util.configs import *
 
 
 def normalize_descriptors(path: str) -> None:
@@ -58,9 +59,7 @@ def normalize_descriptors(path: str) -> None:
         shape.descriptors = descriptors[identifier]
         shape_list.append(shape)
 
-    split_filename = filename.split('.')
-    output_file_name = split_filename[0] + '_normalized.' + split_filename[1]
-    DatabaseWriter.write_descriptors(shape_list, os.path.join(dir_name, output_file_name))
+    DatabaseWriter.write_descriptors(shape_list, os.path.join(dir_name, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
 
 
 def _normalize_descriptor(data: [float], config: ConfigParser, name: str):

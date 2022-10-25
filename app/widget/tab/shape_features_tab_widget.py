@@ -7,6 +7,7 @@ from PyQt6.QtGui import QWindow
 from app.widget.features.bounding_box_features_widget import BoundingBoxFeaturesWidget
 from app.widget.features.mesh_features_widget import MeshFeaturesWidget
 from app.widget.features.silhouette_features_widget import SilhouetteFeaturesWidget
+from app.widget.mesh_descriptors_widget import DescriptorsWidget
 from src.database.reader import DatabaseReader
 from src.object.settings import Settings
 
@@ -15,6 +16,7 @@ from app.widget.features.normalization_features_widget import NormalizationFeatu
 from app.widget.util import color_widget
 from app.widget.settings_widget import SettingsWidget
 from app.widget.visualization_widget import VisualizationWidget
+from src.pipeline.compute_descriptors import compute_descriptors
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
 from src.pipeline.feature_extractor.silhouette_feature_extractor import SilhouetteFeatureExtractor
 from src.util.configs import *
@@ -30,6 +32,8 @@ class ShapeFeaturesTabWidget(QWidget):
             os.path.join(DATABASE_ORIGINAL_DIR, DATABASE_FEATURES_FILENAME),
             os.path.join(DATABASE_REFINED_DIR, DATABASE_FEATURES_FILENAME)
         ])
+
+        self.shape_descriptors = DatabaseReader.read_descriptors(os.path.join(DATABASE_REFINED_DIR, DATABASE_DESCRIPTORS_FILENAME))
 
         # Left panel
         self.settings: Settings = Settings()
@@ -72,13 +76,14 @@ class ShapeFeaturesTabWidget(QWidget):
         self.mesh_features_widget = MeshFeaturesWidget()
         self.convex_hull_features_widget = MeshFeaturesWidget()
         self.silhouette_features_widget = SilhouetteFeaturesWidget()
+        self.descriptors_widget = DescriptorsWidget()
+        self.bounding_box_features_widget = BoundingBoxFeaturesWidget()
 
         grid_layout.addWidget(self.mesh_features_widget, 2, 0, 1, 1)
         grid_layout.addWidget(self.convex_hull_features_widget, 2, 1, 1, 1)
         grid_layout.addWidget(self.silhouette_features_widget, 2, 2, -1, 1)
-
-        self.bounding_box_features_widget = BoundingBoxFeaturesWidget()
-        grid_layout.addWidget(self.bounding_box_features_widget, 3, 0, 1, 2)
+        grid_layout.addWidget(self.descriptors_widget, 3, 0, 1, 2)
+        grid_layout.addWidget(self.bounding_box_features_widget, 4, 0, 1, 2)
 
         layout = QHBoxLayout(self)
         layout.addLayout(left_layout)
@@ -93,9 +98,9 @@ class ShapeFeaturesTabWidget(QWidget):
         header_label.setMaximumHeight(20)
         return header_label
 
-    def load_shape(self, file_path: str):
+    def load_shape_from_path(self, file_path: str):
         # Load the shapes
-        self.scene_widgets[0].load_shape(file_path)
+        self.scene_widgets[0].load_shape_from_path(file_path)
 
         # Populate widget 2 with the shape
         self.scene_widgets[1].clear()
@@ -111,15 +116,20 @@ class ShapeFeaturesTabWidget(QWidget):
         # Save silhouette to file
         self.scene_widgets[2].vis.capture_screen_image("data/temp.png")
 
-        # Extract features and set diameter to both mesh features
+        # Extract features and descriptors from database if present
         if self.shape_features.__contains__(self.scene_widgets[0].shape.geometries.path):
             self.scene_widgets[0].shape.features = self.shape_features[self.scene_widgets[0].shape.geometries.path]
+        if self.shape_descriptors.__contains__(self.scene_widgets[0].shape.geometries.path):
+            self.scene_widgets[0].shape.descriptors = self.shape_descriptors[self.scene_widgets[0].shape.geometries.path]
+
         ShapeFeatureExtractor.extract_all_shape_features(self.scene_widgets[0].shape)
+        compute_descriptors(self.scene_widgets[0].shape)
 
         self.normalization_widget.update_widget(self.scene_widgets[0].shape.features.normalization_features)
         self.mesh_features_widget.update_widget(self.scene_widgets[0].shape.features.mesh_features)
         self.convex_hull_features_widget.update_widget(self.scene_widgets[0].shape.features.convex_hull_features)
         self.bounding_box_features_widget.update_widget(self.scene_widgets[0].shape.features.axis_aligned_bounding_box_features)
+        self.descriptors_widget.update_widget(self.scene_widgets[0].shape.descriptors)
 
         SilhouetteFeatureExtractor.extract_features("data/temp.png", self.scene_widgets[0].shape.features.silhouette_features)
         self.silhouette_features_widget.update_widget(self.scene_widgets[0].shape.features.silhouette_features)
