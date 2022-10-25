@@ -3,19 +3,23 @@ from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QGridLayo
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QWindow
 
+from app.widget.query_result_widget import QueryResultWidget
 from src.database.querier import DatabaseQuerier
 from src.object.features.shape_features import ShapeFeatures
 from src.object.settings import Settings
-from src.util.configs import *
 
-from app.util.font import BOLD_FONT
-from app.widget.util import color_widget
+from app.widget.util import color_widget, create_header_label
 from app.widget.settings_widget import SettingsWidget
 from app.widget.visualization_widget import VisualizationWidget
+from src.pipeline.compute_descriptors import compute_descriptors
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
+from src.pipeline.normalization_pipeline import NormalizationPipeline
 
 
 class QueryTabWidget(QWidget):
+    NR_RESULTS = 8
+    RESULTS_PER_ROW = 4
+
     def __init__(self):
         super(QueryTabWidget, self).__init__()
         color_widget(self, [0, 255, 0])
@@ -23,87 +27,54 @@ class QueryTabWidget(QWidget):
         # Left panel
         self.settings: Settings = Settings()
         self.settings_widget = SettingsWidget(self.settings)
+        self.pipeline = NormalizationPipeline()
+        # self.querier = DatabaseQuerier(os.path.join(DATABASE_REFINED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
 
         # Load widget
-        self.scene_widget_0 = VisualizationWidget(self.settings)
-        window_0 = QWindow.fromWinId(self.scene_widget_0.hwnd)
-        window_container_0 = self.createWindowContainer(window_0, self.scene_widget_0)
+        self.query_scene_widget = VisualizationWidget(self.settings)
+        window = QWindow.fromWinId(self.query_scene_widget.hwnd)
+        window_container = self.createWindowContainer(window, self.query_scene_widget)
 
-        # Widget 1
-        self.scene_widget_1 = VisualizationWidget(self.settings)
-        window_1 = QWindow.fromWinId(self.scene_widget_1.hwnd)
-        window_container_1 = self.createWindowContainer(window_1, self.scene_widget_1)
+        self.query_result_widgets: [QueryResultWidget] = []
 
-        # Widget 2
-        self.scene_widget_2 = VisualizationWidget(self.settings)
-        window_2 = QWindow.fromWinId(self.scene_widget_2.hwnd)
-        window_container_2 = self.createWindowContainer(window_2, self.scene_widget_2)
-
-        # Widget 3
-        self.scene_widget_3 = VisualizationWidget(self.settings)
-        window_3 = QWindow.fromWinId(self.scene_widget_3.hwnd)
-        window_container_3 = self.createWindowContainer(window_3, self.scene_widget_3)
-
-        self.querier = DatabaseQuerier(os.path.join(DATABASE_REFINED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
+        grid_layout = QGridLayout()
+        for i in range(QueryTabWidget.NR_RESULTS):
+            query_widget = QueryResultWidget(f'Result {i+1}', self.settings)
+            self.query_result_widgets.append(query_widget)
+            grid_layout.addWidget(query_widget, int(i / QueryTabWidget.RESULTS_PER_ROW), i % QueryTabWidget.RESULTS_PER_ROW, 1, 1)
 
         # Connect the settings to the widget
-        self.scene_widgets = [self.scene_widget_0, self.scene_widget_1, self.scene_widget_2, self.scene_widget_3]
+        self.scene_widgets = [self.query_scene_widget] + [widget.scene_widget for widget in self.query_result_widgets]
         self.settings_widget.connect_visualizers(self.scene_widgets)
 
         # Assign scene widget here since that covers entire gui
         left_layout = QVBoxLayout()
-        left_layout.addWidget(QueryTabWidget._create_header("Query shape"))
-        left_layout.addWidget(window_container_0)
+        left_layout.addWidget(create_header_label("Query shape"))
+        left_layout.addWidget(window_container)
         left_layout.addWidget(self.settings_widget)
-
-        grid_layout = QGridLayout()
-        grid_layout.addWidget(QueryTabWidget._create_header("Result 1"), 0, 0, 1, 1)
-        grid_layout.addWidget(QueryTabWidget._create_header("Result 2"), 0, 1, 1, 1)
-        grid_layout.addWidget(QueryTabWidget._create_header("Result 3"), 0, 2, 1, 1)
-
-        grid_layout.addWidget(window_container_1, 1, 0, 1, 1)
-        grid_layout.addWidget(window_container_2, 1, 1, 1, 1)
-        grid_layout.addWidget(window_container_3, 1, 2, 1, 1)
 
         layout = QHBoxLayout(self)
         layout.addLayout(left_layout)
         layout.addLayout(grid_layout)
         self.setLayout(layout)
 
-    @staticmethod
-    def _create_header(text: str) -> QLabel:
-        header_label = QLabel(text)
-        header_label.setFont(BOLD_FONT)
-        header_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        header_label.setMaximumHeight(20)
-        return header_label
-
     def load_shape_from_path(self, file_path: str):
         # Load the shapes
-        self.scene_widget_0.load_shape_from_path(file_path)
+        self.query_scene_widget.load_shape_from_path(file_path)
+        normalized_shape = self.pipeline.normalize_shape(file_path)
+        ShapeFeatureExtractor.extract_all_shape_features(normalized_shape)
+        compute_descriptors(normalized_shape)
 
-        # Query
-        queried_shape_paths = []
-        ShapeFeatureExtractor.extract_all_shape_features(self.scene_widgets[0].shape)
+        # Dummy query
+        queried_shape_paths, distances = ['data\\LabeledDB_new\\Airplane\\61\\refined.ply'] * QueryTabWidget.NR_RESULTS, range(1, 100)
 
-        # Populate widget 1 with the shape
-        self.scene_widget_1.clear()
-        # self.scene_widget_1.load_shape(queried_shape_paths[0])
-        self.scene_widget_1.update_widget()
-
-        # Populate widget 2 with the shape
-        self.scene_widget_2.clear()
-        # self.scene_widget_2.load_shape(queried_shape_paths[1])
-        self.scene_widget_2.update_widget()
-
-        # Populate widget 3 with the shape
-        self.scene_widget_3.clear()
-        # self.scene_widget_3.load_shape(queried_shape_paths[2])
-        self.scene_widget_3.update_widget()
+        for query_index in range(len(self.query_result_widgets)):
+            query_result_widget = self.query_result_widgets[query_index]
+            shape_descriptors = self.pipeline.shape_descriptors[queried_shape_paths[query_index]]
+            query_result_widget.load_shape_from_path(queried_shape_paths[query_index], distances[query_index], shape_descriptors)
 
     def save_shape(self, file_path: str):
         pass
-        # self.scene_widgets[1].shape.save_ply(file_path)
 
     def export_image_action(self, file_path: str):
-        self.scene_widget_0.vis.capture_screen_image(file_path)
+        self.query_scene_widget.vis.capture_screen_image(file_path)

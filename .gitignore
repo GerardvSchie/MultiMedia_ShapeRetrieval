@@ -5,7 +5,7 @@
 sandbox/
 .idea/
 plots/
-data/refined meshes 10k/
+data/*.png
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

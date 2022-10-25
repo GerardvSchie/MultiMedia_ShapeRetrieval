@@ -40,7 +40,7 @@ class TabWidget(QTabWidget):
         self.shape_features_widget = ShapeFeaturesTabWidget()
         self.features_table_widget = FeaturesTableTabWidget()
         self.descriptors_table_widget = DescriptorsTableTabWidget()
-        # self.query_widget = QueryTabWidget()
+        self.query_widget = QueryTabWidget()
 
         # Add the tabs
         self.addTab(self.viewer_widget, "Mesh inspect")
@@ -48,7 +48,7 @@ class TabWidget(QTabWidget):
         self.addTab(self.shape_features_widget, "Features")
         self.addTab(self.features_table_widget, "Features table")
         self.addTab(self.descriptors_table_widget, "Descriptors table")
-        # self.addTab(self.query_widget, "Query")
+        self.addTab(self.query_widget, "Query")
 
     def closeEvent(self, *args, **kwargs):
         self.worker.stop()

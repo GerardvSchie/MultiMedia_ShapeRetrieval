@@ -206,19 +206,6 @@ def main():
 
     normalize_descriptors(os.path.join(DATABASE_REFINED_DIR, DATABASE_DESCRIPTORS_FILENAME))
 
-    # querier = DatabaseQuerier('data/database/normalized_descriptors_normalized.csv')
-
-    # descriptor = Descriptors()
-    # descriptor.surface_area = 1
-    # descriptor.eccentricity = 0
-    # descriptor.diameter = 2
-    # descriptor.rectangularity = 1
-    # descriptor.compactness = 2
-    # compute_normalized_descriptor(descriptor)
-    #
-    # querier.query_normalized_descriptor(descriptor)
-    # plot_feature_data(shape_list)
-
 
 # Example loads an .off and .ply file
 if __name__ == '__main__':

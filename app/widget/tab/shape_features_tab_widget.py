@@ -7,7 +7,7 @@ from PyQt6.QtGui import QWindow
 from app.widget.features.bounding_box_features_widget import BoundingBoxFeaturesWidget
 from app.widget.features.mesh_features_widget import MeshFeaturesWidget
 from app.widget.features.silhouette_features_widget import SilhouetteFeaturesWidget
-from app.widget.mesh_descriptors_widget import DescriptorsWidget
+from app.widget.descriptors_widget import DescriptorsWidget
 from src.database.reader import DatabaseReader
 from src.object.settings import Settings
 

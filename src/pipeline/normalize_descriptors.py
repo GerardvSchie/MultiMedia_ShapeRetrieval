@@ -77,7 +77,7 @@ def _normalize_descriptor(data: [float], config: ConfigParser, name: str):
 
 def compute_normalized_descriptor(descriptors: Descriptors):
     config = ConfigParser()
-    config.read(['data/database/original_descriptors.ini'])
+    config.read([os.path.join(DATABASE_REFINED_DIR, DATABASE_DESCRIPTORS_INI)])
 
     descriptors.surface_area = (descriptors.surface_area - float(config['surface_area']['average'])) / float(config['surface_area']['standard_deviation'])
     descriptors.compactness = (descriptors.compactness - float(config['compactness']['average'])) / float(config['compactness']['standard_deviation'])
