@@ -25,13 +25,14 @@ class DistanceMatrixPlotter:
         for i in range(descriptors_length):
             weight_vec = np.zeros(descriptors_length)
             weight_vec[i] = 1
-            DistanceMatrixPlotter.plot_and_save_heatmap(normalized_descriptors, weight_vec)
+            DistanceMatrixPlotter.plot_and_save_heatmap(normalized_descriptors, weight_vec, Descriptors.names()[i])
 
-        DistanceMatrixPlotter.plot_and_save_heatmap(normalized_descriptors, np.array([0.5, 2, 2, 0.5, 1.5, 1.5, 0.7, 0.4]))
+        vec = np.array([0.5, 2, 2, 0.5, 1.5, 1.5, 0.7, 0.4])
+        DistanceMatrixPlotter.plot_and_save_heatmap(normalized_descriptors, vec, str(vec))
 
 
         # ax.matshow(distance_matrix, cmap='YlGn')
-        sys.exit()
+        return
 
         DistanceMatrixPlotter.heatmap(distance_matrix, list(normalized_descriptors.keys()), list(normalized_descriptors.keys()),
                                        cmap='YlGn')
@@ -45,10 +46,12 @@ class DistanceMatrixPlotter:
         util.save_feature_distribution_plt('distance_matrix', os.path.join('plots/distances'))
 
     @staticmethod
-    def plot_and_save_heatmap(normalized_descriptors: dict[str, Descriptors], weights: np.ndarray) -> None:
+    def plot_and_save_heatmap(normalized_descriptors: dict[str, Descriptors], weights: np.ndarray, title: str) -> None:
         distance_matrix = DistanceMatrixPlotter._calc_distance_matrix(normalized_descriptors, weights)
         fig, ax = plt.subplots()
         ax.matshow(distance_matrix, cmap='magma')
+        plt.title(title)
+
         util.save_feature_distribution_plt(str(weights), 'plots/distances')
         plt.close(fig)
 
