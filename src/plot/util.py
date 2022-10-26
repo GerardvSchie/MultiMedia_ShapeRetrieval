@@ -8,6 +8,11 @@ BIGGER_SIZE = 16
 
 
 def set_params():
+    set_params_minus_formatter()
+    plt.gca().yaxis.set_major_formatter(PercentFormatter(1))
+
+
+def set_params_minus_formatter():
     plt.rc('font', size=SMALL_SIZE)  # controls default text sizes
     plt.rc('axes', titlesize=SMALL_SIZE)  # fontsize of the axes title
     plt.rc('axes', labelsize=MEDIUM_SIZE)  # fontsize of the x and y labels
@@ -17,11 +22,10 @@ def set_params():
     plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
     plt.rc('figure', labelsize=BIGGER_SIZE)  # fontsize of the figure title
 
-    plt.gca().yaxis.set_major_formatter(PercentFormatter(1))
-
 
 def save_feature_distribution_plt(title: str, plot_dir: str):
     file_name = (title.lower() + ".png").replace(" ", "_")
     os.makedirs(plot_dir, exist_ok=True)
+    # plt.show()
     plt.savefig(os.path.join(plot_dir, file_name))
     plt.close()
