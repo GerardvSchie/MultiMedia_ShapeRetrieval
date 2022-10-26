@@ -63,6 +63,8 @@ class ShapeProps:
         hist = ShapeProps.normalize_hist(hist)
         shape_props["D4"] = (hist, bin_edges)
 
+        return shape_props
+
     @staticmethod
     def calc_A3(v1, v2, v3):
         v21 = v1 - v2
