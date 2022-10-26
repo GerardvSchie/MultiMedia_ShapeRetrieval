@@ -86,14 +86,8 @@ class DatabaseReader:
 
             for descriptor in reader:
                 data = Descriptors()
-
-                # Descriptors
                 identifier = descriptor[0]
-                data.surface_area = float(descriptor[1])
-                data.compactness = float(descriptor[2])
-                data.rectangularity = float(descriptor[3])
-                data.diameter = float(descriptor[4])
-                data.eccentricity = float(descriptor[5])
+                data.from_list(descriptor[1:])
 
                 # Set path
                 path = os.path.join(*(_read_np_array(identifier)))

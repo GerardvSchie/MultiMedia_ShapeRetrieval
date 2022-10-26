@@ -10,60 +10,45 @@ from src.util.configs import *
 
 
 def normalize_descriptors(path: str) -> None:
-    descriptors = DatabaseReader.read_descriptors(path)
+    descriptors_dict = DatabaseReader.read_descriptors(path)
     dir_name, filename = os.path.split(path)
 
-    # Initialize lists
-    identifiers = []
-    surface_area = []
-    compactness = []
-    rectangularity = []
-    diameter = []
-    eccentricity = []
-
     # Fill lists with data
-    for identifier in descriptors:
-        descriptor = descriptors[identifier]
-
+    descriptors_array = np.ndarray(shape=(len(descriptors_dict), len(Descriptors.names())), dtype=float)
+    identifiers = []
+    i = 0
+    for identifier in descriptors_dict:
         identifiers.append(identifier)
-        surface_area.append(descriptor.surface_area)
-        compactness.append(descriptor.compactness)
-        rectangularity.append(descriptor.rectangularity)
-        diameter.append(descriptor.diameter)
-        eccentricity.append(descriptor.eccentricity)
+        descriptors_array[i] = np.array(descriptors_dict[identifier].to_list())
+        i += 1
 
-    # Normalize descriptors
+    # Normalize descriptors (transpose so each feature is a row
     config = ConfigParser()
+    descriptors_array = np.transpose(descriptors_array)
 
-    surface_area = _normalize_descriptor(surface_area, config, 'surface_area')
-    compactness = _normalize_descriptor(compactness, config, 'compactness')
-    rectangularity = _normalize_descriptor(rectangularity, config, 'rectangularity')
-    diameter = _normalize_descriptor(diameter, config, 'diameter')
-    eccentricity = _normalize_descriptor(eccentricity, config, 'eccentricity')
+    for i in range(len(Descriptors.names())):
+        descriptors_array[i] = _normalize_descriptor(descriptors_array[i], config, Descriptors.names()[i])
 
     config_name = filename.split('.')[0] + '.ini'
     with open(os.path.join(dir_name, config_name), 'w') as configfile:
         config.write(configfile)
 
     shape_list = []
+    descriptors_array = np.transpose(descriptors_array)
     # Replace data with normalized values
     for index in range(len(identifiers)):
         identifier = identifiers[index]
-        descriptors[identifier].surface_area = surface_area[index]
-        descriptors[identifier].compactness = compactness[index]
-        descriptors[identifier].rectangularity = rectangularity[index]
-        descriptors[identifier].diameter = diameter[index]
-        descriptors[identifier].eccentricity = eccentricity[index]
+        descriptors_list = list(descriptors_array[index])
+        descriptors_dict[identifier].from_list(descriptors_list)
 
         shape = Shape(identifier)
-        shape.descriptors = descriptors[identifier]
+        shape.descriptors = descriptors_dict[identifier]
         shape_list.append(shape)
 
     DatabaseWriter.write_descriptors(shape_list, os.path.join(dir_name, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
 
 
-def _normalize_descriptor(data: [float], config: ConfigParser, name: str):
-    data = np.array(data)
+def _normalize_descriptor(data: np.array, config: ConfigParser, name: str):
     avg = np.average(data)
     std = np.std(data)
 

@@ -19,15 +19,18 @@ class DistanceMatrixPlotter:
         print('length after:', len(normalized_descriptors))
 
         # Choose a backend for matplotlib
-        matplotlib.use('TkAgg')
+        matplotlib.use('Agg')
 
-        distance_matrix = DistanceMatrixPlotter._calc_distance_matrix(normalized_descriptors)
-        print('matrix:', distance_matrix)
+        descriptors_length = len(list(normalized_descriptors.values())[0].to_list())
+        for i in range(descriptors_length):
+            weight_vec = np.zeros(descriptors_length)
+            weight_vec[i] = 1
+            DistanceMatrixPlotter.plot_and_save_heatmap(normalized_descriptors, weight_vec)
 
-        fig, ax = plt.subplots()
+        DistanceMatrixPlotter.plot_and_save_heatmap(normalized_descriptors, np.array([0.5, 2, 2, 0.5, 1.5, 1.5, 0.7, 0.4]))
+
+
         # ax.matshow(distance_matrix, cmap='YlGn')
-        ax.matshow(distance_matrix, cmap='magma')
-        plt.show()
         sys.exit()
 
         DistanceMatrixPlotter.heatmap(distance_matrix, list(normalized_descriptors.keys()), list(normalized_descriptors.keys()),
@@ -42,12 +45,22 @@ class DistanceMatrixPlotter:
         util.save_feature_distribution_plt('distance_matrix', os.path.join('plots/distances'))
 
     @staticmethod
-    def _calc_distance_matrix(normalized_descriptors: dict[str, Descriptors]) -> np.ndarray:
+    def plot_and_save_heatmap(normalized_descriptors: dict[str, Descriptors], weights: np.ndarray) -> None:
+        distance_matrix = DistanceMatrixPlotter._calc_distance_matrix(normalized_descriptors, weights)
+        fig, ax = plt.subplots()
+        ax.matshow(distance_matrix, cmap='magma')
+        util.save_feature_distribution_plt(str(weights), 'plots/distances')
+        plt.close(fig)
+
+    @staticmethod
+    def _calc_distance_matrix(normalized_descriptors: dict[str, Descriptors], weights: np.ndarray) -> np.ndarray:
         vectors = np.array([descriptor.to_list() for descriptor in list(normalized_descriptors.values())])
 
         # Weights for the descriptors
-        # [self.surface_area, self.compactness, self.rectangularity, self.diameter, self.eccentricity]
-        # vectors = vectors * np.array([1, 3, 3, 1, 1])
+        # [self.surface_area, self.compactness, self.rectangularity, self.diameter, self.eccentricity, self.convexity, self.major_eccentricity, self.minor_eccentricity]
+        # vectors = vectors * np.array([1, 2, 2, 1, 1, 2, 0.7, 0.4])
+        # vectors = vectors * np.array([0.5, 2, 2, 0.5, 1.5, 1.5, 0.7, 0.4])
+        vectors = vectors * weights
 
         # [self.surface_area, self.compactness, self.rectangularity, self.diameter, self.eccentricity]
         distance_matrix: np.ndarray = np.zeros(shape=(len(vectors), len(vectors)))

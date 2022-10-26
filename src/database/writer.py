@@ -5,7 +5,7 @@ from src.object.shape import Shape
 
 
 class DatabaseWriter:
-    DESCRIPTORS_HEADER = ["path", "surface_area", "compactness", "rectangularity", "diameter", "eccentricity"]
+    DESCRIPTORS_HEADER = ["path", "surface_area", "compactness", "rectangularity", "diameter", "eccentricity", "convexity", "major_eccentricity", "minor_eccentricity"]
     FEATURES_HEADER = [
         'path', 'class', 'mesh_is_watertight', 'diameter',
         'mesh_nr_vertices', 'mesh_nr_faces', 'mesh_surface_area', 'mesh_volume',
@@ -88,6 +88,10 @@ class DatabaseWriter:
             shape.descriptors.rectangularity,
             shape.descriptors.diameter,
             shape.descriptors.eccentricity,
+
+            shape.descriptors.convexity,
+            shape.descriptors.minor_eccentricity,
+            shape.descriptors.major_eccentricity,
         ]
 
 

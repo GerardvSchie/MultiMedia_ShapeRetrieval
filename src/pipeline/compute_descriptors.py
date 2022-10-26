@@ -17,5 +17,9 @@ def compute_descriptors(shape: Shape) -> bool:
     descriptors.diameter = shape.features.diameter
     descriptors.eccentricity = shape.features.normalization_features.eigenvalues[0] / shape.features.normalization_features.eigenvalues[2]
 
+    descriptors.convexity = shape.features.mesh_features.volume / shape.features.convex_hull_features.volume
+    descriptors.major_eccentricity = shape.features.normalization_features.eigenvalues[0] / shape.features.normalization_features.eigenvalues[1]
+    descriptors.minor_eccentricity = shape.features.normalization_features.eigenvalues[1] / shape.features.normalization_features.eigenvalues[2]
+
     shape.descriptors = descriptors
     return True
