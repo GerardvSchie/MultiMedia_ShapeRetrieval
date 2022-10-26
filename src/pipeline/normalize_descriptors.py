@@ -14,7 +14,7 @@ def normalize_descriptors(path: str) -> None:
     dir_name, filename = os.path.split(path)
 
     # Fill lists with data
-    descriptors_array = np.ndarray(shape=(len(descriptors_dict), len(Descriptors.names())), dtype=float)
+    descriptors_array = np.ndarray(shape=(len(descriptors_dict), len(Descriptors.NAMES)), dtype=float)
     identifiers = []
     i = 0
     for identifier in descriptors_dict:
@@ -26,8 +26,8 @@ def normalize_descriptors(path: str) -> None:
     config = ConfigParser()
     descriptors_array = np.transpose(descriptors_array)
 
-    for i in range(len(Descriptors.names())):
-        descriptors_array[i] = _normalize_descriptor(descriptors_array[i], config, Descriptors.names()[i])
+    for i in range(len(Descriptors.NAMES)):
+        descriptors_array[i] = _normalize_descriptor(descriptors_array[i], config, Descriptors.NAMES[i])
 
     config_name = filename.split('.')[0] + '.ini'
     with open(os.path.join(dir_name, config_name), 'w') as configfile:

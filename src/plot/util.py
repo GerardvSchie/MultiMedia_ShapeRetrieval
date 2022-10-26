@@ -26,6 +26,6 @@ def set_params_minus_formatter():
 def save_feature_distribution_plt(title: str, plot_dir: str):
     file_name = (title.lower() + ".png").replace(" ", "_")
     os.makedirs(plot_dir, exist_ok=True)
-    # plt.show()
+    plt.tight_layout()
     plt.savefig(os.path.join(plot_dir, file_name))
     plt.close()

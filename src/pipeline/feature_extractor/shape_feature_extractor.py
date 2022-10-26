@@ -34,13 +34,13 @@ class ShapeFeatureExtractor:
 
     @staticmethod
     def is_watertight(shape: Shape, force_recompute=False) -> bool:
-        if shape.features.is_watertight is not None and not force_recompute:
+        if shape.features.mesh_is_watertight is not None and not force_recompute:
             return False
 
         if not shape.geometries.mesh:
             GeometriesController.calculate_mesh(shape.geometries)
 
-        shape.features.is_watertight = shape.geometries.mesh.is_watertight()
+        shape.features.mesh_is_watertight = shape.geometries.mesh.is_watertight()
         return True
 
     @staticmethod

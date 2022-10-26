@@ -17,7 +17,7 @@ class FeatureDistributionPlotter:
         FeatureDistributionPlotter.histogram_plot(data, ['normalization_features', 'flip'], 'Correctly directed axes')
         FeatureDistributionPlotter.histogram_plot(data, ['mesh_features', 'nr_faces'], 'Number of faces')
         FeatureDistributionPlotter.histogram_plot(data, ['mesh_features', 'nr_vertices'], 'Number of vertices')
-        FeatureDistributionPlotter.pie_plot(data, ['is_watertight'], 'watertight')
+        FeatureDistributionPlotter.pie_plot(data, ['mesh_is_watertight'], 'watertight')
 
     @staticmethod
     def pie_plot(data: [ShapeFeatures], feature_names: [str], title: str):

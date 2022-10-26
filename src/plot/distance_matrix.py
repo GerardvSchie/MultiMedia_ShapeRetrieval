@@ -40,7 +40,7 @@ class DistanceMatrixPlotter:
         # Choose a backend for matplotlib
         matplotlib.use('Agg')
 
-        descriptors_length = len(Descriptors.names())
+        descriptors_length = len(Descriptors.NAMES)
 
         for i in range(descriptors_length):
             weight_vec = np.zeros(descriptors_length)
@@ -52,7 +52,7 @@ class DistanceMatrixPlotter:
             #     for y in range(377):
             #         distance_matrix[x, y] = categorical_labels[classes[max(x, y)]]
 
-            DistanceMatrixPlotter.plot_and_save_heatmap(Descriptors.names()[i], distance_matrix, weight_vec, shape_dict)
+            DistanceMatrixPlotter.plot_and_save_heatmap(Descriptors.NAMES[i], distance_matrix, weight_vec, shape_dict)
             # sys.exit()
 
         vec = np.array([0.5, 2, 2, 0.5, 1.5, 1.5, 0.7, 0.4])

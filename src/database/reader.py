@@ -1,10 +1,10 @@
 import csv
 import logging
 import os.path
-import numpy as np
 
 from src.object.descriptors import Descriptors
 from src.object.features.shape_features import ShapeFeatures
+from src.database.util import read_np_array
 
 dataPaths = list()
 
@@ -14,6 +14,7 @@ class DatabaseReader:
     def read_features_paths(paths: [str]) -> dict[str, ShapeFeatures]:
         shape_features = dict()
 
+        # Union features dictionaries together
         for path in paths:
             shape_features = shape_features | DatabaseReader.read_features(path)
 
@@ -36,38 +37,10 @@ class DatabaseReader:
 
                 # Global features
                 identifier = features[0]
-                data.true_class = features[1]
-                data.is_watertight = features[2].lower() == 'true'
-                data.diameter = float(features[3])
-
-                # Mesh features
-                data.mesh_features.nr_vertices = int(features[4])
-                data.mesh_features.nr_faces = int(features[5])
-                data.mesh_features.surface_area = float(features[6])
-                data.mesh_features.volume = float(features[7])
-
-                # Convex hull features
-                data.convex_hull_features.nr_vertices = int(features[8])
-                data.convex_hull_features.nr_faces = int(features[9])
-                data.convex_hull_features.surface_area = float(features[10])
-                data.convex_hull_features.volume = float(features[11])
-
-                # AABB features
-                data.axis_aligned_bounding_box_features.min_bound = _read_np_array(features[12])
-                data.axis_aligned_bounding_box_features.max_bound = _read_np_array(features[13])
-                data.axis_aligned_bounding_box_features.surface_area = float(features[14])
-                data.axis_aligned_bounding_box_features.volume = float(features[15])
-                data.axis_aligned_bounding_box_features.diameter = float(features[16])
-
-                # Normalization features
-                data.normalization_features.distance_to_center = float(features[17])
-                data.normalization_features.scale = float(features[18])
-                data.normalization_features.alignment = float(features[19])
-                data.normalization_features.flip = int(features[20])
-                data.normalization_features.eigenvalues = _read_np_array(features[21])
+                data.from_list(features[1:])
 
                 # Set path
-                path = os.path.join(*(_read_np_array(identifier)))
+                path = os.path.join(*(read_np_array(identifier)))
                 shape_features[path] = data
 
         return shape_features
@@ -90,19 +63,7 @@ class DatabaseReader:
                 data.from_list(descriptor[1:])
 
                 # Set path
-                path = os.path.join(*(_read_np_array(identifier)))
+                path = os.path.join(*(read_np_array(identifier)))
                 shape_descriptors[path] = data
 
         return shape_descriptors
-
-
-def _read_np_array(array_str: str) -> np.array:
-    # Contains strings
-    if array_str.__contains__("'"):
-        arr = array_str[2:-2].split("\' \'")
-        return np.array(arr)
-    # Just an int array
-    else:
-        array_str = array_str.strip()
-        arr = array_str[1:-1].strip().split()
-        return np.array(arr, dtype=float)

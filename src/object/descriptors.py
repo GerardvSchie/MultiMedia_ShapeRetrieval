@@ -3,6 +3,11 @@ import numpy as np
 
 
 class Descriptors:
+    NAMES = [
+        "surface_area", "compactness", "rectangularity", "diameter", "eccentricity",
+        "convexity", "major_eccentricity", "minor_eccentricity"
+    ]
+
     def __init__(self) -> None:
         self.surface_area: float = math.inf
         self.compactness: float = math.inf
@@ -17,16 +22,11 @@ class Descriptors:
     def missing_values(self):
         return np.any(np.isinf(self.to_list()))
 
-    @staticmethod
-    def names():
-        return ["surface_area", "compactness", "rectangularity", "diameter", "eccentricity",
-                "convexity", "major_eccentricity", "minor_eccentricity"]
-
     def to_list(self):
-        return [self.__getattribute__(name) for name in Descriptors.names()]
+        return [self.__getattribute__(name) for name in Descriptors.NAMES]
 
     def from_list(self, params: [object]):
-        assert len(Descriptors.names()) == len(params)
+        assert len(Descriptors.NAMES) == len(params)
 
         self.surface_area = float(params[0])
         self.compactness = float(params[1])

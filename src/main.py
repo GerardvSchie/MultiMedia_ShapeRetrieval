@@ -52,6 +52,7 @@ def read_original_shapes() -> [Shape]:
             shape_list.append(shape)
 
     add_shape_features(shape_list, os.path.join(DATABASE_ORIGINAL_DIR, DATABASE_FEATURES_FILENAME))
+    add_shape_descriptors(shape_list, os.path.join(DATABASE_ORIGINAL_DIR, DATABASE_DESCRIPTORS_FILENAME))
     return shape_list
 
 
@@ -82,8 +83,7 @@ def normalize_and_save_pcd(shape: Shape, new_path: str):
 
 
 def plot_feature_data(shape_collection: [Shape]) -> None:
-    shape_features = [shape.features for shape in shape_collection]
-    FeatureDistributionPlotter.plot_features(shape_features)
+    FeatureDistributionPlotter.plot_features([shape.features for shape in shape_collection])
 
 
 def refine_meshes(shape_collection: [Shape], final_vertices) -> None:
@@ -124,6 +124,8 @@ def main():
     for shape in tqdm(shape_list):
         recomputed_features.append(ShapeFeatureExtractor.extract_all_shape_features(shape))
         recomputed_descriptors.append(compute_descriptors(shape))
+
+    FeatureDistributionPlotter.plot_features([shape.features for shape in shape_list])
 
     # Only write file if new features are computed
     if any(recomputed_features):
