@@ -1,7 +1,5 @@
 import os
 import sys
-import time
-
 import logging
 import numpy as np
 import matplotlib
@@ -30,9 +28,9 @@ class DistanceMatrixPlotter:
             shape_dict[path] = Shape(path)
             shape_dict[path].descriptors = normalized_descriptors[path]
 
-        shape_dict.__delitem__('data\\LabeledDB_new\\Chair\\101\\refined.ply')
-        shape_dict.__delitem__('data\\LabeledDB_new\\Glasses\\42\\refined.ply')
-        shape_dict.__delitem__('data\\LabeledDB_new\\Chair\\109\\refined.ply')
+        shape_dict.__delitem__(os.path.join('data', 'LabeledDB_new', 'Chair', '101', 'refined.ply'))
+        shape_dict.__delitem__(os.path.join('data', 'LabeledDB_new', 'Glasses', '42', 'refined.ply'))
+        shape_dict.__delitem__(os.path.join('data', 'LabeledDB_new', 'Chair', '109', 'refined.ply'))
         logging.info(f'Removed {len(normalized_descriptors) - len(shape_dict)} elements from distance matrix calculations')
 
         for path in shape_dict:
@@ -42,7 +40,7 @@ class DistanceMatrixPlotter:
         # Choose a backend for matplotlib
         matplotlib.use('Agg')
 
-        descriptors_length = len(list(normalized_descriptors.values())[0].to_list())
+        descriptors_length = len(Descriptors.names())
 
         for i in range(descriptors_length):
             weight_vec = np.zeros(descriptors_length)
@@ -78,7 +76,6 @@ class DistanceMatrixPlotter:
 
         # Save the plot
         util.save_feature_distribution_plt(str(weights), 'plots/distances')
-        # plt.close(fig)
 
     @staticmethod
     def set_ticks_and_labels(ax, shape_dict: dict[str, Shape]):
@@ -104,6 +101,7 @@ class DistanceMatrixPlotter:
 
         x_ticks = ax.set_xticks(tick_positions, labels, rotation=45, ha='left')
         y_ticks = ax.set_yticks(tick_positions, labels, va='top')
+        ax.set_ylabel('category')
 
     @staticmethod
     def _calc_distance_matrix(shape_dict: dict[str, Shape], weights: np.ndarray) -> np.ndarray:
