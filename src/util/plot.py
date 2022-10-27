@@ -6,8 +6,10 @@ import src.util.io
 import numpy as np
 from src.object.features.shape_features import ShapeFeatures
 from matplotlib.ticker import PercentFormatter
+import src.plot.io
 
-#from src.database.reader import dataPaths
+from src.util.configs import *
+from src.database.reader import dataPaths
 from src.vertex_normalization import refine_mesh
 
 
@@ -41,34 +43,15 @@ desiredNumberOfVertices = 10000
 
 def plot_features(feature_list: [ShapeFeatures], databasePaths: [str]):
     # Choose a backend for matplotlib
-    matplotlib.use('TkAgg')
+    matplotlib.use('Agg')
     # Create folder for the plots
     src.util.io.create_dir("plots")
-
-    # Bounding box features added soon
-    # bounding_box_area = [features.bounding_box_area for features in feature_list]
-    # hist_plot(boundingArea, bounding_box_area)
-
-    # # Class is a string, which requires a special comparison.
-    # # There are 19 classes.
-    # true_classes = [features.true_class for features in feature_list]
-    # hist_plot(CLASSES, true_classes)
-
-
-
-    #testId = 0
-    #testPath = databasePaths[testId]
-    #testOriginalVertices = mesh_nr_vertices[testId]
 
     # print(testPath)
     # print(testOriginalVertices)
     # refineMesh(testPath, testOriginalVertices, desiredNumberOfVertices)
 
     print("plot.py")
-
-    # mesh_nr_vertices = [feature.mesh_features.nr_vertices for feature in feature_list]
-    # refine_mesh(databasePaths[0], mesh_nr_vertices[0], desiredNumberOfVertices)
-
     return
 
     print('========================= Refining meshes to desired number of vertices in whole database ======================')
@@ -198,14 +181,7 @@ def scatter_hist(x, y, xName, yName, ax, ax_histx, ax_histy):
     drawShapeDotOfSingleFeatureOnPlot(ax, 0, xName, x, yName, y, averageX, f'Shape closest to {xName} average', 'green')
     drawShapeDotOfSingleFeatureOnPlot(ax, 1, yName, y, xName, x, averageY, f'Shape closest to {yName} average', 'purple')
 
-    save_plt(f"{xName} and {yName} of meshes")
-
-
-def save_plt(title: str):
-    file_name = (title.lower() + ".png").replace(" ", "_")
-    plt.savefig(os.path.join("plots", file_name))
-
-    plt.close()
+    src.plot.io.save_plt_using_title('plots/others', f"{xName} and {yName} of meshes")
 
 
 def saveAverageShapeData(featureName, featureData, allFeatures: [ShapeFeatures]):
@@ -300,7 +276,7 @@ def detectOutliers(featureName, featureData, allFeatures: [ShapeFeatures]):
     #    print(f'{elem} has element id {featureData.index(elem)} in the {featureName} data.')
 
     # plt.show()
-    save_plt(f'{featureName} outliers')
+    src.plot.io.save_plt_using_title(PLOT_OUTLIERS_DIR, featureName)
 
 
 def drawShapeDotOfSingleFeatureOnPlot(ax, featureID, featureName, featureData, otherFeatureName, otherFeatureData, featureMathAverage, dotText, givenColor):

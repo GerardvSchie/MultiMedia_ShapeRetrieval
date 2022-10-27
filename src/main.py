@@ -4,9 +4,7 @@ import sys
 import open3d as o3d
 from matplotlib import pyplot as plt
 import numpy as np
-
-from src.pipeline.normalize_descriptors import normalize_descriptors
-from src.plot.distance_matrix import DistanceMatrixPlotter
+import matplotlib
 
 # Needed to fix ModuleNotFoundError when importing src.util.logger.
 directoryContainingCurrentFile = os.path.dirname(__file__)
@@ -15,20 +13,22 @@ repoDirectory = os.path.dirname(directoryContainingCurrentFile)
 # Add repo to list of possible paths
 sys.path.append(repoDirectory)
 
+import src.util.logger as logger
+
+from src.pipeline.normalize_descriptors import normalize_descriptors
+from src.plot.descriptor_distribution import DescriptorDistributionPlotter
+from src.plot.distance_matrix import DistanceMatrixPlotter
 from src.pipeline.compute_descriptors import compute_descriptors
 from src.controller.geometries_controller import GeometriesController
 from src.pipeline.feature_extractor.normalization_feature_extractor import NormalizationFeatureExtractor
-import src.util.logger as logger
 from src.object.shape import Shape
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
-import src.util.plot
 from src.database.writer import DatabaseWriter
 from src.database.reader import DatabaseReader
 from src.util.io import check_working_dir
 from src.pipeline.normalization import Normalizer
 from src.plot.feature_distribution import FeatureDistributionPlotter
-from src.vertex_normalization import refine_mesh, simplifyMesh, saveRefinedMesh
-
+from src.vertex_normalization import refine_mesh, simplifyMesh
 from src.util.configs import *
 
 
@@ -125,11 +125,10 @@ def main():
         recomputed_features.append(ShapeFeatureExtractor.extract_all_shape_features(shape))
         recomputed_descriptors.append(compute_descriptors(shape))
 
-    FeatureDistributionPlotter.plot_features([shape.features for shape in shape_list])
-
     # Only write file if new features are computed
     if any(recomputed_features):
         DatabaseWriter.write_features(shape_list, os.path.join(DATABASE_ORIGINAL_DIR, DATABASE_FEATURES_FILENAME))
+        FeatureDistributionPlotter.plot_features(PLOT_ORIGINAL_FEATURES_DIR, [shape.features for shape in shape_list])
     if any(recomputed_descriptors):
         DatabaseWriter.write_descriptors(shape_list, os.path.join(DATABASE_ORIGINAL_DIR, DATABASE_DESCRIPTORS_FILENAME))
 
@@ -208,11 +207,15 @@ def main():
 
     if any(recomputed_features):
         DatabaseWriter.write_features(shape_list, os.path.join(DATABASE_REFINED_DIR, DATABASE_FEATURES_FILENAME))
+        FeatureDistributionPlotter.plot_features(PLOT_REFINED_FEATURES_DIR, [shape.features for shape in shape_list])
     if any(recomputed_descriptors):
         DatabaseWriter.write_descriptors(shape_list, os.path.join(DATABASE_REFINED_DIR, DATABASE_DESCRIPTORS_FILENAME))
         normalize_descriptors(os.path.join(DATABASE_REFINED_DIR, DATABASE_DESCRIPTORS_FILENAME))
 
+    DescriptorDistributionPlotter.plot_features(PLOT_REFINED_DESCRIPTORS_DIR, [shape.descriptors for shape in shape_list])
     normalized_descriptors = DatabaseReader.read_descriptors(os.path.join(DATABASE_REFINED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
+    DescriptorDistributionPlotter.plot_features(PLOT_NORMALIZED_DESCRIPTORS_DIR, list(normalized_descriptors.values()))
+
     DistanceMatrixPlotter.plot(normalized_descriptors)
 
 
@@ -220,5 +223,6 @@ def main():
 if __name__ == '__main__':
     logger.initialize()
     check_working_dir()
+    matplotlib.use('Agg')
     main()
     print("run complete")

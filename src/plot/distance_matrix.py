@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 
+import src.plot.io as io
 import src.plot.util as util
 from src.object.shape import Shape
 from src.object.descriptors import Descriptors
@@ -36,9 +37,6 @@ class DistanceMatrixPlotter:
         for path in shape_dict:
             ShapeFeatureExtractor.extract_class_feature(shape_dict[path])
             classes.append(shape_dict[path].features.true_class)
-
-        # Choose a backend for matplotlib
-        matplotlib.use('Agg')
 
         descriptors_length = len(Descriptors.NAMES)
 
@@ -75,7 +73,7 @@ class DistanceMatrixPlotter:
         cbar.ax.invert_yaxis()
 
         # Save the plot
-        util.save_feature_distribution_plt(str(weights), 'plots/distances')
+        io.save_plt_using_title('plots/distances', str(weights))
 
     @staticmethod
     def set_ticks_and_labels(ax, shape_dict: dict[str, Shape]):
