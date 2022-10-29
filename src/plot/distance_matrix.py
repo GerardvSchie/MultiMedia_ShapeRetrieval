@@ -32,6 +32,8 @@ class DistanceMatrixPlotter:
         shape_dict.__delitem__(os.path.join('data', 'LabeledDB_new', 'Chair', '101', 'refined.ply'))
         shape_dict.__delitem__(os.path.join('data', 'LabeledDB_new', 'Glasses', '42', 'refined.ply'))
         shape_dict.__delitem__(os.path.join('data', 'LabeledDB_new', 'Chair', '109', 'refined.ply'))
+        shape_dict.__delitem__(os.path.join('data', 'LabeledDB_new', 'Cup', '33', 'refined.ply'))
+        shape_dict.__delitem__(os.path.join('data', 'LabeledDB_new', 'Cup', '34', 'refined.ply'))
         logging.info(f'Removed {len(normalized_descriptors) - len(shape_dict)} elements from distance matrix calculations')
 
         for path in shape_dict:
@@ -53,7 +55,15 @@ class DistanceMatrixPlotter:
             DistanceMatrixPlotter.plot_and_save_heatmap(Descriptors.NAMES[i], distance_matrix, weight_vec, shape_dict)
             # sys.exit()
 
+        vec = np.array([1, 1, 1, 1, 1, 1, 1, 1])
+        distance_matrix = DistanceMatrixPlotter._calc_distance_matrix(shape_dict, vec)
+        DistanceMatrixPlotter.plot_and_save_heatmap(str(vec), distance_matrix, vec, shape_dict)
+
         vec = np.array([0.5, 2, 2, 0.5, 1.5, 1.5, 0.7, 0.4])
+        distance_matrix = DistanceMatrixPlotter._calc_distance_matrix(shape_dict, vec)
+        DistanceMatrixPlotter.plot_and_save_heatmap(str(vec), distance_matrix, vec, shape_dict)
+
+        vec = np.array([1.5, 1.3, 0.3, 0, 0.3, 1.7, 0.15, 0.15])
         distance_matrix = DistanceMatrixPlotter._calc_distance_matrix(shape_dict, vec)
         DistanceMatrixPlotter.plot_and_save_heatmap(str(vec), distance_matrix, vec, shape_dict)
 
