@@ -34,5 +34,5 @@ class Descriptors:
         self.diameter = float(params[3])
         self.eccentricity = float(params[4])
         self.convexity = float(params[5])
-        self.minor_eccentricity = float(params[6])
-        self.major_eccentricity = float(params[7])
+        self.major_eccentricity = float(params[6])
+        self.minor_eccentricity = float(params[7])

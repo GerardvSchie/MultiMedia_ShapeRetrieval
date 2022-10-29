@@ -73,7 +73,7 @@ class MenuBar(QMenuBar):
 
     def open_file_action(self):
         file_filter = "Triangle mesh files (*.ply *.off)"
-        file_name, _ = QFileDialog.getOpenFileName(self, "Open shape", "data", file_filter)
+        file_name, _ = QFileDialog.getOpenFileName(self, "Open shape", "data/LabeledDB_new", file_filter)
 
         if file_name:
             self.tab_widget.load_shape_from_path(file_name)
@@ -87,7 +87,7 @@ class MenuBar(QMenuBar):
 
     def export_image_action(self):
         file_filter = "Image file (*.png *.jpg)"
-        file_name, _ = QFileDialog.getSaveFileName(self, "Save Image", "data", file_filter)
+        file_name, _ = QFileDialog.getSaveFileName(self, "Save Image", "images", file_filter)
 
         if file_name:
             self.tab_widget.export_image_action(file_name)
