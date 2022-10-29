@@ -63,7 +63,7 @@ class DistanceMatrixPlotter:
         distance_matrix = DistanceMatrixPlotter._calc_distance_matrix(shape_dict, vec)
         DistanceMatrixPlotter.plot_and_save_heatmap(str(vec), distance_matrix, vec, shape_dict)
 
-        vec = np.array([1.5, 1.3, 0.3, 0, 0.3, 1.7, 0.15, 0.15])
+        vec = np.array([1.5, 1.3, 0.3, 0, 0.1, 1.7, 0.1, 0.50])
         distance_matrix = DistanceMatrixPlotter._calc_distance_matrix(shape_dict, vec)
         DistanceMatrixPlotter.plot_and_save_heatmap(str(vec), distance_matrix, vec, shape_dict)
 

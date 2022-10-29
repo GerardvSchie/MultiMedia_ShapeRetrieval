@@ -4,7 +4,6 @@
 
 sandbox/
 .idea/
-plots/
 data/*.png
 
 # Byte-compiled / optimized / DLL files
