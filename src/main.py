@@ -6,6 +6,8 @@ from matplotlib import pyplot as plt
 import numpy as np
 import matplotlib
 
+from pipeline.feature_extractor.shape_properties_extractor import ShapeProps
+
 # Needed to fix ModuleNotFoundError when importing src.util.logger.
 directoryContainingCurrentFile = os.path.dirname(__file__)
 repoDirectory = os.path.dirname(directoryContainingCurrentFile)
@@ -30,6 +32,7 @@ from src.pipeline.normalization import Normalizer
 from src.plot.feature_distribution import FeatureDistributionPlotter
 from src.vertex_normalization import refine_mesh, simplifyMesh
 from src.util.configs import *
+from src.plot.io import save_plt
 
 
 def read_original_shapes() -> [Shape]:
@@ -114,6 +117,8 @@ def refine_meshes(shape_collection: [Shape], final_vertices) -> None:
 
 
 def main():
+    recompute_plots = False
+
     # Compute offline features
     shape_list = read_original_shapes()
 
@@ -128,6 +133,7 @@ def main():
     # Only write file if new features are computed
     if any(recomputed_features):
         DatabaseWriter.write_features(shape_list, os.path.join(DATABASE_ORIGINAL_DIR, DATABASE_FEATURES_FILENAME))
+    if any(recomputed_features) or recompute_plots:
         FeatureDistributionPlotter.plot_features(PLOT_ORIGINAL_FEATURES_DIR, [shape.features for shape in shape_list])
     if any(recomputed_descriptors):
         DatabaseWriter.write_descriptors(shape_list, os.path.join(DATABASE_ORIGINAL_DIR, DATABASE_DESCRIPTORS_FILENAME))
@@ -212,11 +218,55 @@ def main():
         DatabaseWriter.write_descriptors(shape_list, os.path.join(DATABASE_REFINED_DIR, DATABASE_DESCRIPTORS_FILENAME))
         normalize_descriptors(os.path.join(DATABASE_REFINED_DIR, DATABASE_DESCRIPTORS_FILENAME))
 
-    DescriptorDistributionPlotter.plot_features(PLOT_REFINED_DESCRIPTORS_DIR, [shape.descriptors for shape in shape_list])
-    normalized_descriptors = DatabaseReader.read_descriptors(os.path.join(DATABASE_REFINED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
-    DescriptorDistributionPlotter.plot_features(PLOT_NORMALIZED_DESCRIPTORS_DIR, list(normalized_descriptors.values()))
+    if any(recomputed_descriptors) or recompute_plots:
+        DescriptorDistributionPlotter.plot_features(PLOT_REFINED_DESCRIPTORS_DIR, [shape.descriptors for shape in shape_list])
+        normalized_descriptors = DatabaseReader.read_descriptors(os.path.join(DATABASE_REFINED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
+        DescriptorDistributionPlotter.plot_features(PLOT_NORMALIZED_DESCRIPTORS_DIR, list(normalized_descriptors.values()))
 
-    DistanceMatrixPlotter.plot(normalized_descriptors)
+        DistanceMatrixPlotter.plot(normalized_descriptors)
+
+    # plot_feature(shape_list, 'Ant')
+    # plot_feature(shape_list, 'Airplane')
+    # plot_feature(shape_list, 'Vase')
+
+
+def plot_feature(shape_list: [Shape], category: str):
+    features_list = []
+    for shape in tqdm(shape_list):
+        if shape.features.true_class != category:
+            continue
+
+        features = ShapeProps.shape_propertizer(shape)
+        features_list.append(features)
+
+    for feat in features_list:
+        d1_features = feat["D1"]
+        plt.plot((d1_features[1][0:-1] + d1_features[1][1:]) / 2, d1_features[0])
+
+    save_plt(os.path.join(PLOT_PROPERTIES_DIR, f'd1_{category}.png'))
+
+    for feat in features_list:
+        d2_features = feat["D2"]
+        plt.plot((d2_features[1][0:-1] + d2_features[1][1:]) / 2, d2_features[0])
+
+    save_plt(os.path.join(PLOT_PROPERTIES_DIR, f'd2_{category}.png'))
+
+    for feat in features_list:
+        d3_features = feat["D3"]
+        plt.plot((d3_features[1][0:-1] + d3_features[1][1:]) / 2, d3_features[0])
+
+    save_plt(os.path.join(PLOT_PROPERTIES_DIR, f'd3_{category}.png'))
+
+    for feat in features_list:
+        a3_features = feat["A3"]
+        plt.plot((a3_features[1][0:-1] + a3_features[1][1:]) / 2, a3_features[0])
+
+    save_plt(os.path.join(PLOT_PROPERTIES_DIR, f'a3_{category}.png'))
+
+    for feat in features_list:
+        d4_features = feat["D4"]
+        plt.plot((d4_features[1][0:-1] + d4_features[1][1:]) / 2, d4_features[0])
+    save_plt(os.path.join(PLOT_PROPERTIES_DIR, f'd4_{category}.png'))
 
 
 # Example loads an .off and .ply file

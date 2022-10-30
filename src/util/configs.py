@@ -33,3 +33,5 @@ PLOT_NORMALIZED_DESCRIPTORS_DIR = os.path.join(PLOT_DESCRIPTORS_DIR, 'normalized
 PLOT_DISTANCES_DIR = os.path.join(PLOT_DIR, 'distances')
 
 PLOT_OUTLIERS_DIR = os.path.join(PLOT_DIR, 'outliers')
+
+PLOT_PROPERTIES_DIR = os.path.join(PLOT_DIR, 'properties')
