@@ -30,8 +30,8 @@ class GeometriesController:
 
         if not geometries.point_cloud:
             GeometriesController.set_mesh_from_file(geometries, force_reload)
-        else:
-            GeometriesController.point_cloud_to_mesh(geometries, force_reload)
+        # else:
+        #     GeometriesController.point_cloud_to_mesh(geometries, force_reload)
 
     @staticmethod
     def set_mesh_from_file(geometries: Geometries, force_reload=False) -> bool:
@@ -43,7 +43,6 @@ class GeometriesController:
 
         if geometry_type & o3d.io.CONTAINS_TRIANGLES:
             geometries.mesh = o3d.io.read_triangle_mesh(geometries.path)
-            # self.mesh.fill_holes()
 
         # Could not load mesh
         if geometries.mesh is None:
@@ -57,10 +56,35 @@ class GeometriesController:
         return True
 
     @staticmethod
-    def calculate_point_cloud(geometries: Geometries, force_reload=False) -> bool:
-        # Point cloud already existed
+    def set_pcd_from_file(geometries: Geometries, force_reload=False) -> bool:
+        # Mesh is already loaded and no force
         if geometries.point_cloud and not force_reload:
             return True
+
+        pcd_path = geometries.path.split('.')[0] + '.pcd'
+        if not os.path.exists(pcd_path):
+            logging.warning(f"Shape at path '{os.path.abspath(pcd_path)}' does not exist")
+
+        geometries.point_cloud = o3d.io.read_point_cloud(pcd_path)
+
+        # Could not load mesh
+        if geometries.point_cloud is None:
+            logging.warning(f"Shape at path '{os.path.abspath(pcd_path)}' cannot be read as a point cloud")
+            return False
+
+        return True
+
+    @staticmethod
+    def calculate_point_cloud(geometries: Geometries, force_reload=False) -> bool:
+        if geometries.point_cloud and not force_reload:
+            return True
+
+        # Point cloud already existed
+        if os.path.exists(geometries.path.split('.')[0] + '.pcd'):
+            return GeometriesController.set_pcd_from_file(geometries, force_reload)
+        else:
+            logging.warning('TEMPORARY: point cloud should not be computed in current logic')
+            return False
 
         if not GeometriesController.set_mesh_from_file(geometries):
             return False
@@ -73,14 +97,10 @@ class GeometriesController:
         if geometries.convex_hull_mesh and not force_reload:
             return True
 
-        if geometries.point_cloud:
-            geometries.convex_hull_mesh, _ = geometries.point_cloud.compute_convex_hull()
-        elif geometries.mesh:
-            geometries.convex_hull_mesh, _ = geometries.mesh.compute_convex_hull()
-        else:
-            logging.warning("Tried to calculate convex hull but there is no mesh or point cloud")
-            return False
+        if not geometries.point_cloud:
+            GeometriesController.calculate_point_cloud(geometries, force_reload)
 
+        geometries.convex_hull_mesh, _ = geometries.point_cloud.compute_convex_hull()
         return True
 
     @staticmethod
@@ -88,14 +108,10 @@ class GeometriesController:
         if geometries.axis_aligned_bounding_box and not force_reload:
             return True
 
-        if geometries.point_cloud:
-            geometries.axis_aligned_bounding_box = geometries.point_cloud.get_axis_aligned_bounding_box()
-        elif geometries.mesh:
-            geometries.axis_aligned_bounding_box = geometries.mesh.get_axis_aligned_bounding_box()
-        else:
-            logging.warning("Tried to calculate axis aligned bounding box but there is no mesh or point cloud")
-            return False
+        if not geometries.point_cloud:
+            GeometriesController.calculate_point_cloud(geometries, force_reload)
 
+        geometries.axis_aligned_bounding_box = geometries.point_cloud.get_axis_aligned_bounding_box()
         return True
 
     @staticmethod
@@ -103,14 +119,10 @@ class GeometriesController:
         if geometries.center_mesh and not force_reload:
             return True
 
-        if geometries.point_cloud:
-            center = geometries.point_cloud.get_center()
-        elif geometries.mesh:
-            center = geometries.mesh.get_center()
-        else:
-            logging.warning("Tried to calculate barycenter but there is no mesh or point cloud")
-            return False
+        if not geometries.point_cloud:
+            GeometriesController.calculate_point_cloud(geometries, force_reload)
 
+        center = geometries.point_cloud.get_center()
         geometries.center_mesh = o3d.geometry.TriangleMesh().create_sphere(0.015)
         geometries.center_mesh.translate(center)
         geometries.center_mesh.paint_uniform_color([1, 0, 1])

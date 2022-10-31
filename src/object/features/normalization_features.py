@@ -16,7 +16,7 @@ class NormalizationFeatures:
     def misses_values(self) -> bool:
         misses_ints = self.flip is None
         misses_floats = any([math.isinf(self.distance_to_center), math.isinf(self.scale),
-                             math.isinf(self.alignment),
+                             math.isinf(self.alignment)
                              ])
         misses_array = any(np.isinf(self.eigenvalues))
         return misses_floats or misses_ints or misses_array

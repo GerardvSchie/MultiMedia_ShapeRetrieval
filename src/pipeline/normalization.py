@@ -19,7 +19,7 @@ class Normalizer:
         # Rotate based on PCA
         Normalizer.rot_pca(shape)
         # Flip based on momentum
-        Normalizer.flipper_vertices_center(shape.geometries.point_cloud)
+        Normalizer.flipper_vertices_center(shape)
         # Scale shape to unit size
         Normalizer.scaler(shape)
 
@@ -33,14 +33,17 @@ class Normalizer:
         GeometriesController.calculate_point_cloud_normals(shape.geometries, True)
 
     @staticmethod
-    def translater(shape):
+    def translater(shape: Shape):
         bary_center = shape.geometries.point_cloud.get_center()
         shape.geometries.point_cloud.translate(-bary_center)
+        shape.geometries.mesh.translate(-bary_center)
 
     @staticmethod
-    def scaler(shape):
+    def scaler(shape: Shape):
         scale_before = shape.geometries.point_cloud.get_axis_aligned_bounding_box().get_max_extent()
-        shape.geometries.point_cloud.scale(1 / scale_before, shape.geometries.point_cloud.get_center())
+        barycenter = shape.geometries.point_cloud.get_center()
+        shape.geometries.point_cloud.scale(1 / scale_before, barycenter)
+        shape.geometries.mesh.scale(1 / scale_before, barycenter)
 
     @staticmethod
     def rot_pca(shape: Shape):
@@ -51,11 +54,10 @@ class Normalizer:
         # rotate with positive or negative matrix
         if np.linalg.det(rotation_matrix) >= 0:
             shape.geometries.point_cloud.rotate(R=rotation_matrix)
+            shape.geometries.mesh.rotate(R=rotation_matrix)
         else:
             shape.geometries.point_cloud.rotate(R=-rotation_matrix)
-
-        # Verify eigenvalues of new mesh
-        Normalizer.get_eigenvalues_and_eigenvectors(shape.geometries.point_cloud)
+            shape.geometries.mesh.rotate(R=-rotation_matrix)
 
     @staticmethod
     def get_eigenvalues_and_eigenvectors(pcd: o3d.geometry.PointCloud):
@@ -71,11 +73,12 @@ class Normalizer:
         return sorted(zipped, key=lambda x: x[0], reverse=True)
 
     @staticmethod
-    def flipper_vertices_center(pcd: o3d.geometry.PointCloud):
-        fi = Normalizer.compute_fi(pcd)
+    def flipper_vertices_center(shape: Shape):
+        fi = Normalizer.compute_fi(shape.geometries.point_cloud)
         flipping_rotation_matrix = np.zeros((3, 3))
         np.fill_diagonal(flipping_rotation_matrix, fi)
-        pcd.rotate(R=flipping_rotation_matrix)
+        shape.geometries.point_cloud.rotate(R=flipping_rotation_matrix)
+        shape.geometries.mesh.rotate(R=flipping_rotation_matrix)
 
     @staticmethod
     def compute_fi(pcd: o3d.geometry.PointCloud):

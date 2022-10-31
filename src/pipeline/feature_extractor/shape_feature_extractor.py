@@ -48,7 +48,7 @@ class ShapeFeatureExtractor:
         if not math.isinf(shape.features.diameter) and not force_recompute:
             return False
 
-        GeometriesController.calculate_mesh(shape.geometries)
+        GeometriesController.calculate_point_cloud(shape.geometries)
         if not shape.geometries.convex_hull_mesh:
             GeometriesController.calculate_convex_hull(shape.geometries)
 
@@ -99,7 +99,7 @@ class ShapeFeatureExtractor:
             return False
 
         if not shape.geometries.mesh and not shape.geometries.point_cloud:
-            GeometriesController.calculate_mesh(shape.geometries)
+            GeometriesController.calculate_point_cloud(shape.geometries)
         GeometriesController.calculate_aligned_bounding_box(shape.geometries)
 
         return BoundingBoxFeatureExtractor.extract_features(shape.geometries.mesh, shape.geometries.point_cloud, shape.geometries.axis_aligned_bounding_box, shape.features.axis_aligned_bounding_box_features, force_recompute)

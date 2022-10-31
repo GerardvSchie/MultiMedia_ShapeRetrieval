@@ -5,14 +5,18 @@ NR_VERTICES = 10000
 
 # Paths
 FILENAME_ORIGINAL = 'original.ply'
-FILENAME_NORMALIZED_PCD = 'normalized.pcd'
-FILENAME_NORMALIZED_PLY = 'normalized.ply'
-FILENAME_REFINED = 'refined.ply'
+# FILENAME_NORMALIZED_PCD = 'normalized.pcd'
+# FILENAME_NORMALIZED_PLY = 'normalized.ply'
+# FILENAME_REFINED = 'refined.ply'
+
+FILENAME_NORMALIZED_PCD = 'normalized_v2.pcd'
+FILENAME_NORMALIZED_PLY = 'normalized_v2.ply'
 
 # Database paths
 DATABASE_DIR = 'data/database'
 DATABASE_ORIGINAL_DIR = os.path.join(DATABASE_DIR, 'original')
 DATABASE_REFINED_DIR = os.path.join(DATABASE_DIR, 'refined')
+DATABASE_NORMALIZED_DIR = os.path.join(DATABASE_DIR, 'normalized')
 
 DATABASE_FEATURES_FILENAME = 'features.csv'
 DATABASE_DESCRIPTORS_FILENAME = 'descriptors.csv'
