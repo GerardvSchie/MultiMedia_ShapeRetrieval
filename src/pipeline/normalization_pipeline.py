@@ -1,4 +1,6 @@
 import os
+import sys
+
 import open3d as o3d
 
 from src.pipeline.compute_descriptors import compute_descriptors
@@ -17,11 +19,11 @@ class NormalizationPipeline:
         # Load all shape features
         self.shape_features = DatabaseReader.read_features_paths([
             os.path.join(DATABASE_ORIGINAL_DIR, DATABASE_FEATURES_FILENAME),
-            os.path.join(DATABASE_REFINED_DIR, DATABASE_FEATURES_FILENAME)
+            os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_FEATURES_FILENAME)
         ])
 
         self.shape_descriptors = DatabaseReader.read_descriptors(
-            os.path.join(DATABASE_REFINED_DIR, DATABASE_DESCRIPTORS_FILENAME))
+            os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
 
     def normalize_shape(self, path: str) -> Shape:
         # Create shape object
@@ -58,8 +60,10 @@ class NormalizationPipeline:
 
             shape.set_new_ply_path(new_path)
 
+        sys.exit('Normalization pipeline temporarily broken')
+
         if shape.geometries.path.endswith(FILENAME_NORMALIZED_PLY):
-            new_path = os.path.join(os.path.split(shape.geometries.path)[0], FILENAME_REFINED)
+            new_path = os.path.join(os.path.split(shape.geometries.path)[0], FILENAME_NORMALIZED_PLY)
             if not os.path.exists(new_path):
                 refined_mesh, _ = simplifyMesh(shape.geometries.path, NR_VERTICES)
                 refined_mesh.save_current_mesh(new_path)

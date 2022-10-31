@@ -14,7 +14,7 @@ class DescriptorsTableTabWidget(QWidget):
         super(DescriptorsTableTabWidget, self).__init__()
         color_widget(self, [0, 255, 0])
 
-        shape_descriptors = DatabaseReader.read_descriptors(os.path.join(DATABASE_REFINED_DIR, DATABASE_DESCRIPTORS_FILENAME))
+        shape_descriptors = DatabaseReader.read_descriptors(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
         shape_list = []
 
         for identifier in shape_descriptors:

@@ -1,8 +1,6 @@
-import os
 import sys
 import logging
 import numpy as np
-import matplotlib
 import matplotlib.pyplot as plt
 
 import src.plot.io as io
@@ -10,6 +8,7 @@ import src.plot.util as util
 from src.object.shape import Shape
 from src.object.descriptors import Descriptors
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
+from src.util.configs import *
 
 
 class DistanceMatrixPlotter:
@@ -29,13 +28,6 @@ class DistanceMatrixPlotter:
             shape_dict[path] = Shape(path)
             shape_dict[path].descriptors = normalized_descriptors[path]
 
-        shape_dict.__delitem__(os.path.join('data', 'LabeledDB_new', 'Chair', '101', 'refined.ply'))
-        shape_dict.__delitem__(os.path.join('data', 'LabeledDB_new', 'Glasses', '42', 'refined.ply'))
-        shape_dict.__delitem__(os.path.join('data', 'LabeledDB_new', 'Chair', '109', 'refined.ply'))
-        shape_dict.__delitem__(os.path.join('data', 'LabeledDB_new', 'Cup', '33', 'refined.ply'))
-        shape_dict.__delitem__(os.path.join('data', 'LabeledDB_new', 'Cup', '34', 'refined.ply'))
-        logging.info(f'Removed {len(normalized_descriptors) - len(shape_dict)} elements from distance matrix calculations')
-
         for path in shape_dict:
             ShapeFeatureExtractor.extract_class_feature(shape_dict[path])
             classes.append(shape_dict[path].features.true_class)
@@ -53,17 +45,12 @@ class DistanceMatrixPlotter:
             #         distance_matrix[x, y] = categorical_labels[classes[max(x, y)]]
 
             DistanceMatrixPlotter.plot_and_save_heatmap(Descriptors.NAMES[i], distance_matrix, weight_vec, shape_dict)
-            # sys.exit()
 
-        vec = np.array([1, 1, 1, 1, 1, 1, 1, 1])
+        vec = np.full(descriptors_length, 1)
         distance_matrix = DistanceMatrixPlotter._calc_distance_matrix(shape_dict, vec)
         DistanceMatrixPlotter.plot_and_save_heatmap(str(vec), distance_matrix, vec, shape_dict)
 
-        vec = np.array([0.5, 2, 2, 0.5, 1.5, 1.5, 0.7, 0.4])
-        distance_matrix = DistanceMatrixPlotter._calc_distance_matrix(shape_dict, vec)
-        DistanceMatrixPlotter.plot_and_save_heatmap(str(vec), distance_matrix, vec, shape_dict)
-
-        vec = np.array([1.5, 1.3, 0.3, 0, 0.1, 1.7, 0.1, 0.50])
+        vec = np.array([1.5, 0.4, 1.3, 0.3, 1.7, 0, 0.2, 0.1, 0.50])
         distance_matrix = DistanceMatrixPlotter._calc_distance_matrix(shape_dict, vec)
         DistanceMatrixPlotter.plot_and_save_heatmap(str(vec), distance_matrix, vec, shape_dict)
 
@@ -83,7 +70,7 @@ class DistanceMatrixPlotter:
         cbar.ax.invert_yaxis()
 
         # Save the plot
-        io.save_plt_using_title('plots/distances', str(weights))
+        io.save_plt_using_title(PLOT_DISTANCES_DIR, str(weights))
 
     @staticmethod
     def set_ticks_and_labels(ax, shape_dict: dict[str, Shape]):
@@ -113,6 +100,8 @@ class DistanceMatrixPlotter:
 
     @staticmethod
     def _calc_distance_matrix(shape_dict: dict[str, Shape], weights: np.ndarray) -> np.ndarray:
+        assert len(Descriptors.NAMES) == len(weights)
+
         vectors = np.array([shape.descriptors.to_list() for shape in list(shape_dict.values())])
         vectors = vectors * weights
 

@@ -1,4 +1,3 @@
-import os
 from PyQt6.QtWidgets import QWidget, QHBoxLayout
 
 from app.widget.table_widget import TableWidget
@@ -14,7 +13,7 @@ class FeaturesTableTabWidget(QWidget):
         super(FeaturesTableTabWidget, self).__init__()
         color_widget(self, [0, 255, 0])
 
-        shape_features = DatabaseReader.read_features(os.path.join(DATABASE_REFINED_DIR, DATABASE_FEATURES_FILENAME))
+        shape_features = DatabaseReader.read_features(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_FEATURES_FILENAME))
         shape_list = []
 
         for identifier in shape_features:

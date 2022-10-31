@@ -1,5 +1,6 @@
 import math
 import numpy as np
+
 from src.database.util import read_np_array
 
 
@@ -7,8 +8,8 @@ class BoundingBoxFeatures:
     NAMES = ['min_bound', 'max_bound', 'surface_area', 'volume', 'diameter']
 
     def __init__(self) -> None:
-        self.min_bound: np.array = np.array((math.inf, math.inf, math.inf))
-        self.max_bound: np.array = np.array((math.inf, math.inf, math.inf))
+        self.min_bound: np.array = np.full(3, math.inf)
+        self.max_bound: np.array = np.full(3, math.inf)
         self.surface_area: float = math.inf
         self.volume: float = math.inf
         self.diameter: float = math.inf

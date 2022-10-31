@@ -15,13 +15,13 @@ FILENAME_NORMALIZED_PLY = 'normalized_v2.ply'
 # Database paths
 DATABASE_DIR = 'data/database'
 DATABASE_ORIGINAL_DIR = os.path.join(DATABASE_DIR, 'original')
-DATABASE_REFINED_DIR = os.path.join(DATABASE_DIR, 'refined')
 DATABASE_NORMALIZED_DIR = os.path.join(DATABASE_DIR, 'normalized')
 
 DATABASE_FEATURES_FILENAME = 'features.csv'
 DATABASE_DESCRIPTORS_FILENAME = 'descriptors.csv'
 DATABASE_DESCRIPTORS_INI = 'descriptors.ini'
 DATABASE_NORMALIZED_DESCRIPTORS_FILENAME = 'descriptors_normalized.csv'
+DATABASE_PROPERTIES_FILENAME = 'properties.csv'
 
 # Plot paths
 PLOT_DIR = 'plots'

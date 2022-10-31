@@ -1,5 +1,6 @@
 import os
 import logging
+
 import numpy as np
 import math
 
@@ -63,19 +64,13 @@ class ShapeFeatureExtractor:
             logging.warning('Cannot compute diameter with less than 2 points')
             return False
 
-        max_squared_distance = -math.inf
-
-        # Using only np operations to make it faster
-        for point in points:
-            relative_vector = points - point
-            components_squared = np.power(relative_vector, 2)
-            distance_squared = np.sum(components_squared, axis=1)
-            maximum = np.max(distance_squared)
-            if maximum > max_squared_distance:
-                max_squared_distance = maximum
-
-        max_diameter = np.sqrt(max_squared_distance)
-        shape.features.diameter = max_diameter
+        # Improve speed by using meshgrid on list of points
+        meshgrid_indices = np.array(np.meshgrid(range(len(points)), range(len(points)))).T.reshape(-1, 2)
+        values = points[meshgrid_indices]
+        vecs = values[:, 0, :] - values[:, 1, :]
+        distances = np.linalg.norm(vecs, axis=1)
+        max_distance = np.max(distances)
+        shape.features.diameter = max_distance
         return True
 
     @staticmethod
@@ -98,7 +93,7 @@ class ShapeFeatureExtractor:
         if not shape.features.axis_aligned_bounding_box_features.misses_values() and not force_recompute:
             return False
 
-        if not shape.geometries.mesh and not shape.geometries.point_cloud:
+        if not shape.geometries.point_cloud:
             GeometriesController.calculate_point_cloud(shape.geometries)
         GeometriesController.calculate_aligned_bounding_box(shape.geometries)
 
@@ -110,7 +105,7 @@ class ShapeFeatureExtractor:
             return False
 
         GeometriesController.calculate_mesh(shape.geometries)
-        return MeshFeatureExtractor.extract_features(shape.geometries.mesh, shape.geometries.point_cloud, shape.features.mesh_features, force_recompute)
+        return MeshFeatureExtractor.extract_features(shape.geometries.mesh, shape.features.mesh_features, force_recompute)
 
     @staticmethod
     def extract_convex_hull_features(shape: Shape, force_recompute=False) -> bool:
@@ -118,7 +113,7 @@ class ShapeFeatureExtractor:
             return False
 
         if GeometriesController.calculate_convex_hull(shape.geometries):
-            return MeshFeatureExtractor.extract_convex_hull_features(shape.geometries.convex_hull_mesh, None, shape.features.convex_hull_features, force_recompute)
+            return MeshFeatureExtractor.extract_convex_hull_features(shape.geometries.convex_hull_mesh, shape.features.convex_hull_features, force_recompute)
         else:
             logging.warning("Could not extract convex hull features")
             return False

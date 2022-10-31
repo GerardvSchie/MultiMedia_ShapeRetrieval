@@ -30,10 +30,10 @@ class ShapeFeaturesTabWidget(QWidget):
         # Load all shape features
         self.shape_features = DatabaseReader.read_features_paths([
             os.path.join(DATABASE_ORIGINAL_DIR, DATABASE_FEATURES_FILENAME),
-            os.path.join(DATABASE_REFINED_DIR, DATABASE_FEATURES_FILENAME)
+            os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_FEATURES_FILENAME)
         ])
 
-        self.shape_descriptors = DatabaseReader.read_descriptors(os.path.join(DATABASE_REFINED_DIR, DATABASE_DESCRIPTORS_FILENAME))
+        self.shape_descriptors = DatabaseReader.read_descriptors(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
 
         # Left panel
         self.settings: Settings = Settings()

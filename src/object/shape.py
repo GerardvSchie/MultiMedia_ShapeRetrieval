@@ -6,6 +6,7 @@ from src.controller.geometries_controller import GeometriesController
 from src.object.descriptors import Descriptors
 from src.object.features.shape_features import ShapeFeatures
 from src.object.geometries import Geometries
+from src.object.properties import Properties
 from src.util.configs import *
 
 
@@ -21,6 +22,7 @@ class Shape:
         self.features: ShapeFeatures = None
         self.descriptors: Descriptors = None
         self.geometries: Geometries = None
+        self.properties: Properties = None
 
         self.set_new_ply_path(path)
         if load_geometries:
@@ -37,14 +39,13 @@ class Shape:
         self.features: ShapeFeatures = ShapeFeatures()
         self.descriptors: Descriptors = Descriptors()
         self.geometries: Geometries = Geometries(new_path)
+        self.properties: Properties = Properties()
 
     @staticmethod
     def convert_to_ply(path) -> str:
         dir_path, file_name = os.path.split(path)
 
         # If the name of the file is one of these, then we assume its created by the program itself
-        # if file_name == FILENAME_ORIGINAL or file_name == FILENAME_NORMALIZED_PCD or file_name == FILENAME_NORMALIZED_PLY or file_name == FILENAME_REFINED:
-        #     return path
         if file_name == FILENAME_ORIGINAL or file_name == FILENAME_NORMALIZED_PCD or file_name == FILENAME_NORMALIZED_PLY:
             return path
 

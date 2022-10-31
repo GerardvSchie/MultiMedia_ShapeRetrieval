@@ -22,7 +22,7 @@ class ViewerWidget(QWidget):
         # Load all shape features
         self.shape_features = DatabaseReader.read_features_paths([
             os.path.join(DATABASE_ORIGINAL_DIR, DATABASE_FEATURES_FILENAME),
-            os.path.join(DATABASE_REFINED_DIR, DATABASE_FEATURES_FILENAME)
+            os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_FEATURES_FILENAME)
         ])
 
         # Left panel

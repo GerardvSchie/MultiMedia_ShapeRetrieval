@@ -11,39 +11,35 @@ from src.object.features.mesh_features import MeshFeatures
 
 class MeshFeatureExtractor:
     @staticmethod
-    def extract_convex_hull_features(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud, mesh_features: MeshFeatures, force_recompute=False) -> bool:
-        if not mesh and not point_cloud:
-            logging.warning("Cannot extract any features without mesh and point cloud")
+    def extract_convex_hull_features(mesh: o3d.geometry.TriangleMesh, mesh_features: MeshFeatures, force_recompute=False) -> bool:
+        if not mesh:
+            logging.warning("Cannot extract any features without mesh")
             return False
 
-        return MeshFeatureExtractor.extract_features(mesh, point_cloud, mesh_features, force_recompute)
+        return MeshFeatureExtractor.extract_features(mesh, mesh_features, force_recompute)
 
     @staticmethod
     # Only extract the features that are not yet set with values in the shape
-    def extract_features(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud, mesh_features: MeshFeatures, force_recompute=False) -> bool:
-        if not mesh and not point_cloud:
-            logging.warning("Cannot extract any features without mesh and point cloud")
+    def extract_features(mesh: o3d.geometry.TriangleMesh, mesh_features: MeshFeatures, force_recompute=False) -> bool:
+        if not mesh:
+            logging.warning("Cannot extract any features without mesh")
             return False
 
-        MeshFeatureExtractor.number_of_vertices(mesh, point_cloud, mesh_features, force_recompute)
+        computed_features = [
+            MeshFeatureExtractor.number_of_vertices(mesh, mesh_features, force_recompute),
+            MeshFeatureExtractor.number_of_faces(mesh, mesh_features, force_recompute),
+            MeshFeatureExtractor.calculate_surface_area(mesh, mesh_features, force_recompute),
+            MeshFeatureExtractor.calculate_volume(mesh, mesh_features, force_recompute),
+        ]
 
-        if mesh:
-            MeshFeatureExtractor.number_of_faces(mesh, mesh_features, force_recompute)
-            MeshFeatureExtractor.calculate_surface_area(mesh, mesh_features, force_recompute)
-            MeshFeatureExtractor.calculate_volume(mesh, mesh_features, force_recompute)
-            return True
-        else:
-            logging.warning("Could not extract some mesh features since mesh was missing")
-            return False
+        return any(computed_features)
 
     @staticmethod
-    def number_of_vertices(mesh: o3d.geometry.TriangleMesh, point_cloud: o3d.geometry.PointCloud, mesh_features: MeshFeatures, force_recompute=False) -> bool:
+    def number_of_vertices(mesh: o3d.geometry.TriangleMesh, mesh_features: MeshFeatures, force_recompute=False) -> bool:
         if mesh_features.nr_vertices and not force_recompute:
             return False
 
-        if point_cloud:
-            nr_points = len(point_cloud.points)
-        elif mesh:
+        if mesh:
             nr_points = len(mesh.vertices)
         else:
             logging.warning("Cannot give number of vertices without point cloud and mesh")

@@ -4,6 +4,7 @@ import os.path
 
 from src.object.descriptors import Descriptors
 from src.object.features.shape_features import ShapeFeatures
+from src.object.properties import Properties
 from src.database.util import read_np_array
 
 dataPaths = list()
@@ -67,3 +68,26 @@ class DatabaseReader:
                 shape_descriptors[path] = data
 
         return shape_descriptors
+
+    @staticmethod
+    def read_properties(path: str) -> dict[str, Properties]:
+        shape_properties = dict()
+        if not os.path.exists(path):
+            logging.warning(f'Properties path: {path} does not exist')
+            return shape_properties
+
+        with open(path, "r") as f:
+            # Read csv file and skip header
+            reader = csv.reader(f)
+            next(reader)
+
+            for properties in reader:
+                data = Properties()
+                identifier = properties[0]
+                data.from_list(properties[1:])
+
+                # Set path
+                path = os.path.join(*(read_np_array(identifier)))
+                shape_properties[path] = data
+
+        return shape_properties

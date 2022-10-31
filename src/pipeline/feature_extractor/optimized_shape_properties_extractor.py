@@ -1,69 +1,53 @@
-import time
 import open3d as o3d
 import numpy as np
 
 from src.controller.geometries_controller import GeometriesController
 from src.object.shape import Shape
+from src.object.properties import Properties
 
 
-class ShapeProps:
+class ShapePropsOptimized:
     @staticmethod
-    def shape_propertizer(shape: Shape):
-        GeometriesController.calculate_mesh(shape.geometries)
-        shape_props = {}
-
-        current_time = time.time()
-        vn = np.asarray(o3d.io.read_triangle_mesh(shape.geometries.path).sample_points_uniformly(number_of_points=5000, seed=0).points)
-        print("Sampling: ", time.time() - current_time)
-        current_time = time.time()
+    def shape_propertizer(shape: Shape) -> bool:
+        if not shape.properties.missing_values():
+            return False
 
         # Fixed seed
         np.random.seed(0)
 
+        GeometriesController.calculate_mesh(shape.geometries)
+        vn = np.asarray(shape.geometries.mesh.sample_points_uniformly(number_of_points=5000, seed=0).points)
+
         # D1
         indices = np.random.choice(len(vn), 5000, replace=False)
-        d1 = ShapeProps.calc_D1(vn[indices])
-        shape_props["D1"] = ShapeProps.create_and_normalize_hist(d1, (0, np.sqrt(3) / 2 + 0.1))
-        print("D1: ", time.time() - current_time)
-        current_time = time.time()
+        d1 = ShapePropsOptimized.calc_D1(vn[indices])
+        shape.properties.d1 = ShapePropsOptimized.create_and_normalize_hist(d1, Properties.MAX['d1'])
 
         # D2
         indices = np.random.choice(len(vn), 4000, replace=False)
         indices_meshgrid = np.meshgrid(indices[:2000], indices[2000:])
         indices_meshgrid = np.array(indices_meshgrid).T.reshape(-1, 2)
-        d2 = ShapeProps.calc_D2(vn[indices_meshgrid[:, 0]], vn[indices_meshgrid[:, 1]])
-        shape_props["D2"] = ShapeProps.create_and_normalize_hist(d2, (0, np.sqrt(3) + 0.05))
-        print("D2: ", time.time() - current_time)
-        current_time = time.time()
+        d2 = ShapePropsOptimized.calc_D2(vn[indices_meshgrid[:, 0]], vn[indices_meshgrid[:, 1]])
+        shape.properties.d2 = ShapePropsOptimized.create_and_normalize_hist(d2, Properties.MAX['d2'])
 
         # D3
         indices = np.random.choice(len(vn), 600, replace=False)
         arr = np.meshgrid(indices[:200], indices[200:400], indices[400:])
         indices_meshgrid = np.array(arr).T.reshape(-1, 3)
-        d3 = ShapeProps.calc_D3(vn[indices_meshgrid[:, 0]], vn[indices_meshgrid[:, 1]], vn[indices_meshgrid[:, 2]])
-        shape_props["D3"] = ShapeProps.create_and_normalize_hist(d3, (0, 1))
-        print("D3: ", time.time() - current_time)
+        d3 = ShapePropsOptimized.calc_D3(vn[indices_meshgrid[:, 0]], vn[indices_meshgrid[:, 1]], vn[indices_meshgrid[:, 2]])
+        shape.properties.d3 = ShapePropsOptimized.create_and_normalize_hist(d3, Properties.MAX['d3'])
 
         # A3
-        indices = np.random.choice(len(vn), 600, replace=False)
-        arr = np.meshgrid(indices[:200], indices[200:400], indices[400:])
-        indices_meshgrid = np.array(arr).T.reshape(-1, 3)
-        d3 = ShapeProps.calc_A3(vn[indices_meshgrid[:, 0]], vn[indices_meshgrid[:, 1]], vn[indices_meshgrid[:, 2]])
-        shape_props["A3"] = ShapeProps.create_and_normalize_hist(d3, (0, np.pi))
-        print("A3: ", time.time() - current_time)
-        current_time = time.time()
+        a3 = ShapePropsOptimized.calc_A3(vn[indices_meshgrid[:, 0]], vn[indices_meshgrid[:, 1]], vn[indices_meshgrid[:, 2]])
+        shape.properties.a3 = ShapePropsOptimized.create_and_normalize_hist(a3, Properties.MAX['a3'])
 
-        # D4
+        # D4 source range: https://math.stackexchange.com/questions/975968/the-maximum-volume-of-tetrahedron
         indices = np.random.choice(len(vn), 200, replace=False)
         abcd_indices = np.meshgrid(indices[:50], indices[50:100], indices[100:150], indices[150:])
         abcd_indices_meshgrid = np.array(abcd_indices).T.reshape(-1, 4)
-
-        d4 = ShapeProps.calc_D4(vn[abcd_indices_meshgrid[:, 0]], vn[abcd_indices_meshgrid[:, 1]], vn[abcd_indices_meshgrid[:, 2]], vn[abcd_indices_meshgrid[:, 3]])
-        shape_props["D4"] = ShapeProps.create_and_normalize_hist(d4, (0, 0.366))  # Max is 0.33
-        print("D4: ", time.time() - current_time)
-        current_time = time.time()
-        return shape_props
-
+        d4 = ShapePropsOptimized.calc_D4(vn[abcd_indices_meshgrid[:, 0]], vn[abcd_indices_meshgrid[:, 1]], vn[abcd_indices_meshgrid[:, 2]], vn[abcd_indices_meshgrid[:, 3]])
+        shape.properties.d4 = ShapePropsOptimized.create_and_normalize_hist(d4, Properties.MAX['d4'])
+        return True
 
     @staticmethod
     def calc_A3(v1, v2, v3):
@@ -96,8 +80,7 @@ class ShapeProps:
         return np.cbrt(np.abs(dot) / 6)
 
     @staticmethod
-    def create_and_normalize_hist(data: [float], hist_range: (float, float)):
-        hist, bin_edges = np.histogram(data, bins=20, range=hist_range)
-        # hist, bin_edges = np.histogram(data, bins=int(np.sqrt(len(data))), range=hist_range)
+    def create_and_normalize_hist(data: [float], max_value: float):
+        hist, bin_edges = np.histogram(data, bins=Properties.NR_BINS, range=(0, max_value))
         hist = hist / np.sum(hist)  # Normalize
-        return hist, bin_edges
+        return hist
