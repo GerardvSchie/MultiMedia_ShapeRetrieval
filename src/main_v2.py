@@ -202,7 +202,7 @@ def main():
         recomputed_properties.append(ShapePropsOptimized.shape_propertizer(shape))
 
     # Histograms
-    if any(recomputed_properties):
+    if any(recomputed_properties) or True:
         DatabaseWriter.write_properties(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME))
         normalize_properties(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME))
 
@@ -215,7 +215,7 @@ def main():
         plot_property(shape_list, 'a3', 'Angle between 3 vertices')
 
     if any(recomputed_properties) or recompute_plots or True:
-        properties = DatabaseReader.read_properties(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME))
+        properties = DatabaseReader.read_properties(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_PROPERTIES_FILENAME))
         DistanceMatrixPlotter.plot_properties(properties)
 
 

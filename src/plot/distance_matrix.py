@@ -221,12 +221,17 @@ class DistanceMatrixPlotter:
             arr1 = shape_dict[path_i].properties.__getattribute__(attribute)
             for path_j in shape_dict:
                 arr2 = shape_dict[path_j].properties.__getattribute__(attribute)
+
+                # Absolute distance
                 diff_arr = arr1 - arr2
+                result_matrix[i, j] = np.sum(np.abs(diff_arr))
+
+                # Euclidian
+                # diff_arr = arr1 - arr2
                 # squared_dif_arr = np.power(diff_arr, 2)
                 # distance = np.sqrt(np.sum(squared_dif_arr))
-                result_matrix[i, j] = np.sum(np.abs(diff_arr))
+                # result_matrix[i, j] = distance
                 j += 1
             i += 1
 
         return result_matrix
-

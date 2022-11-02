@@ -59,7 +59,8 @@ class DatabaseWriter:
 
     @staticmethod
     def get_properties_list(shape: Shape) -> [object]:
-        return [path_to_array(shape.geometries.path)] + shape.properties.to_list()
+        arr = [str(property).replace('\n', '') for property in shape.properties.to_list()]
+        return [str(path_to_array(shape.geometries.path))] + arr
 
 
 def path_to_array(path: str):

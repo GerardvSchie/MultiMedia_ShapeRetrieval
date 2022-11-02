@@ -35,8 +35,8 @@ class Properties:
     def from_list(self, params: [object]):
         assert len(Properties.NAMES) == len(params)
 
-        self.d1: float = read_np_array(params[0])
-        self.d2: float = read_np_array(params[1])
-        self.d3: float = read_np_array(params[2])
-        self.d4: float = read_np_array(params[3])
-        self.a3: float = read_np_array(params[4])
+        self.d1: np.array = read_np_array(params[0])
+        self.d2: np.array = read_np_array(params[1])
+        self.d3: np.array = read_np_array(params[2])
+        self.d4: np.array = read_np_array(params[3])
+        self.a3: np.array = read_np_array(params[4])

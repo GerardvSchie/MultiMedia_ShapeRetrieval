@@ -2,6 +2,8 @@ import numpy as np
 
 
 def read_np_array(array_str: str) -> np.array:
+    if type(array_str) is np.ndarray:
+        return array_str
     # Contains strings
     if array_str.__contains__("'"):
         arr = array_str[2:-2].split("\' \'")
