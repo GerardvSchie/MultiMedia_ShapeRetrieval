@@ -18,11 +18,11 @@ import src.util.logger as logger
 
 from pipeline.feature_extractor.optimized_shape_properties_extractor import ShapePropsOptimized
 from src.pipeline.normalize_descriptors import normalize_descriptors
+from src.pipeline.normalize_properties import normalize_properties
 from src.plot.descriptor_distribution import DescriptorDistributionPlotter
 from src.plot.distance_matrix import DistanceMatrixPlotter
 from src.pipeline.compute_descriptors import compute_descriptors
 from src.controller.geometries_controller import GeometriesController
-from src.pipeline.feature_extractor.normalization_feature_extractor import NormalizationFeatureExtractor
 from src.object.shape import Shape
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
 from src.database.writer import DatabaseWriter
@@ -201,14 +201,22 @@ def main():
     for shape in tqdm(shape_list):
         recomputed_properties.append(ShapePropsOptimized.shape_propertizer(shape))
 
+    # Histograms
     if any(recomputed_properties):
         DatabaseWriter.write_properties(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME))
+        normalize_properties(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME))
 
-    plot_property(shape_list, 'd1', 'Distance to center')
-    plot_property(shape_list, 'd2', 'Distance between two vertices')
-    plot_property(shape_list, 'd3', 'Area of triangle')
-    plot_property(shape_list, 'd4', 'Volume of tetrahedron')
-    plot_property(shape_list, 'a3', 'Angle between 3 vertices')
+    # Distance matrices
+    if any(recomputed_properties) or recompute_plots:
+        plot_property(shape_list, 'd1', 'Distance to center')
+        plot_property(shape_list, 'd2', 'Distance between two vertices')
+        plot_property(shape_list, 'd3', 'Area of triangle')
+        plot_property(shape_list, 'd4', 'Volume of tetrahedron')
+        plot_property(shape_list, 'a3', 'Angle between 3 vertices')
+
+    if any(recomputed_properties) or recompute_plots or True:
+        properties = DatabaseReader.read_properties(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME))
+        DistanceMatrixPlotter.plot_properties(properties)
 
 
 # Example loads an .off and .ply file

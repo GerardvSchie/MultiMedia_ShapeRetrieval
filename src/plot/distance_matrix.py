@@ -1,13 +1,16 @@
-import sys
-import logging
 import numpy as np
 import matplotlib.pyplot as plt
+from pyemd import emd
+from tqdm import tqdm
+from scipy.stats import entropy
+from scipy.spatial.distance import jensenshannon
 
 import src.plot.io as io
 import src.plot.util as util
 from src.object.shape import Shape
 from src.object.descriptors import Descriptors
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
+from src.object.properties import Properties
 from src.util.configs import *
 
 
@@ -44,18 +47,41 @@ class DistanceMatrixPlotter:
             #     for y in range(377):
             #         distance_matrix[x, y] = categorical_labels[classes[max(x, y)]]
 
-            DistanceMatrixPlotter.plot_and_save_heatmap(Descriptors.NAMES[i], distance_matrix, weight_vec, shape_dict)
+            file_path = os.path.join(PLOT_DESCRIPTORS_DISTANCES_DIR, str(weight_vec).replace(' ', '_') + '.png')
+            DistanceMatrixPlotter.plot_and_save_heatmap(file_path, Descriptors.NAMES[i], distance_matrix, shape_dict)
 
         vec = np.full(descriptors_length, 1)
         distance_matrix = DistanceMatrixPlotter._calc_distance_matrix(shape_dict, vec)
-        DistanceMatrixPlotter.plot_and_save_heatmap(str(vec), distance_matrix, vec, shape_dict)
+        file_path = os.path.join(PLOT_DESCRIPTORS_DISTANCES_DIR, str(vec).replace(' ', '_') + '.png')
+        DistanceMatrixPlotter.plot_and_save_heatmap(file_path, str(vec), distance_matrix, shape_dict)
 
         vec = np.array([1.5, 0.4, 1.3, 0.3, 1.7, 0, 0.2, 0.1, 0.50])
         distance_matrix = DistanceMatrixPlotter._calc_distance_matrix(shape_dict, vec)
-        DistanceMatrixPlotter.plot_and_save_heatmap(str(vec), distance_matrix, vec, shape_dict)
+        file_path = os.path.join(PLOT_DESCRIPTORS_DISTANCES_DIR, str(vec).replace(' ', '_') + '.png')
+        DistanceMatrixPlotter.plot_and_save_heatmap(file_path, str(vec), distance_matrix, shape_dict)
 
     @staticmethod
-    def plot_and_save_heatmap(title: str, matrix: np.ndarray, weights: np.ndarray, shape_dict: dict[str, Shape]) -> None:
+    def plot_properties(properties: dict[str, Properties]) -> None:
+        shape_dict = dict()
+        for path in properties:
+            shape_dict[path] = Shape(path)
+            shape_dict[path].properties = properties[path]
+
+        for path in shape_dict:
+            ShapeFeatureExtractor.extract_class_feature(shape_dict[path])
+
+        print(f'\nPlot property distances ({len(Properties.NAMES)} total)\n')
+        for property_name in Properties.NAMES:
+            # distance_matrix = DistanceMatrixPlotter.calc_jensen_shannon(shape_dict, property_name)
+            # distance_matrix = DistanceMatrixPlotter._calc_emd_distance_matrix(shape_dict, property_name)
+            # distance_matrix = DistanceMatrixPlotter.calc_entropy(shape_dict, property_name)
+            distance_matrix = DistanceMatrixPlotter.calc_euclidian_distance(shape_dict, property_name)
+
+            file_path = os.path.join(PLOT_DISTANCES_DIR, property_name + '.png')
+            DistanceMatrixPlotter.plot_and_save_heatmap(file_path, property_name.upper(), distance_matrix, shape_dict)
+
+    @staticmethod
+    def plot_and_save_heatmap(plot_path: str, title: str, matrix: np.ndarray, shape_dict: dict[str, Shape]) -> None:
         fig, ax = plt.subplots()
 
         mat = ax.matshow(matrix, cmap='magma')
@@ -70,7 +96,7 @@ class DistanceMatrixPlotter:
         cbar.ax.invert_yaxis()
 
         # Save the plot
-        io.save_plt_using_title(PLOT_DISTANCES_DIR, str(weights))
+        io.save_plt(plot_path)
 
     @staticmethod
     def set_ticks_and_labels(ax, shape_dict: dict[str, Shape]):
@@ -112,3 +138,95 @@ class DistanceMatrixPlotter:
             distance_matrix[index] = distances
 
         return distance_matrix
+
+    @staticmethod
+    def _calc_emd_distance_matrix(shape_dict: dict[str, Shape], attribute: str) -> np.ndarray:
+        n = Properties.NR_BINS
+        # Uniform
+        # distance_matrix = np.full((n, n), 1.0)
+
+        # DIAGONAL
+        # arr = np.arange(0.0, 1.0, 1.0 / n)
+        # meshgrid = np.array(np.meshgrid(arr, arr)).T.reshape(-1, 2)
+        # diff = meshgrid[:, 0] - meshgrid[:, 1]
+        # abs_diff = np.abs(diff)
+        # power_abs_diff = np.power(abs_diff, 2)
+        # distance_matrix = power_abs_diff.reshape(n, n)
+
+        # Threshold
+        # arr = np.arange(0.0, 1.0, 1.0 / n)
+        # meshgrid = np.array(np.meshgrid(arr, arr)).T.reshape(-1, 2)
+        # diff = meshgrid[:, 0] - meshgrid[:, 1]
+        # abs_diff = np.abs(diff)
+        # distance_matrix = (abs_diff > 0.1) * 1.0
+        # distance_matrix = distance_matrix.reshape(n, n)
+
+        # Threshold + Diagonal
+        arr = np.arange(0.0, 1.0, 1.0 / n)
+        meshgrid = np.array(np.meshgrid(arr, arr)).T.reshape(-1, 2)
+        diff = meshgrid[:, 0] - meshgrid[:, 1]
+        abs_diff = np.abs(diff)
+        abs_diff[abs_diff < 0.2] = 0.0
+        distance_matrix = abs_diff.reshape(n, n)
+
+        result_matrix = np.full((len(shape_dict), len(shape_dict)), 0.0)
+        i = 0
+        for path_i in tqdm(shape_dict):
+            j = 0
+            arr1 = shape_dict[path_i].properties.__getattribute__(attribute)
+            for path_j in shape_dict:
+                val = emd(arr1, shape_dict[path_j].properties.__getattribute__(attribute), distance_matrix)
+                result_matrix[i, j] = val
+                j += 1
+            i += 1
+
+        return result_matrix
+
+    @staticmethod
+    def calc_entropy(shape_dict: dict[str, Shape], attribute: str) -> np.ndarray:
+        result_matrix = np.full((len(shape_dict), len(shape_dict)), 0.0)
+        i = 0
+        for path_i in tqdm(shape_dict):
+            j = 0
+            arr1 = shape_dict[path_i].properties.__getattribute__(attribute) + 0.0001
+            for path_j in shape_dict:
+                arr2 = shape_dict[path_j].properties.__getattribute__(attribute) + 0.0001
+                result_matrix[i, j] = (entropy(arr1, arr2) + entropy(arr2, arr1)) / 2
+                j += 1
+            i += 1
+
+        return result_matrix
+
+    @staticmethod
+    def calc_jensen_shannon(shape_dict: dict[str, Shape], attribute: str) -> np.ndarray:
+        result_matrix = np.full((len(shape_dict), len(shape_dict)), 0.0)
+        i = 0
+        for path_i in tqdm(shape_dict):
+            j = 0
+            arr1 = shape_dict[path_i].properties.__getattribute__(attribute)
+            for path_j in shape_dict:
+                arr2 = shape_dict[path_j].properties.__getattribute__(attribute)
+                result_matrix[i, j] = jensenshannon(arr1, arr2)
+                j += 1
+            i += 1
+
+        return result_matrix
+
+    @staticmethod
+    def calc_euclidian_distance(shape_dict: dict[str, Shape], attribute: str) -> np.ndarray:
+        result_matrix = np.full((len(shape_dict), len(shape_dict)), 0.0)
+        i = 0
+        for path_i in tqdm(shape_dict):
+            j = 0
+            arr1 = shape_dict[path_i].properties.__getattribute__(attribute)
+            for path_j in shape_dict:
+                arr2 = shape_dict[path_j].properties.__getattribute__(attribute)
+                diff_arr = arr1 - arr2
+                # squared_dif_arr = np.power(diff_arr, 2)
+                # distance = np.sqrt(np.sum(squared_dif_arr))
+                result_matrix[i, j] = np.sum(np.abs(diff_arr))
+                j += 1
+            i += 1
+
+        return result_matrix
+

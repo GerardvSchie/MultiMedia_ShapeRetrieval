@@ -22,6 +22,7 @@ DATABASE_DESCRIPTORS_FILENAME = 'descriptors.csv'
 DATABASE_DESCRIPTORS_INI = 'descriptors.ini'
 DATABASE_NORMALIZED_DESCRIPTORS_FILENAME = 'descriptors_normalized.csv'
 DATABASE_PROPERTIES_FILENAME = 'properties.csv'
+DATABASE_NORMALIZED_PROPERTIES_FILENAME = 'properties_normalized.csv'
 
 # Plot paths
 PLOT_DIR = 'plots'
@@ -35,6 +36,7 @@ PLOT_REFINED_DESCRIPTORS_DIR = os.path.join(PLOT_DESCRIPTORS_DIR, 'refined')
 PLOT_NORMALIZED_DESCRIPTORS_DIR = os.path.join(PLOT_DESCRIPTORS_DIR, 'normalized')
 
 PLOT_DISTANCES_DIR = os.path.join(PLOT_DIR, 'distances')
+PLOT_DESCRIPTORS_DISTANCES_DIR = os.path.join(PLOT_DISTANCES_DIR, 'descriptors')
 
 PLOT_OUTLIERS_DIR = os.path.join(PLOT_DIR, 'outliers')
 
