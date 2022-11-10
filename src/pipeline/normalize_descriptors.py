@@ -62,10 +62,15 @@ def _normalize_descriptor(data: np.array, config: ConfigParser, name: str):
 
 def compute_normalized_descriptor(descriptors: Descriptors):
     config = ConfigParser()
-    config.read([os.path.join(DATABASE_REFINED_DIR, DATABASE_DESCRIPTORS_INI)])
+    config.read([os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_INI)])
 
-    descriptors.surface_area = (descriptors.surface_area - float(config['surface_area']['average'])) / float(config['surface_area']['standard_deviation'])
-    descriptors.compactness = (descriptors.compactness - float(config['compactness']['average'])) / float(config['compactness']['standard_deviation'])
-    descriptors.rectangularity = (descriptors.rectangularity - float(config['rectangularity']['average'])) / float(config['rectangularity']['standard_deviation'])
-    descriptors.diameter = (descriptors.diameter - float(config['diameter']['average'])) / float(config['diameter']['standard_deviation'])
-    descriptors.eccentricity = (descriptors.eccentricity - float(config['eccentricity']['average'])) / float(config['eccentricity']['standard_deviation'])
+    for attribute in Descriptors.NAMES:
+        val = descriptors.__getattribute__(attribute)
+        new_val = (val - float(config[attribute]['average'])) / float(config[attribute]['standard_deviation'])
+        descriptors.__setattr__(attribute, new_val)
+
+    # descriptors.surface_area = (descriptors.surface_area - float(config['surface_area']['average'])) / float(config['surface_area']['standard_deviation'])
+    # descriptors.compactness = (descriptors.compactness - float(config['compactness']['average'])) / float(config['compactness']['standard_deviation'])
+    # descriptors.rectangularity = (descriptors.rectangularity - float(config['rectangularity']['average'])) / float(config['rectangularity']['standard_deviation'])
+    # descriptors.diameter = (descriptors.diameter - float(config['diameter']['average'])) / float(config['diameter']['standard_deviation'])
+    # descriptors.eccentricity = (descriptors.eccentricity - float(config['eccentricity']['average'])) / float(config['eccentricity']['standard_deviation'])

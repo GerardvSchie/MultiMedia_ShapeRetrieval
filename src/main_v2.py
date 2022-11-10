@@ -16,7 +16,7 @@ sys.path.append(repoDirectory)
 
 import src.util.logger as logger
 
-from pipeline.feature_extractor.optimized_shape_properties_extractor import ShapePropsOptimized
+from src.pipeline.feature_extractor.optimized_shape_properties_extractor import ShapePropsOptimized
 from src.pipeline.normalize_descriptors import normalize_descriptors
 from src.pipeline.normalize_properties import normalize_properties
 from src.plot.descriptor_distribution import DescriptorDistributionPlotter

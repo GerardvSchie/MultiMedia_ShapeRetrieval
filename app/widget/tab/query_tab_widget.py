@@ -4,7 +4,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QWindow
 
 from app.widget.query_result_widget import QueryResultWidget
-from src.database.querier import DatabaseQuerier
+from src.database.querier import DatabaseQuerier, CustomDatabaseQuerier
 from src.object.features.shape_features import ShapeFeatures
 from src.object.settings import Settings
 
@@ -14,11 +14,12 @@ from app.widget.visualization_widget import VisualizationWidget
 from src.pipeline.compute_descriptors import compute_descriptors
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
 from src.pipeline.normalization_pipeline import NormalizationPipeline
+from src.util.configs import *
 
 
 class QueryTabWidget(QWidget):
-    NR_RESULTS = 8
-    RESULTS_PER_ROW = 4
+    NR_RESULTS = 5
+    RESULTS_PER_ROW = 5
 
     def __init__(self):
         super(QueryTabWidget, self).__init__()
@@ -29,6 +30,7 @@ class QueryTabWidget(QWidget):
         self.settings_widget = SettingsWidget(self.settings)
         self.pipeline = NormalizationPipeline()
         # self.querier = DatabaseQuerier(os.path.join(DATABASE_REFINED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
+        self.querier = CustomDatabaseQuerier(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
 
         # Load widget
         self.query_scene_widget = VisualizationWidget(self.settings)
@@ -66,7 +68,8 @@ class QueryTabWidget(QWidget):
         compute_descriptors(normalized_shape)
 
         # Dummy query
-        queried_shape_paths, distances = ['data\\LabeledDB_new\\Airplane\\61\\refined.ply'] * QueryTabWidget.NR_RESULTS, range(1, 100)
+        queried_shape_paths, distances = self.querier.query_descriptor(normalized_shape.descriptors)
+        # queried_shape_paths, distances = ['data\\LabeledDB_new\\Airplane\\61\\refined.ply'] * QueryTabWidget.NR_RESULTS, range(1, 100)
 
         for query_index in range(len(self.query_result_widgets)):
             query_result_widget = self.query_result_widgets[query_index]

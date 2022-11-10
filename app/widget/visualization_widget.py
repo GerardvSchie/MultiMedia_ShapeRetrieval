@@ -58,7 +58,8 @@ class VisualizationWidget(QWidget):
 
         # Load shape + the geometries needed for GUI drawing
         self.shape = shape
-        GeometriesController.calculate_gui_geometries(self.shape.geometries, True)
+
+        GeometriesController.calculate_gui_geometries(self.shape.geometries)
 
         # Compute normals
         GeometriesController.calculate_mesh_normals(self.shape.geometries, True)

@@ -83,8 +83,7 @@ class GeometriesController:
         if os.path.exists(geometries.path.split('.')[0] + '.pcd'):
             return GeometriesController.set_pcd_from_file(geometries, force_reload)
         else:
-            logging.warning('TEMPORARY: point cloud should not be computed in current logic')
-            return False
+            logging.warning('Will create pdc from mesh vertices')
 
         if not GeometriesController.set_mesh_from_file(geometries):
             return False

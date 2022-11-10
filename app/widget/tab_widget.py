@@ -1,4 +1,5 @@
 from app.widget.tab.descriptors_table_tab_widget import DescriptorsTableTabWidget
+from app.widget.tab.normalized_descriptors_table_tab_widget import NormalizedDescriptorsTableTabWidget
 from app.widget.tab.features_table_tab_widget import FeaturesTableTabWidget
 from app.widget.tab.query_tab_widget import QueryTabWidget
 from app.widget.tab.shape_features_tab_widget import ShapeFeaturesTabWidget
@@ -40,6 +41,7 @@ class TabWidget(QTabWidget):
         self.shape_features_widget = ShapeFeaturesTabWidget()
         self.features_table_widget = FeaturesTableTabWidget()
         self.descriptors_table_widget = DescriptorsTableTabWidget()
+        self.normalized_descriptors_table_widget = NormalizedDescriptorsTableTabWidget()
         self.query_widget = QueryTabWidget()
 
         # Add the tabs
@@ -48,6 +50,7 @@ class TabWidget(QTabWidget):
         self.addTab(self.shape_features_widget, "Features")
         self.addTab(self.features_table_widget, "Features table")
         self.addTab(self.descriptors_table_widget, "Descriptors table")
+        self.addTab(self.normalized_descriptors_table_widget, "Normalized descriptors table")
         self.addTab(self.query_widget, "Query")
 
     def closeEvent(self, *args, **kwargs):

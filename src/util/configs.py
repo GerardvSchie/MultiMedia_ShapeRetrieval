@@ -5,10 +5,6 @@ NR_VERTICES = 10000
 
 # Paths
 FILENAME_ORIGINAL = 'original.ply'
-# FILENAME_NORMALIZED_PCD = 'normalized.pcd'
-# FILENAME_NORMALIZED_PLY = 'normalized.ply'
-# FILENAME_REFINED = 'refined.ply'
-
 FILENAME_NORMALIZED_PCD = 'normalized_v2.pcd'
 FILENAME_NORMALIZED_PLY = 'normalized_v2.ply'
 

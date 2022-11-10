@@ -66,10 +66,10 @@ class MenuBar(QMenuBar):
         load_airplane_action_1.setShortcut(QKeySequence("Ctrl+2"))
         self.shape_menu.addAction(load_airplane_action_1)
 
-        load_human_action = QAction("&Human", self)
-        load_human_action.triggered.connect(self.open_human_shape)
-        load_human_action.setShortcut(QKeySequence("Ctrl+3"))
-        self.shape_menu.addAction(load_human_action)
+        load_chair_action = QAction("&Chair", self)
+        load_chair_action.triggered.connect(self.open_chair_shape)
+        load_chair_action.setShortcut(QKeySequence("Ctrl+3"))
+        self.shape_menu.addAction(load_chair_action)
 
     def open_file_action(self):
         file_filter = "Triangle mesh files (*.ply *.off)"
@@ -98,5 +98,5 @@ class MenuBar(QMenuBar):
     def open_airplane_shape_2(self):
         self.tab_widget.load_shape_from_path("data/LabeledDB_new/Airplane/65.off")
 
-    def open_human_shape(self):
-        self.tab_widget.load_shape_from_path("data/LabeledDB_new/Human/1.off")
+    def open_chair_shape(self):
+        self.tab_widget.load_shape_from_path("data/LabeledDB_new/Chair/101.off")
