@@ -1,5 +1,4 @@
 from copy import deepcopy
-import os
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QGridLayout
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QWindow
@@ -8,7 +7,7 @@ from app.widget.features.bounding_box_features_widget import BoundingBoxFeatures
 from app.widget.features.mesh_features_widget import MeshFeaturesWidget
 from app.widget.features.silhouette_features_widget import SilhouetteFeaturesWidget
 from app.widget.descriptors_widget import DescriptorsWidget
-from src.database.reader import DatabaseReader
+from database.features.reader import FeatureDatabaseReader
 from src.object.settings import Settings
 
 from app.util.font import BOLD_FONT
@@ -28,12 +27,12 @@ class ShapeFeaturesTabWidget(QWidget):
         color_widget(self, [0, 255, 0])
 
         # Load all shape features
-        self.shape_features = DatabaseReader.read_features_paths([
+        self.shape_features = FeatureDatabaseReader.read_features_paths([
             os.path.join(DATABASE_ORIGINAL_DIR, DATABASE_FEATURES_FILENAME),
             os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_FEATURES_FILENAME)
         ])
 
-        self.shape_descriptors = DatabaseReader.read_descriptors(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
+        self.shape_descriptors = FeatureDatabaseReader.read_descriptors(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
 
         # Left panel
         self.settings: Settings = Settings()

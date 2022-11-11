@@ -1,4 +1,3 @@
-import numpy as np
 import matplotlib.pyplot as plt
 from pyemd import emd
 from tqdm import tqdm
@@ -18,14 +17,14 @@ class DistanceMatrixPlotter:
     @staticmethod
     def plot(normalized_descriptors: dict[str, Descriptors]) -> None:
         shape_dict = dict()
-        classes = []
-
-        # For debug only
-        categorical_labels = {
-            'Airplane': 1, 'Ant': 2, 'Armadillo': 3, 'Bearing': 4, 'Bird': 5, 'Bust': 6, 'Chair': 7, 'Cup': 8, 'Fish': 9,
-            'FourLeg': 10, 'Glasses': 11, 'Hand': 12, 'Human': 13, 'Mech': 14, 'Octopus': 15, 'Plier': 16, 'Table': 17,
-            'Teddy': 18, 'Vase': 19
-        }
+        # classes = []
+        #
+        # # For debug only
+        # categorical_labels = {
+        #     'Airplane': 1, 'Ant': 2, 'Armadillo': 3, 'Bearing': 4, 'Bird': 5, 'Bust': 6, 'Chair': 7, 'Cup': 8, 'Fish': 9,
+        #     'FourLeg': 10, 'Glasses': 11, 'Hand': 12, 'Human': 13, 'Mech': 14, 'Octopus': 15, 'Plier': 16, 'Table': 17,
+        #     'Teddy': 18, 'Vase': 19
+        # }
 
         for path in normalized_descriptors:
             shape_dict[path] = Shape(path)
@@ -33,32 +32,26 @@ class DistanceMatrixPlotter:
 
         for path in shape_dict:
             ShapeFeatureExtractor.extract_class_feature(shape_dict[path])
-            classes.append(shape_dict[path].features.true_class)
+            # classes.append(shape_dict[path].features.true_class)
 
         descriptors_length = len(Descriptors.NAMES)
 
         for i in range(descriptors_length):
             weight_vec = np.zeros(descriptors_length)
             weight_vec[i] = 1
-            distance_matrix = DistanceMatrixPlotter._calc_distance_matrix(shape_dict, weight_vec)
-
-            # For debug only
-            # for x in range(377):
-            #     for y in range(377):
-            #         distance_matrix[x, y] = categorical_labels[classes[max(x, y)]]
+            distance_matrix = DistanceMatrixPlotter.calc_distance_matrix(shape_dict, weight_vec)
 
             file_path = os.path.join(PLOT_DESCRIPTORS_DISTANCES_DIR, str(weight_vec).replace(' ', '_') + '.png')
             DistanceMatrixPlotter.plot_and_save_heatmap(file_path, Descriptors.NAMES[i], distance_matrix, shape_dict)
 
         vec = np.full(descriptors_length, 1)
-        distance_matrix = DistanceMatrixPlotter._calc_distance_matrix(shape_dict, vec)
+        distance_matrix = DistanceMatrixPlotter.calc_distance_matrix(shape_dict, vec)
         file_path = os.path.join(PLOT_DESCRIPTORS_DISTANCES_DIR, str(vec).replace(' ', '_') + '.png')
         DistanceMatrixPlotter.plot_and_save_heatmap(file_path, str(vec), distance_matrix, shape_dict)
 
-        vec = np.array([1.5, 0.4, 1.3, 0.3, 1.7, 0, 0.2, 0.1, 0.50])
-        distance_matrix = DistanceMatrixPlotter._calc_distance_matrix(shape_dict, vec)
-        file_path = os.path.join(PLOT_DESCRIPTORS_DISTANCES_DIR, str(vec).replace(' ', '_') + '.png')
-        DistanceMatrixPlotter.plot_and_save_heatmap(file_path, str(vec), distance_matrix, shape_dict)
+        distance_matrix = DistanceMatrixPlotter.calc_distance_matrix(shape_dict, WEIGHT_VECTOR)
+        file_path = os.path.join(PLOT_DESCRIPTORS_DISTANCES_DIR, str(WEIGHT_VECTOR).replace(' ', '_') + '.png')
+        DistanceMatrixPlotter.plot_and_save_heatmap(file_path, str(WEIGHT_VECTOR), distance_matrix, shape_dict)
 
     @staticmethod
     def plot_properties(properties: dict[str, Properties]) -> None:
@@ -125,7 +118,7 @@ class DistanceMatrixPlotter:
         ax.set_ylabel('category')
 
     @staticmethod
-    def _calc_distance_matrix(shape_dict: dict[str, Shape], weights: np.ndarray) -> np.ndarray:
+    def calc_distance_matrix(shape_dict: dict[str, Shape], weights: np.ndarray) -> np.ndarray:
         assert len(Descriptors.NAMES) == len(weights)
 
         vectors = np.array([shape.descriptors.to_list() for shape in list(shape_dict.values())])

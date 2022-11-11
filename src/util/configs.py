@@ -1,7 +1,9 @@
 import os
+import numpy as np
 
 # General settings
 NR_VERTICES = 10000
+WEIGHT_VECTOR = np.array([1.5, 0.4, 1.3, 0.3, 1.7, 0, 0.2, 0.1, 0.5])
 
 # Paths
 FILENAME_ORIGINAL = 'original.ply'
@@ -19,6 +21,7 @@ DATABASE_DESCRIPTORS_INI = 'descriptors.ini'
 DATABASE_NORMALIZED_DESCRIPTORS_FILENAME = 'descriptors_normalized.csv'
 DATABASE_PROPERTIES_FILENAME = 'properties.csv'
 DATABASE_NORMALIZED_PROPERTIES_FILENAME = 'properties_normalized.csv'
+DATABASE_DISTANCES_FILENAME = 'distances.ini'
 
 # Plot paths
 PLOT_DIR = 'plots'
@@ -37,3 +40,4 @@ PLOT_DESCRIPTORS_DISTANCES_DIR = os.path.join(PLOT_DISTANCES_DIR, 'descriptors')
 PLOT_OUTLIERS_DIR = os.path.join(PLOT_DIR, 'outliers')
 
 PLOT_PROPERTIES_DIR = os.path.join(PLOT_DIR, 'properties')
+PLOT_CONFUSION_MATRICES = os.path.join(PLOT_DIR, 'confusion_matrices')

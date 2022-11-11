@@ -2,7 +2,7 @@ from src.pipeline.compute_descriptors import compute_descriptors
 from src.controller.geometries_controller import GeometriesController
 from src.object.shape import Shape
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
-from src.database.reader import DatabaseReader
+from database.features.reader import FeatureDatabaseReader
 from src.pipeline.normalization import Normalizer
 from src.util.configs import *
 
@@ -10,12 +10,12 @@ from src.util.configs import *
 class NormalizationPipeline:
     def __init__(self):
         # Load all shape features
-        self.shape_features = DatabaseReader.read_features_paths([
+        self.shape_features = FeatureDatabaseReader.read_features_paths([
             os.path.join(DATABASE_ORIGINAL_DIR, DATABASE_FEATURES_FILENAME),
             os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_FEATURES_FILENAME)
         ])
 
-        self.shape_descriptors = DatabaseReader.read_descriptors(
+        self.shape_descriptors = FeatureDatabaseReader.read_descriptors(
             os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
 
     def normalize_shape(self, path: str) -> Shape:

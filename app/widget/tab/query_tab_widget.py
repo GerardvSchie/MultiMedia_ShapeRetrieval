@@ -1,11 +1,8 @@
-import os
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QGridLayout
-from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGridLayout
 from PyQt6.QtGui import QWindow
 
 from app.widget.query_result_widget import QueryResultWidget
-from src.database.querier import DatabaseQuerier, CustomDatabaseQuerier
-from src.object.features.shape_features import ShapeFeatures
+from database.features.querier import CustomFeatureDatabaseQuerier
 from src.object.settings import Settings
 
 from app.widget.util import color_widget, create_header_label
@@ -30,7 +27,7 @@ class QueryTabWidget(QWidget):
         self.settings_widget = SettingsWidget(self.settings)
         self.pipeline = NormalizationPipeline()
         # self.querier = DatabaseQuerier(os.path.join(DATABASE_REFINED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
-        self.querier = CustomDatabaseQuerier(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
+        self.querier = CustomFeatureDatabaseQuerier(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
 
         # Load widget
         self.query_scene_widget = VisualizationWidget(self.settings)

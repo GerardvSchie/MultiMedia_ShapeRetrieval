@@ -8,7 +8,7 @@ from src.object.shape import Shape
 from src.object.properties import Properties
 
 
-class DatabaseWriter:
+class FeatureDatabaseWriter:
     DESCRIPTORS_HEADER = ['path'] + Descriptors.NAMES
     FEATURES_HEADER = ['path'] + ShapeFeatures.NAMES
     PROPERTIES_HEADER = ['path'] + Properties.NAMES
@@ -21,9 +21,9 @@ class DatabaseWriter:
             writer = csv.writer(f)
 
             # Write header to file
-            writer.writerow(DatabaseWriter.FEATURES_HEADER)
+            writer.writerow(FeatureDatabaseWriter.FEATURES_HEADER)
             for shape in shape_list:
-                writer.writerow(DatabaseWriter.get_features_list(shape))
+                writer.writerow(FeatureDatabaseWriter.get_features_list(shape))
 
     @staticmethod
     def write_descriptors(shape_list: [Shape], path: str):
@@ -33,9 +33,9 @@ class DatabaseWriter:
             writer = csv.writer(f)
 
             # Write header to file
-            writer.writerow(DatabaseWriter.DESCRIPTORS_HEADER)
+            writer.writerow(FeatureDatabaseWriter.DESCRIPTORS_HEADER)
             for shape in shape_list:
-                writer.writerow(DatabaseWriter.get_descriptors_list(shape))
+                writer.writerow(FeatureDatabaseWriter.get_descriptors_list(shape))
 
     @staticmethod
     def write_properties(shape_list: [Shape], path: str):
@@ -45,9 +45,9 @@ class DatabaseWriter:
             writer = csv.writer(f)
 
             # Write header to file
-            writer.writerow(DatabaseWriter.PROPERTIES_HEADER)
+            writer.writerow(FeatureDatabaseWriter.PROPERTIES_HEADER)
             for shape in shape_list:
-                writer.writerow(DatabaseWriter.get_properties_list(shape))
+                writer.writerow(FeatureDatabaseWriter.get_properties_list(shape))
 
     @staticmethod
     def get_features_list(shape: Shape) -> [object]:

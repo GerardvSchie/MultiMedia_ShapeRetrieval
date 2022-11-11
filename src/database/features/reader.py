@@ -5,19 +5,19 @@ import os.path
 from src.object.descriptors import Descriptors
 from src.object.features.shape_features import ShapeFeatures
 from src.object.properties import Properties
-from src.database.util import read_np_array
+from database.features.util import read_np_array
 
 dataPaths = list()
 
 
-class DatabaseReader:
+class FeatureDatabaseReader:
     @staticmethod
     def read_features_paths(paths: [str]) -> dict[str, ShapeFeatures]:
         shape_features = dict()
 
         # Union features dictionaries together
         for path in paths:
-            shape_features = shape_features | DatabaseReader.read_features(path)
+            shape_features = shape_features | FeatureDatabaseReader.read_features(path)
 
         return shape_features
 

@@ -1,4 +1,3 @@
-import os
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout
 from PyQt6.QtGui import QWindow
 
@@ -7,8 +6,7 @@ from app.widget.features.shape_features_widget import ShapeFeaturesWidget
 from app.widget.visualization_widget import VisualizationWidget
 from app.widget.util import color_widget
 
-from src.database.reader import DatabaseReader
-from src.object.features.shape_features import ShapeFeatures
+from database.features.reader import FeatureDatabaseReader
 from src.object.settings import Settings
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
 from src.util.configs import *
@@ -20,7 +18,7 @@ class ViewerWidget(QWidget):
         color_widget(self, [0, 255, 0])
 
         # Load all shape features
-        self.shape_features = DatabaseReader.read_features_paths([
+        self.shape_features = FeatureDatabaseReader.read_features_paths([
             os.path.join(DATABASE_ORIGINAL_DIR, DATABASE_FEATURES_FILENAME),
             os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_FEATURES_FILENAME)
         ])

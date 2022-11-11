@@ -1,16 +1,14 @@
-import numpy as np
-import os
 from configparser import ConfigParser
 
-from src.database.reader import DatabaseReader
-from src.database.writer import DatabaseWriter
+from database.features.reader import FeatureDatabaseReader
+from database.features.writer import FeatureDatabaseWriter
 from src.object.properties import Properties
 from src.object.shape import Shape
 from src.util.configs import *
 
 
 def normalize_properties(path: str) -> None:
-    properties_dict = DatabaseReader.read_properties(path)
+    properties_dict = FeatureDatabaseReader.read_properties(path)
     dir_name, filename = os.path.split(path)
 
     # Fill lists with data
@@ -45,7 +43,7 @@ def normalize_properties(path: str) -> None:
         shape.properties = properties_dict[identifier]
         shape_list.append(shape)
 
-    DatabaseWriter.write_properties(shape_list, os.path.join(dir_name, DATABASE_NORMALIZED_PROPERTIES_FILENAME))
+    FeatureDatabaseWriter.write_properties(shape_list, os.path.join(dir_name, DATABASE_NORMALIZED_PROPERTIES_FILENAME))
 
 
 def _normalize_property(data: np.array, config: ConfigParser, name: str):

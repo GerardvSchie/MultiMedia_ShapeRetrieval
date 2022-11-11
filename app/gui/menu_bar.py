@@ -71,6 +71,16 @@ class MenuBar(QMenuBar):
         load_chair_action.setShortcut(QKeySequence("Ctrl+3"))
         self.shape_menu.addAction(load_chair_action)
 
+        load_cup_action = QAction("&Cup", self)
+        load_cup_action.triggered.connect(self.open_cup_shape)
+        load_cup_action.setShortcut(QKeySequence("Ctrl+4"))
+        self.shape_menu.addAction(load_cup_action)
+
+        load_glasses_action = QAction("&Glasses", self)
+        load_glasses_action.triggered.connect(self.open_glasses_shape)
+        load_glasses_action.setShortcut(QKeySequence("Ctrl+5"))
+        self.shape_menu.addAction(load_glasses_action)
+
     def open_file_action(self):
         file_filter = "Triangle mesh files (*.ply *.off)"
         file_name, _ = QFileDialog.getOpenFileName(self, "Open shape", "data/LabeledDB_new", file_filter)
@@ -100,3 +110,9 @@ class MenuBar(QMenuBar):
 
     def open_chair_shape(self):
         self.tab_widget.load_shape_from_path("data/LabeledDB_new/Chair/101.off")
+
+    def open_cup_shape(self):
+        self.tab_widget.load_shape_from_path("data/LabeledDB_new/Cup/21.off")
+
+    def open_glasses_shape(self):
+        self.tab_widget.load_shape_from_path("data/LabeledDB_new/Glasses/41.off")

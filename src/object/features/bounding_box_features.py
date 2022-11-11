@@ -1,7 +1,7 @@
 import math
 import numpy as np
 
-from src.database.util import read_np_array
+from database.features.util import read_np_array
 
 
 class BoundingBoxFeatures:

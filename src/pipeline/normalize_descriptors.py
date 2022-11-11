@@ -1,16 +1,14 @@
-import numpy as np
-import os
 from configparser import ConfigParser
 
-from src.database.reader import DatabaseReader
-from src.database.writer import DatabaseWriter
+from database.features.reader import FeatureDatabaseReader
+from database.features.writer import FeatureDatabaseWriter
 from src.object.descriptors import Descriptors
 from src.object.shape import Shape
 from src.util.configs import *
 
 
 def normalize_descriptors(path: str) -> None:
-    descriptors_dict = DatabaseReader.read_descriptors(path)
+    descriptors_dict = FeatureDatabaseReader.read_descriptors(path)
     dir_name, filename = os.path.split(path)
 
     # Fill lists with data
@@ -45,7 +43,7 @@ def normalize_descriptors(path: str) -> None:
         shape.descriptors = descriptors_dict[identifier]
         shape_list.append(shape)
 
-    DatabaseWriter.write_descriptors(shape_list, os.path.join(dir_name, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
+    FeatureDatabaseWriter.write_descriptors(shape_list, os.path.join(dir_name, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
 
 
 def _normalize_descriptor(data: np.array, config: ConfigParser, name: str):
@@ -68,9 +66,3 @@ def compute_normalized_descriptor(descriptors: Descriptors):
         val = descriptors.__getattribute__(attribute)
         new_val = (val - float(config[attribute]['average'])) / float(config[attribute]['standard_deviation'])
         descriptors.__setattr__(attribute, new_val)
-
-    # descriptors.surface_area = (descriptors.surface_area - float(config['surface_area']['average'])) / float(config['surface_area']['standard_deviation'])
-    # descriptors.compactness = (descriptors.compactness - float(config['compactness']['average'])) / float(config['compactness']['standard_deviation'])
-    # descriptors.rectangularity = (descriptors.rectangularity - float(config['rectangularity']['average'])) / float(config['rectangularity']['standard_deviation'])
-    # descriptors.diameter = (descriptors.diameter - float(config['diameter']['average'])) / float(config['diameter']['standard_deviation'])
-    # descriptors.eccentricity = (descriptors.eccentricity - float(config['eccentricity']['average'])) / float(config['eccentricity']['standard_deviation'])

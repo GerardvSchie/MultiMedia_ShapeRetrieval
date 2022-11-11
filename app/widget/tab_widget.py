@@ -12,8 +12,6 @@ from app.util.worker import Worker
 from app.gui.menu_bar import MenuBar
 from app.widget.tab.viewer_widget import ViewerWidget
 from app.widget.tab.normalization_tab_widget import NormalizationTabWidget
-from src.database.reader import DatabaseReader
-from src.object.features.shape_features import ShapeFeatures
 
 
 class TabWidget(QTabWidget):

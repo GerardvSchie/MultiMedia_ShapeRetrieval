@@ -8,7 +8,10 @@ def save_plt_using_title(plot_dir: str, title: str):
 
 
 def save_plt(plot_path: str):
-    os.makedirs(os.path.split(plot_path)[0], exist_ok=True)
+    dirs, _ = os.path.split(plot_path)
+    if dirs:
+        os.makedirs(dirs, exist_ok=True)
+
     plt.tight_layout()
     # plt.margins(x=0, y=0)
     # plt.savefig(plot_path)

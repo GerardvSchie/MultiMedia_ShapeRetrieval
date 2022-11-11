@@ -1,17 +1,11 @@
-import math
-import os
 import matplotlib
 import matplotlib.pyplot as plt
 import src.util.io
-import numpy as np
 from src.object.features.shape_features import ShapeFeatures
-from matplotlib.ticker import PercentFormatter
 import src.plot.io
 
 from src.util.configs import *
-from src.database.reader import dataPaths
-from src.vertex_normalization import refine_mesh
-
+from database.features.reader import dataPaths
 
 # Python can't convert variable names to string.
 CLASSES = 'classes'
