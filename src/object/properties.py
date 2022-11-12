@@ -1,7 +1,7 @@
 import math
 import numpy as np
 
-from database.features.util import read_np_array
+from database.util import read_np_array
 
 
 class Properties:

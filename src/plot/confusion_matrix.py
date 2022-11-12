@@ -6,7 +6,7 @@ from src.object.shape import Shape
 from src.object.descriptors import Descriptors
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
 from src.util.configs import *
-from database.features.util import *
+from database.util import *
 import src.plot.io as io
 
 

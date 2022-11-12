@@ -7,7 +7,7 @@ from app.widget.features.bounding_box_features_widget import BoundingBoxFeatures
 from app.widget.features.mesh_features_widget import MeshFeaturesWidget
 from app.widget.features.silhouette_features_widget import SilhouetteFeaturesWidget
 from app.widget.descriptors_widget import DescriptorsWidget
-from database.features.reader import FeatureDatabaseReader
+from database.reader import FeatureDatabaseReader
 from src.object.settings import Settings
 
 from app.util.font import BOLD_FONT

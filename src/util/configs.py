@@ -3,9 +3,13 @@ import numpy as np
 
 # General settings
 NR_VERTICES = 10000
+NR_SHAPES = 380
+NR_CATEGORIES = 19
+
+# Querying
 WEIGHT_VECTOR = np.array([1.5, 0.4, 1.3, 0.3, 1.7, 0, 0.2, 0.1, 0.5])
 
-# Paths
+# Shape paths
 FILENAME_ORIGINAL = 'original.ply'
 FILENAME_NORMALIZED_PCD = 'normalized_v2.pcd'
 FILENAME_NORMALIZED_PLY = 'normalized_v2.ply'
@@ -21,7 +25,7 @@ DATABASE_DESCRIPTORS_INI = 'descriptors.ini'
 DATABASE_NORMALIZED_DESCRIPTORS_FILENAME = 'descriptors_normalized.csv'
 DATABASE_PROPERTIES_FILENAME = 'properties.csv'
 DATABASE_NORMALIZED_PROPERTIES_FILENAME = 'properties_normalized.csv'
-DATABASE_DISTANCES_FILENAME = 'distances.ini'
+DATABASE_DISTANCES_FILENAME = 'distances.npy'
 
 # Plot paths
 PLOT_DIR = 'plots'

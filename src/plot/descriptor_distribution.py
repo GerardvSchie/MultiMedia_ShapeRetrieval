@@ -7,7 +7,7 @@ from src.plot.util import histogram_plot
 
 class DescriptorDistributionPlotter:
     @staticmethod
-    def plot_features(plot_dir: str, data: [Descriptors]):
+    def plot_descriptors(plot_dir: str, data: [Descriptors]):
         for name in Descriptors.NAMES:
             DescriptorDistributionPlotter.numerical_feature(plot_dir, data, [name], name.replace('_', ' ').capitalize())
 

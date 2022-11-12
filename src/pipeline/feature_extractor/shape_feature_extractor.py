@@ -4,7 +4,7 @@ import logging
 import numpy as np
 import math
 
-from database.features.writer import path_to_array
+from database.writer import path_to_array
 from src.object.shape import Shape
 from src.controller.geometries_controller import GeometriesController
 from src.pipeline.feature_extractor.bounding_box_feature_extractor import BoundingBoxFeatureExtractor

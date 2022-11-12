@@ -24,8 +24,8 @@ from src.controller.geometries_controller import GeometriesController
 from src.pipeline.feature_extractor.normalization_feature_extractor import NormalizationFeatureExtractor
 from src.object.shape import Shape
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
-from database.features.writer import FeatureDatabaseWriter
-from database.features.reader import FeatureDatabaseReader
+from database.writer import FeatureDatabaseWriter
+from database.reader import FeatureDatabaseReader
 from src.util.io import check_working_dir
 from src.pipeline.normalization import Normalizer
 from src.plot.feature_distribution import FeatureDistributionPlotter
@@ -218,11 +218,11 @@ def main():
         normalize_descriptors(os.path.join(DATABASE_REFINED_DIR, DATABASE_DESCRIPTORS_FILENAME))
 
     if any(recomputed_descriptors) or recompute_plots:
-        DescriptorDistributionPlotter.plot_features(PLOT_REFINED_DESCRIPTORS_DIR, [shape.descriptors for shape in shape_list])
+        DescriptorDistributionPlotter.plot_descriptors(PLOT_REFINED_DESCRIPTORS_DIR, [shape.descriptors for shape in shape_list])
         normalized_descriptors = FeatureDatabaseReader.read_descriptors(os.path.join(DATABASE_REFINED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
-        DescriptorDistributionPlotter.plot_features(PLOT_NORMALIZED_DESCRIPTORS_DIR, list(normalized_descriptors.values()))
+        DescriptorDistributionPlotter.plot_descriptors(PLOT_NORMALIZED_DESCRIPTORS_DIR, list(normalized_descriptors.values()))
 
-        DistanceMatrixPlotter.plot(normalized_descriptors)
+        DistanceMatrixPlotter.plot_descriptors(normalized_descriptors)
 
     # plot_feature(shape_list, 'Ant')
     # plot_feature(shape_list, 'Airplane')

@@ -1,13 +1,13 @@
 from configparser import ConfigParser
 
-from database.features.reader import FeatureDatabaseReader
-from database.features.writer import FeatureDatabaseWriter
+from database.reader import FeatureDatabaseReader
+from database.writer import FeatureDatabaseWriter
 from src.object.descriptors import Descriptors
 from src.object.shape import Shape
 from src.util.configs import *
 
 
-def normalize_descriptors(path: str) -> None:
+def normalize_descriptors(path: str) -> [Shape]:
     descriptors_dict = FeatureDatabaseReader.read_descriptors(path)
     dir_name, filename = os.path.split(path)
 
@@ -44,6 +44,7 @@ def normalize_descriptors(path: str) -> None:
         shape_list.append(shape)
 
     FeatureDatabaseWriter.write_descriptors(shape_list, os.path.join(dir_name, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
+    return shape_list
 
 
 def _normalize_descriptor(data: np.array, config: ConfigParser, name: str):

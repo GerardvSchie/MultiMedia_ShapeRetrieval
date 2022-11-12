@@ -2,8 +2,8 @@ from PyQt6.QtWidgets import QWidget, QHBoxLayout
 
 from app.widget.table_widget import TableWidget
 from app.widget.util import color_widget
-from database.features.reader import FeatureDatabaseReader
-from database.features.writer import FeatureDatabaseWriter
+from database.reader import FeatureDatabaseReader
+from database.writer import FeatureDatabaseWriter
 from src.object.shape import Shape
 from src.util.configs import *
 

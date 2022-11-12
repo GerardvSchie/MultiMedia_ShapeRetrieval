@@ -6,7 +6,7 @@ from app.widget.features.shape_features_widget import ShapeFeaturesWidget
 from app.widget.visualization_widget import VisualizationWidget
 from app.widget.util import color_widget
 
-from database.features.reader import FeatureDatabaseReader
+from database.reader import FeatureDatabaseReader
 from src.object.settings import Settings
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
 from src.util.configs import *

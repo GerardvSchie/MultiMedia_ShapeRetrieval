@@ -4,6 +4,9 @@ import sys
 import matplotlib
 import matplotlib.pyplot as plt
 
+from object.distances import Distances
+from pipeline.compute_distances import calc_distances
+
 # Needed to fix ModuleNotFoundError when importing src.util.logger.
 directoryContainingCurrentFile = os.path.dirname(__file__)
 repoDirectory = os.path.dirname(directoryContainingCurrentFile)
@@ -22,8 +25,8 @@ from src.pipeline.compute_descriptors import compute_descriptors
 from src.controller.geometries_controller import GeometriesController
 from src.object.shape import Shape
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
-from database.features.writer import FeatureDatabaseWriter
-from database.features.reader import FeatureDatabaseReader
+from database.writer import FeatureDatabaseWriter
+from database.reader import FeatureDatabaseReader
 from src.util.io import check_working_dir
 from src.pipeline.normalization import Normalizer
 from src.plot.feature_distribution import FeatureDistributionPlotter
@@ -171,53 +174,68 @@ def main():
 
     add_shape_features(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_FEATURES_FILENAME))
     add_shape_descriptors(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
+    add_shape_properties(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME))
 
     print('\nCompute features of normalized shapes:\n')
     recomputed_features = []
     recomputed_descriptors = []
+    recomputed_properties = []
+
+    # All other features can be computed afterwards
     for shape in tqdm(shape_list):
-        # All other features can be computed afterwards
         recomputed_features.append(ShapeFeatureExtractor.extract_all_shape_features(shape))
         recomputed_descriptors.append(compute_descriptors(shape))
-
-    if any(recomputed_features):
-        FeatureDatabaseWriter.write_features(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_FEATURES_FILENAME))
-        FeatureDistributionPlotter.plot_features(PLOT_REFINED_FEATURES_DIR, [shape.features for shape in shape_list])
-    if any(recomputed_descriptors):
-        FeatureDatabaseWriter.write_descriptors(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
-        normalize_descriptors(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
-
-    if any(recomputed_descriptors) or recompute_plots:
-        DescriptorDistributionPlotter.plot_features(PLOT_REFINED_DESCRIPTORS_DIR, [shape.descriptors for shape in shape_list])
-        normalized_descriptors = FeatureDatabaseReader.read_descriptors(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
-        DescriptorDistributionPlotter.plot_features(PLOT_NORMALIZED_DESCRIPTORS_DIR, list(normalized_descriptors.values()))
-        DistanceMatrixPlotter.plot(normalized_descriptors)
-
-    if any(recomputed_descriptors) or recompute_plots:
-        normalized_descriptors = FeatureDatabaseReader.read_descriptors(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
-        ConfusionMatrixPlotter.plot(normalized_descriptors)
-
-    print('\nCompute properties of shapes:\n')
-    add_shape_properties(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME))
-
-    recomputed_properties = []
-    for shape in tqdm(shape_list):
         recomputed_properties.append(ShapePropsOptimized.shape_propertizer(shape))
 
-    # Histograms
-    if any(recomputed_properties) or True:
+    recomputed_features = any(recomputed_features)
+    recomputed_descriptors = any(recomputed_descriptors)
+    recomputed_properties = any(recomputed_properties)
+
+    # if not (recomputed_features or recomputed_descriptors or recomputed_properties):
+    #     return
+
+    if recomputed_features:
+        FeatureDatabaseWriter.write_features(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_FEATURES_FILENAME))
+        FeatureDistributionPlotter.plot_features(PLOT_REFINED_FEATURES_DIR, [shape.features for shape in shape_list])
+
+    if recomputed_descriptors:
+        FeatureDatabaseWriter.write_descriptors(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
+        normalized_shape_list = normalize_descriptors(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
+
+        # Recompute distance matrix on normalized descriptors and save to file
+        distances = calc_distances(normalized_shape_list)
+        distances.save(os.path.join(DATABASE_DIR, DATABASE_DISTANCES_FILENAME))
+
+    if recomputed_properties:
         FeatureDatabaseWriter.write_properties(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME))
         normalize_properties(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME))
 
-    # Distance matrices
-    if any(recomputed_properties) or recompute_plots:
+    # Replot descriptors
+    if recomputed_descriptors or recompute_plots:
+        DescriptorDistributionPlotter.plot_descriptors(PLOT_REFINED_DESCRIPTORS_DIR, [shape.descriptors for shape in shape_list])
+        normalized_descriptors = FeatureDatabaseReader.read_descriptors(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
+        DescriptorDistributionPlotter.plot_descriptors(PLOT_NORMALIZED_DESCRIPTORS_DIR, list(normalized_descriptors.values()))
+
+    # Distance matrix plots
+    if recomputed_descriptors or recompute_plots or True:
+        distances = Distances(os.path.join(DATABASE_DIR, DATABASE_DISTANCES_FILENAME))
+        DistanceMatrixPlotter.plot_distances(distances)
+
+    # Confusion matrix plots
+    if recomputed_descriptors or recompute_plots:
+        normalized_descriptors = FeatureDatabaseReader.read_descriptors(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
+        ConfusionMatrixPlotter.plot(normalized_descriptors)
+
+    # Plot distributions
+    if recomputed_properties or recompute_plots:
         plot_property(shape_list, 'd1', 'Distance to center')
         plot_property(shape_list, 'd2', 'Distance between two vertices')
         plot_property(shape_list, 'd3', 'Area of triangle')
         plot_property(shape_list, 'd4', 'Volume of tetrahedron')
         plot_property(shape_list, 'a3', 'Angle between 3 vertices')
 
-    if any(recomputed_properties) or recompute_plots:
+    # Plot distances between properties
+    if recomputed_properties or recompute_plots:
         properties = FeatureDatabaseReader.read_properties(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_PROPERTIES_FILENAME))
         DistanceMatrixPlotter.plot_properties(properties)
 
