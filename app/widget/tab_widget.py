@@ -12,6 +12,7 @@ from app.util.worker import Worker
 from app.gui.menu_bar import MenuBar
 from app.widget.tab.viewer_widget import ViewerWidget
 from app.widget.tab.normalization_tab_widget import NormalizationTabWidget
+from widget.tab.tsne_tab_widget import TsneTabWidget
 
 
 class TabWidget(QTabWidget):
@@ -35,21 +36,26 @@ class TabWidget(QTabWidget):
 
         # Tab widgets
         self.viewer_widget = ViewerWidget()
-        self.normalization_widget = NormalizationTabWidget()
-        self.shape_features_widget = ShapeFeaturesTabWidget()
-        self.features_table_widget = FeaturesTableTabWidget()
-        self.descriptors_table_widget = DescriptorsTableTabWidget()
-        self.normalized_descriptors_table_widget = NormalizedDescriptorsTableTabWidget()
-        self.query_widget = QueryTabWidget()
+        # self.normalization_widget = NormalizationTabWidget()
+        # self.shape_features_widget = ShapeFeaturesTabWidget()
+        # self.features_table_widget = FeaturesTableTabWidget()
+        # self.descriptors_table_widget = DescriptorsTableTabWidget()
+        # self.normalized_descriptors_table_widget = NormalizedDescriptorsTableTabWidget()
+        # self.query_widget = QueryTabWidget()
+        self.tsne_widget = TsneTabWidget()
 
         # Add the tabs
         self.addTab(self.viewer_widget, "Mesh inspect")
-        self.addTab(self.normalization_widget, "Normalize mesh")
-        self.addTab(self.shape_features_widget, "Features")
-        self.addTab(self.features_table_widget, "Features table")
-        self.addTab(self.descriptors_table_widget, "Descriptors table")
-        self.addTab(self.normalized_descriptors_table_widget, "Normalized descriptors table")
-        self.addTab(self.query_widget, "Query")
+        # self.addTab(self.normalization_widget, "Normalize mesh")
+        # self.addTab(self.shape_features_widget, "Features")
+        # self.addTab(self.features_table_widget, "Features table")
+        # self.addTab(self.descriptors_table_widget, "Descriptors table")
+        # self.addTab(self.normalized_descriptors_table_widget, "Normalized descriptors table")
+        # self.addTab(self.query_widget, "Query")
+        self.addTab(self.tsne_widget, "t-SNE")
+
+        # Set current widget
+        self.setCurrentWidget(self.tsne_widget)
 
     def closeEvent(self, *args, **kwargs):
         self.worker.stop()

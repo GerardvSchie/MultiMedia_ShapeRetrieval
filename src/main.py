@@ -1,11 +1,9 @@
 import os
 from tqdm import tqdm
 import sys
-import open3d as o3d
-from matplotlib import pyplot as plt
 import matplotlib
 
-from pipeline.feature_extractor.shape_properties_extractor import ShapeProps
+from plot.confusion_matrix import ConfusionMatrixPlotter
 
 # Needed to fix ModuleNotFoundError when importing src.util.logger.
 directoryContainingCurrentFile = os.path.dirname(__file__)
@@ -16,22 +14,26 @@ sys.path.append(repoDirectory)
 
 import src.util.logger as logger
 
+from src.object.distances import Distances
+from src.pipeline.compute_distances import calc_distances
+from src.plot.tsne import plot_tsne
+from src.pipeline.compute_tsne import dimensionality_reduction
+from src.plot.property_distribution import plot_property
+from src.pipeline.feature_extractor.optimized_shape_properties_extractor import ShapePropsOptimized
 from src.pipeline.normalize_descriptors import normalize_descriptors
+from src.pipeline.normalize_properties import normalize_properties
 from src.plot.descriptor_distribution import DescriptorDistributionPlotter
 from src.plot.distance_matrix import DistanceMatrixPlotter
 from src.pipeline.compute_descriptors import compute_descriptors
 from src.controller.geometries_controller import GeometriesController
-from src.pipeline.feature_extractor.normalization_feature_extractor import NormalizationFeatureExtractor
 from src.object.shape import Shape
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
-from database.writer import FeatureDatabaseWriter
-from database.reader import FeatureDatabaseReader
+from src.database.writer import FeatureDatabaseWriter
+from src.database.reader import FeatureDatabaseReader
 from src.util.io import check_working_dir
 from src.pipeline.normalization import Normalizer
 from src.plot.feature_distribution import FeatureDistributionPlotter
-from src.vertex_normalization import refine_mesh, simplifyMesh
 from src.util.configs import *
-from src.plot.io import save_plt
 
 
 def read_original_shapes() -> [Shape]:
@@ -74,45 +76,69 @@ def add_shape_descriptors(shape_list: [Shape], path: str) -> None:
             shape.descriptors = descriptors_data[shape.geometries.path]
 
 
-def normalize_and_save_pcd(shape: Shape, new_path: str):
-    if os.path.exists(new_path):
-        return
+def add_shape_properties(shape_list: [Shape], path: str) -> None:
+    properties_data = FeatureDatabaseReader.read_properties(path)
 
-    # When normalization is successful
-    if Normalizer.normalize_shape(shape):
-        shape.save_pcd(new_path)
-        shape.geometries.path = new_path
+    for shape in shape_list:
+        if shape.geometries.path in properties_data:
+            shape.properties = properties_data[shape.geometries.path]
 
 
-def plot_feature_data(shape_collection: [Shape]) -> None:
-    FeatureDistributionPlotter.plot_features([shape.features for shape in shape_collection])
+def save_state(shape_list: [Shape], recomputed_features: bool, recomputed_descriptors: bool, recomputed_properties: bool):
+    if recomputed_features:
+        FeatureDatabaseWriter.write_features(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_FEATURES_FILENAME))
+        FeatureDistributionPlotter.plot_features(PLOT_REFINED_FEATURES_DIR, [shape.features for shape in shape_list])
+
+    if recomputed_descriptors:
+        FeatureDatabaseWriter.write_descriptors(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
+        normalized_shape_list = normalize_descriptors(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
+
+        # Recompute distance matrix on normalized descriptors and save to file
+        distances = calc_distances(normalized_shape_list)
+        distances.save(os.path.join(DATABASE_DIR, DATABASE_DISTANCES_FILENAME))
+
+        # Plot t-sne on weighted vectors
+        normalized_descriptors = np.array([normalized_shape.descriptors.to_list() for normalized_shape in normalized_shape_list])
+        dimensionality_reduction(normalized_descriptors * WEIGHT_VECTOR)
+
+    if recomputed_properties:
+        FeatureDatabaseWriter.write_properties(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME))
+        normalize_properties(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME))
 
 
-def refine_meshes(shape_collection: [Shape], final_vertices) -> None:
-    testShape = shape_collection[140]
-    old_shape_path = testShape.geometries.path
+def plot(shape_list: [Shape], recomputed_descriptors: bool, recomputed_properties: bool, recompute_plots: bool = False):
+    # Replot descriptors
+    if recomputed_descriptors or recompute_plots:
+        DescriptorDistributionPlotter.plot_descriptors(PLOT_REFINED_DESCRIPTORS_DIR, [shape.descriptors for shape in shape_list])
+        normalized_descriptors = FeatureDatabaseReader.read_descriptors(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
+        DescriptorDistributionPlotter.plot_descriptors(PLOT_NORMALIZED_DESCRIPTORS_DIR, list(normalized_descriptors.values()))
 
-    #print(f'{old_shape_path}\n')
+    # Distance matrix plots
+    if recomputed_descriptors or recompute_plots:
+        distances = Distances(os.path.join(DATABASE_DIR, DATABASE_DISTANCES_FILENAME))
+        DistanceMatrixPlotter.plot_distances(distances)
 
-    #refine_mesh(old_shape_path, final_vertices)
-    #prin()
+    # Confusion matrix plots
+    if recomputed_descriptors or recompute_plots:
+        normalized_descriptors = FeatureDatabaseReader.read_descriptors(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
+        ConfusionMatrixPlotter.plot(normalized_descriptors)
 
-    finalVertexCounts = []
-    for current_shape in tqdm(shape_collection):
-        current_shape_path = current_shape.geometries.path
+    # t-SNE plotting
+    if recomputed_descriptors or recompute_plots or True:
+        plot_tsne()
 
-        finalVertexCountOfThisMesh = refine_mesh(current_shape_path, final_vertices)
-        finalVertexCounts.append(finalVertexCountOfThisMesh)
+    # Plot distributions
+    if recomputed_properties or recompute_plots:
+        plot_property(shape_list, 'd1', 'Distance to center')
+        plot_property(shape_list, 'd2', 'Distance between two vertices')
+        plot_property(shape_list, 'd3', 'Area of triangle')
+        plot_property(shape_list, 'd4', 'Volume of tetrahedron')
+        plot_property(shape_list, 'a3', 'Angle between 3 vertices')
 
-    # Create a histogram to check if the simplification performed well.
-    final_counts = np.array(finalVertexCounts)
-
-    #print(f'final_counts = {final_counts}')
-
-    plt.hist(final_counts, bins = 100)
-    plt.title('Final vertex counts of simplified meshes')
-
-    plt.show()
+    # Plot distances between properties
+    if recomputed_properties or recompute_plots:
+        properties = FeatureDatabaseReader.read_properties(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_PROPERTIES_FILENAME))
+        DistanceMatrixPlotter.plot_properties(properties)
 
 
 def main():
@@ -143,129 +169,45 @@ def main():
         if not shape.geometries.path.endswith(FILENAME_ORIGINAL):
             continue
 
-        new_path = os.path.join(os.path.split(shape.geometries.path)[0], FILENAME_NORMALIZED_PCD)
+        dir_path = os.path.split(shape.geometries.path)[0]
+        poisson_pcd_path = os.path.join(dir_path, FILENAME_NORMALIZED_PCD)
+        normalized_path = os.path.join(dir_path, FILENAME_NORMALIZED_PLY)
 
-        # Path already exists, set path of shape to point cloud
-        if os.path.exists(new_path):
-            shape.geometries.path = new_path
+        if os.path.exists(poisson_pcd_path) and os.path.exists(normalized_path):
+            shape.set_new_ply_path(normalized_path)
             continue
 
         GeometriesController.set_mesh_from_file(shape.geometries)
-        shape.geometries.point_cloud = shape.geometries.mesh.sample_points_poisson_disk(NR_VERTICES)
-        normalize_and_save_pcd(shape, new_path)
+        shape.geometries.point_cloud = shape.geometries.mesh.sample_points_poisson_disk(NR_VERTICES, seed=0)
 
-    # Go from a normalized point cloud to a mesh
-    print('\n--------------\nCreate normalized meshes')
-    for shape in tqdm(shape_list):
-        if not shape.geometries.path.endswith(FILENAME_NORMALIZED_PCD):
-            continue
+        # When normalization is successful
+        if Normalizer.normalize_shape(shape):
+            shape.save_pcd(poisson_pcd_path)
+            shape.save_ply(normalized_path)
 
-        new_path = os.path.join(os.path.split(shape.geometries.path)[0], FILENAME_NORMALIZED_PLY)
-        if os.path.exists(new_path):
-            shape.geometries.path = new_path
-            shape.set_new_ply_path(new_path)
-            continue
+        shape.set_new_ply_path(normalized_path)
 
-        point_cloud: o3d.geometry.PointCloud = o3d.io.read_point_cloud(shape.geometries.path)
-        point_cloud.estimate_normals()
-        point_cloud.orient_normals_consistent_tangent_plane(10)
-
-        mesh, _ = o3d.geometry.TriangleMesh().create_from_point_cloud_poisson(point_cloud)
-        mesh: o3d.geometry.TriangleMesh = mesh
-        o3d.io.write_triangle_mesh(new_path, mesh)
-
-        shape.set_new_ply_path(new_path)
-
-    # Creating a mesh with 10k vertices from the normalized point cloud (with a poisson surface)
-    print(f'\n--------------\nSimplifying normalized meshes to {NR_VERTICES} vertices')
-    for shape in tqdm(shape_list):
-        if not shape.geometries.path.endswith(FILENAME_NORMALIZED_PLY):
-            continue
-
-        new_path = os.path.join(os.path.split(shape.geometries.path)[0], FILENAME_REFINED)
-        if os.path.exists(new_path):
-            shape.geometries.path = new_path
-            shape.set_new_ply_path(new_path)
-            continue
-
-        refined_mesh, _ = simplifyMesh(shape.geometries.path, NR_VERTICES)
-        refined_mesh.save_current_mesh(new_path)
-
-        shape.set_new_ply_path(new_path)
-
-    add_shape_features(shape_list, os.path.join(DATABASE_REFINED_DIR, DATABASE_FEATURES_FILENAME))
-    add_shape_descriptors(shape_list, os.path.join(DATABASE_REFINED_DIR, DATABASE_DESCRIPTORS_FILENAME))
+    add_shape_features(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_FEATURES_FILENAME))
+    add_shape_descriptors(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
+    add_shape_properties(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME))
 
     print('\nCompute features of normalized shapes:\n')
     recomputed_features = []
     recomputed_descriptors = []
-    for shape in tqdm(shape_list):
-        # First extract the normalization features from the pcd
-        if shape.features.normalization_features.misses_values():
-            pcd_name = os.path.join(os.path.split(shape.geometries.path)[0], FILENAME_NORMALIZED_PCD)
-            normalized_point_cloud = o3d.io.read_point_cloud(pcd_name)
-            recomputed_features.append(NormalizationFeatureExtractor.extract_features(normalized_point_cloud, shape.features.normalization_features))
+    recomputed_properties = []
 
-        # All other features can be computed afterwards
+    # All other features can be computed afterwards
+    for shape in tqdm(shape_list):
         recomputed_features.append(ShapeFeatureExtractor.extract_all_shape_features(shape))
         recomputed_descriptors.append(compute_descriptors(shape))
+        recomputed_properties.append(ShapePropsOptimized.shape_propertizer(shape))
 
-    if any(recomputed_features):
-        FeatureDatabaseWriter.write_features(shape_list, os.path.join(DATABASE_REFINED_DIR, DATABASE_FEATURES_FILENAME))
-        FeatureDistributionPlotter.plot_features(PLOT_REFINED_FEATURES_DIR, [shape.features for shape in shape_list])
-    if any(recomputed_descriptors):
-        FeatureDatabaseWriter.write_descriptors(shape_list, os.path.join(DATABASE_REFINED_DIR, DATABASE_DESCRIPTORS_FILENAME))
-        normalize_descriptors(os.path.join(DATABASE_REFINED_DIR, DATABASE_DESCRIPTORS_FILENAME))
+    recomputed_features = any(recomputed_features)
+    recomputed_descriptors = any(recomputed_descriptors)
+    recomputed_properties = any(recomputed_properties)
 
-    if any(recomputed_descriptors) or recompute_plots:
-        DescriptorDistributionPlotter.plot_descriptors(PLOT_REFINED_DESCRIPTORS_DIR, [shape.descriptors for shape in shape_list])
-        normalized_descriptors = FeatureDatabaseReader.read_descriptors(os.path.join(DATABASE_REFINED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
-        DescriptorDistributionPlotter.plot_descriptors(PLOT_NORMALIZED_DESCRIPTORS_DIR, list(normalized_descriptors.values()))
-
-        DistanceMatrixPlotter.plot_descriptors(normalized_descriptors)
-
-    # plot_feature(shape_list, 'Ant')
-    # plot_feature(shape_list, 'Airplane')
-    # plot_feature(shape_list, 'Vase')
-
-
-def plot_feature(shape_list: [Shape], category: str):
-    features_list = []
-    for shape in tqdm(shape_list):
-        if shape.features.true_class != category:
-            continue
-
-        features = ShapeProps.shape_propertizer(shape)
-        features_list.append(features)
-
-    for feat in features_list:
-        d1_features = feat["D1"]
-        plt.plot((d1_features[1][0:-1] + d1_features[1][1:]) / 2, d1_features[0])
-
-    save_plt(os.path.join(PLOT_PROPERTIES_DIR, f'd1_{category}.png'))
-
-    for feat in features_list:
-        d2_features = feat["D2"]
-        plt.plot((d2_features[1][0:-1] + d2_features[1][1:]) / 2, d2_features[0])
-
-    save_plt(os.path.join(PLOT_PROPERTIES_DIR, f'd2_{category}.png'))
-
-    for feat in features_list:
-        d3_features = feat["D3"]
-        plt.plot((d3_features[1][0:-1] + d3_features[1][1:]) / 2, d3_features[0])
-
-    save_plt(os.path.join(PLOT_PROPERTIES_DIR, f'd3_{category}.png'))
-
-    for feat in features_list:
-        a3_features = feat["A3"]
-        plt.plot((a3_features[1][0:-1] + a3_features[1][1:]) / 2, a3_features[0])
-
-    save_plt(os.path.join(PLOT_PROPERTIES_DIR, f'a3_{category}.png'))
-
-    for feat in features_list:
-        d4_features = feat["D4"]
-        plt.plot((d4_features[1][0:-1] + d4_features[1][1:]) / 2, d4_features[0])
-    save_plt(os.path.join(PLOT_PROPERTIES_DIR, f'd4_{category}.png'))
+    save_state(shape_list, recomputed_features, recomputed_descriptors, recomputed_properties)
+    plot(shape_list, recomputed_descriptors, recomputed_properties)
 
 
 # Example loads an .off and .ply file

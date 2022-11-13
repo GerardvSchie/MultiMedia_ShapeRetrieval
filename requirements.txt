@@ -2,6 +2,7 @@
 numpy      # Vector computations
 matplotlib # plotting
 tqdm       # progress bars
+sklearn    # t-SNE
 
 # GUI
 PyQt6

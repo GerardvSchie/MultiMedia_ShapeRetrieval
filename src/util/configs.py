@@ -26,6 +26,7 @@ DATABASE_NORMALIZED_DESCRIPTORS_FILENAME = 'descriptors_normalized.csv'
 DATABASE_PROPERTIES_FILENAME = 'properties.csv'
 DATABASE_NORMALIZED_PROPERTIES_FILENAME = 'properties_normalized.csv'
 DATABASE_DISTANCES_FILENAME = 'distances.npy'
+DATABASE_TSNE_FILENAME = 'tsne_coordinates.npy'
 
 # Plot paths
 PLOT_DIR = 'plots'
