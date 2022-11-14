@@ -13,7 +13,5 @@ def save_plt(plot_path: str):
         os.makedirs(dirs, exist_ok=True)
 
     plt.tight_layout()
-    # plt.margins(x=0, y=0)
-    # plt.savefig(plot_path)
     plt.savefig(plot_path, bbox_inches='tight')
     plt.close()

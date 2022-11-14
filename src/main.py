@@ -89,7 +89,7 @@ def save_state(shape_list: [Shape], recomputed_features: bool, recomputed_descri
         FeatureDatabaseWriter.write_features(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_FEATURES_FILENAME))
         FeatureDistributionPlotter.plot_features(PLOT_REFINED_FEATURES_DIR, [shape.features for shape in shape_list])
 
-    if recomputed_descriptors:
+    if recomputed_descriptors or True:
         FeatureDatabaseWriter.write_descriptors(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
         normalized_shape_list = normalize_descriptors(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
 
@@ -98,8 +98,7 @@ def save_state(shape_list: [Shape], recomputed_features: bool, recomputed_descri
         distances.save(os.path.join(DATABASE_DIR, DATABASE_DISTANCES_FILENAME))
 
         # Plot t-sne on weighted vectors
-        normalized_descriptors = np.array([normalized_shape.descriptors.to_list() for normalized_shape in normalized_shape_list])
-        dimensionality_reduction(normalized_descriptors * WEIGHT_VECTOR)
+        dimensionality_reduction(normalized_shape_list)
 
     if recomputed_properties:
         FeatureDatabaseWriter.write_properties(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME))
@@ -124,7 +123,7 @@ def plot(shape_list: [Shape], recomputed_descriptors: bool, recomputed_propertie
         ConfusionMatrixPlotter.plot(normalized_descriptors)
 
     # t-SNE plotting
-    if recomputed_descriptors or recompute_plots or True:
+    if recomputed_descriptors or recompute_plots:
         plot_tsne()
 
     # Plot distributions
@@ -214,6 +213,6 @@ def main():
 if __name__ == '__main__':
     logger.initialize()
     check_working_dir()
-    matplotlib.use('Agg')
+    matplotlib.use('agg')
     main()
     print("run complete")
