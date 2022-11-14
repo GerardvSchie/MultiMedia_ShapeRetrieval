@@ -25,7 +25,6 @@ class ConfusionMatrixPlotter:
 
         fig.tight_layout()
         plt.suptitle(f'Confusion matrix (k={k})', fontdict={'size': util.BIGGER_SIZE})
-        plt.title(f'{accuracy*100:.1f}% accuracy', fontdict={'fontsize': util.MEDIUM_SIZE})
 
         io.save_plt(os.path.join(PLOT_CONFUSION_MATRICES, f'k={k}_acc={accuracy:.3f}_{WEIGHT_VECTOR_STR}.png'))
 

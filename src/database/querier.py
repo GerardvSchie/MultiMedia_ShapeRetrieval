@@ -34,7 +34,7 @@ class CustomFeatureDatabaseQuerier:
         shape_paths = deepcopy(self.paths)
         vectors = np.array([descriptors.to_list() for descriptors in shape_values])
 
-        vectors = vectors * WEIGHT_VECTOR
+        vectors = vectors * DESCRIPTOR_WEIGHT_VECTOR
         query_descriptors = query_descriptors * DESCRIPTOR_WEIGHT_VECTOR
 
         relative_vectors = vectors - query_descriptors
