@@ -2,7 +2,7 @@ from src.pipeline.compute_descriptors import compute_descriptors
 from src.controller.geometries_controller import GeometriesController
 from src.object.shape import Shape
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
-from database.reader import FeatureDatabaseReader
+from src.database.reader import FeatureDatabaseReader
 from src.pipeline.normalization import Normalizer
 from src.util.configs import *
 

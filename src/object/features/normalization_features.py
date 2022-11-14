@@ -1,6 +1,7 @@
 import math
 import numpy as np
-from database.util import read_np_array
+
+from src.database.util import read_np_array
 
 
 class NormalizationFeatures:

@@ -2,7 +2,7 @@ from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGridLayout
 from PyQt6.QtGui import QWindow
 
 from app.widget.query_result_widget import QueryResultWidget
-from database.querier import CustomFeatureDatabaseQuerier
+from src.database.querier import CustomFeatureDatabaseQuerier
 from src.object.settings import Settings
 
 from app.widget.util import color_widget, create_header_label

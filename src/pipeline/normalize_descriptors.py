@@ -1,7 +1,7 @@
 from configparser import ConfigParser
 
-from database.reader import FeatureDatabaseReader
-from database.writer import FeatureDatabaseWriter
+from src.database.reader import FeatureDatabaseReader
+from src.database.writer import FeatureDatabaseWriter
 from src.object.descriptors import Descriptors
 from src.object.shape import Shape
 from src.util.configs import *

@@ -5,7 +5,7 @@ import os.path
 from src.object.descriptors import Descriptors
 from src.object.features.shape_features import ShapeFeatures
 from src.object.properties import Properties
-from database.util import read_np_array
+from src.database.util import read_np_array
 
 dataPaths = list()
 

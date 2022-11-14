@@ -2,7 +2,7 @@ import logging
 from copy import deepcopy
 from pynndescent import NNDescent
 
-from database.reader import FeatureDatabaseReader
+from src.database.reader import FeatureDatabaseReader
 from src.object.descriptors import Descriptors
 from src.pipeline.normalize_descriptors import compute_normalized_descriptor
 from src.util.configs import *
