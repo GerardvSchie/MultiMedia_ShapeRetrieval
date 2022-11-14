@@ -3,8 +3,6 @@ from tqdm import tqdm
 import sys
 import matplotlib
 
-from plot.confusion_matrix import ConfusionMatrixPlotter
-
 # Needed to fix ModuleNotFoundError when importing src.util.logger.
 directoryContainingCurrentFile = os.path.dirname(__file__)
 repoDirectory = os.path.dirname(directoryContainingCurrentFile)
@@ -15,11 +13,11 @@ sys.path.append(repoDirectory)
 import src.util.logger as logger
 
 from src.object.distances import Distances
+from src.pipeline.feature_extractor.shape_properties_extractor import ShapePropertyExtractor
 from src.pipeline.compute_distances import calc_distances
 from src.plot.tsne import plot_tsne
 from src.pipeline.compute_tsne import dimensionality_reduction
 from src.plot.property_distribution import plot_property
-from src.pipeline.feature_extractor.optimized_shape_properties_extractor import ShapePropsOptimized
 from src.pipeline.normalize_descriptors import normalize_descriptors
 from src.pipeline.normalize_properties import normalize_properties
 from src.plot.descriptor_distribution import DescriptorDistributionPlotter
@@ -33,6 +31,7 @@ from src.database.reader import FeatureDatabaseReader
 from src.util.io import check_working_dir
 from src.pipeline.normalization import Normalizer
 from src.plot.feature_distribution import FeatureDistributionPlotter
+from src.plot.confusion_matrix import ConfusionMatrixPlotter
 from src.util.configs import *
 
 
@@ -93,11 +92,15 @@ def save_state(shape_list: [Shape], recomputed_features: bool, recomputed_descri
         FeatureDatabaseWriter.write_descriptors(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
         normalized_shape_list = normalize_descriptors(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
 
-        # Recompute distance matrix on normalized descriptors and save to file
-        distances = calc_distances(normalized_shape_list)
-        distances.save(os.path.join(DATABASE_DIR, DATABASE_DISTANCES_FILENAME))
+        # # Add properties to compute scalar and histogram features
+        # for index in range(len(normalized_shape_list)):
+        #     normalized_shape_list[index].properties = shape_list[index].properties
+        #
+        # # Recompute distance matrix on normalized descriptors and save to file
+        # distances = calc_distances(normalized_shape_list)
+        # distances.save(os.path.join(DATABASE_DIR, DATABASE_DISTANCES_FILENAME))
 
-        # Plot t-sne on weighted vectors
+        # Reduce dimension on t-sne on weighted vectors
         dimensionality_reduction(normalized_shape_list)
 
     if recomputed_properties:
@@ -113,7 +116,7 @@ def plot(shape_list: [Shape], recomputed_descriptors: bool, recomputed_propertie
         DescriptorDistributionPlotter.plot_descriptors(PLOT_NORMALIZED_DESCRIPTORS_DIR, list(normalized_descriptors.values()))
 
     # Distance matrix plots
-    if recomputed_descriptors or recompute_plots:
+    if recomputed_descriptors or recomputed_properties or recompute_plots or True:
         distances = Distances(os.path.join(DATABASE_DIR, DATABASE_DISTANCES_FILENAME))
         DistanceMatrixPlotter.plot_distances(distances)
 
@@ -133,11 +136,6 @@ def plot(shape_list: [Shape], recomputed_descriptors: bool, recomputed_propertie
         plot_property(shape_list, 'd3', 'Area of triangle')
         plot_property(shape_list, 'd4', 'Volume of tetrahedron')
         plot_property(shape_list, 'a3', 'Angle between 3 vertices')
-
-    # Plot distances between properties
-    if recomputed_properties or recompute_plots:
-        properties = FeatureDatabaseReader.read_properties(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_PROPERTIES_FILENAME))
-        DistanceMatrixPlotter.plot_properties(properties)
 
 
 def main():
@@ -199,7 +197,7 @@ def main():
     for shape in tqdm(shape_list):
         recomputed_features.append(ShapeFeatureExtractor.extract_all_shape_features(shape))
         recomputed_descriptors.append(compute_descriptors(shape))
-        recomputed_properties.append(ShapePropsOptimized.shape_propertizer(shape))
+        recomputed_properties.append(ShapePropertyExtractor.shape_propertizer(shape))
 
     recomputed_features = any(recomputed_features)
     recomputed_descriptors = any(recomputed_descriptors)

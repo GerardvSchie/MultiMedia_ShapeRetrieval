@@ -25,7 +25,7 @@ class Distances:
         assert len(weights) == self.matrix.shape[0]
 
         matrix_copy = deepcopy(self.matrix)
-        multiplication_matrix = np.repeat(np.repeat(weights, 380), 380).reshape(-1, 380, 380)
+        multiplication_matrix = np.repeat(np.repeat(weights, 380), 380).reshape((-1, 380, 380))
         matrix_copy = matrix_copy * multiplication_matrix
         distances = np.linalg.norm(matrix_copy, axis=0)
         return distances

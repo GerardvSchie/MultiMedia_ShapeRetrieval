@@ -11,7 +11,7 @@ def dimensionality_reduction(normalized_shape_list: [Shape]):
     for shape in normalized_shape_list:
         paths.append(shape.geometries.path)
         # Multiply with weight vector
-        vectors.append(np.array(shape.descriptors.to_list()) * WEIGHT_VECTOR)
+        vectors.append(np.array(shape.descriptors.to_list()) * DESCRIPTOR_WEIGHT_VECTOR)
 
     paths = np.array(paths)
     vectors = np.array(vectors)

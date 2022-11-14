@@ -7,7 +7,8 @@ NR_SHAPES = 380
 NR_CATEGORIES = 19
 
 # Querying
-WEIGHT_VECTOR = np.array([1.5, 0.4, 1.3, 0.3, 1.7, 0, 0.2, 0.1, 0.5])
+DESCRIPTOR_WEIGHT_VECTOR = np.array([1.5, 0.4, 1.3, 0.3, 1.7, 0, 0.2, 0.1, 0.5])
+WEIGHT_VECTOR = np.append(DESCRIPTOR_WEIGHT_VECTOR, np.array([0.5, 0.25, 0.25, 0.25, 0.25]))
 
 # Shape paths
 FILENAME_ORIGINAL = 'original.ply'
