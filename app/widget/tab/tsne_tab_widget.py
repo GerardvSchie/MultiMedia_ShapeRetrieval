@@ -2,6 +2,7 @@ from PyQt6.QtWidgets import QWidget, QHBoxLayout
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 
 from src.plot.tsne import plot_tsne_on_ax
+from src.database.util import CATEGORIES
 
 from app.widget.util import color_widget
 from app.other.tsne_canvas import TsneCanvas
@@ -32,10 +33,8 @@ class TsneTabWidget(QWidget):
         pos = self.scatter.get_offsets()[ind["ind"][0]]
         self.annot.xy = pos
         text = "{}, {}".format(" ".join(list(map(str, ind["ind"]))),
-                               " ".join([str(1) for n in ind["ind"]]))
+                               " ".join([CATEGORIES[int(n / 20)] for n in ind["ind"]]))
 
-        # text = "{}, {}".format(" ".join(list(map(str, ind["ind"]))),
-        #                        " ".join([names[n] for n in ind["ind"]]))
         self.annot.set_text(text)
         # self.annot.get_bbox_patch().set_facecolor(cmap(norm(c[ind["ind"][0]])))
         self.annot.get_bbox_patch().set_alpha(0.4)
