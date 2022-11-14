@@ -88,17 +88,17 @@ def save_state(shape_list: [Shape], recomputed_features: bool, recomputed_descri
         FeatureDatabaseWriter.write_features(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_FEATURES_FILENAME))
         FeatureDistributionPlotter.plot_features(PLOT_REFINED_FEATURES_DIR, [shape.features for shape in shape_list])
 
-    if recomputed_descriptors or True:
+    if recomputed_descriptors:
         FeatureDatabaseWriter.write_descriptors(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
         normalized_shape_list = normalize_descriptors(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
 
-        # # Add properties to compute scalar and histogram features
-        # for index in range(len(normalized_shape_list)):
-        #     normalized_shape_list[index].properties = shape_list[index].properties
-        #
-        # # Recompute distance matrix on normalized descriptors and save to file
-        # distances = calc_distances(normalized_shape_list)
-        # distances.save(os.path.join(DATABASE_DIR, DATABASE_DISTANCES_FILENAME))
+        # Add properties to compute scalar and histogram features
+        for index in range(len(normalized_shape_list)):
+            normalized_shape_list[index].properties = shape_list[index].properties
+
+        # Recompute distance matrix on normalized descriptors and save to file
+        distances = calc_distances(normalized_shape_list)
+        distances.save(os.path.join(DATABASE_DIR, DATABASE_DISTANCES_FILENAME))
 
         # Reduce dimension on t-sne on weighted vectors
         dimensionality_reduction(normalized_shape_list)
@@ -115,18 +115,16 @@ def plot(shape_list: [Shape], recomputed_descriptors: bool, recomputed_propertie
         normalized_descriptors = FeatureDatabaseReader.read_descriptors(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
         DescriptorDistributionPlotter.plot_descriptors(PLOT_NORMALIZED_DESCRIPTORS_DIR, list(normalized_descriptors.values()))
 
-    # Distance matrix plots
+    # Distance + confusion matrix plots
     if recomputed_descriptors or recomputed_properties or recompute_plots or True:
         distances = Distances(os.path.join(DATABASE_DIR, DATABASE_DISTANCES_FILENAME))
         DistanceMatrixPlotter.plot_distances(distances)
-
-    # Confusion matrix plots
-    if recomputed_descriptors or recompute_plots:
-        normalized_descriptors = FeatureDatabaseReader.read_descriptors(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
-        ConfusionMatrixPlotter.plot(normalized_descriptors)
+        ConfusionMatrixPlotter.plot(distances, k=5)
+        ConfusionMatrixPlotter.plot(distances, k=10)
+        ConfusionMatrixPlotter.plot(distances, k=20)
 
     # t-SNE plotting
-    if recomputed_descriptors or recompute_plots:
+    if recomputed_descriptors or recompute_plots or True:
         plot_tsne()
 
     # Plot distributions

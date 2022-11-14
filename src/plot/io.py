@@ -8,6 +8,8 @@ def save_plt_using_title(plot_dir: str, title: str):
 
 
 def save_plt(plot_path: str):
+    plot_path = plot_path.replace(' ', '_').replace('\n', '').strip()
+
     dirs, _ = os.path.split(plot_path)
     if dirs:
         os.makedirs(dirs, exist_ok=True)

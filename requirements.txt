@@ -3,7 +3,10 @@ numpy      # Vector computations
 matplotlib # plotting
 tqdm       # progress bars
 sklearn    # t-SNE
+
+# Distance computation
 pyemd      # distance calculation
+scipy      # distance calculation
 
 # GUI
 PyQt6

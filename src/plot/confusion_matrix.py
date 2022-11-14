@@ -6,41 +6,35 @@ from src.object.shape import Shape
 from src.object.descriptors import Descriptors
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
 from src.util.configs import *
-from database.util import *
+from src.object.distances import Distances
+from src.database.util import *
 import src.plot.io as io
+import src.plot.util as util
 
 
 class ConfusionMatrixPlotter:
     @staticmethod
-    def plot(normalized_descriptors: dict[str, Descriptors]) -> None:
-        shape_dict = dict()
-
-        for path in normalized_descriptors:
-            shape_dict[path] = Shape(path)
-            shape_dict[path].descriptors = normalized_descriptors[path]
-
-        for path in shape_dict:
-            ShapeFeatureExtractor.extract_class_feature(shape_dict[path])
-
-        k = 20
-        confusion_matrix = ConfusionMatrixPlotter.calc_confusion_matrix(shape_dict, k=k)
+    def plot(distances: Distances, k=10) -> None:
+        weighted_distance_matrix = distances.weighted_distances(WEIGHT_VECTOR)
+        confusion_matrix = ConfusionMatrixPlotter.calc_confusion_matrix(weighted_distance_matrix, k)
+        accuracy = np.mean(confusion_matrix.diagonal())
 
         fig, ax = plt.subplots(figsize=(6, 6))
         im = heatmap(confusion_matrix, CATEGORIES, CATEGORIES, ax=ax, cmap="Blues")
         texts = annotate_heatmap(im, valfmt=".{x:.0f}")
 
         fig.tight_layout()
+        plt.suptitle(f'Confusion matrix (k={k})', fontdict={'size': util.BIGGER_SIZE})
+        plt.title(f'{accuracy*100:.1f}% accuracy', fontdict={'fontsize': util.MEDIUM_SIZE})
 
-        io.save_plt(os.path.join(PLOT_CONFUSION_MATRICES, f'k={k}_{WEIGHT_VECTOR}.png'))
+        io.save_plt(os.path.join(PLOT_CONFUSION_MATRICES, f'k={k}_acc={accuracy:.3f}_{WEIGHT_VECTOR_STR}.png'))
 
     @staticmethod
-    def calc_confusion_matrix(shape_dict: dict[str, Shape], k=10) -> np.array:
-        distance_matrix = DistanceMatrixPlotter.calc_distance_matrix(shape_dict, WEIGHT_VECTOR)
-
+    def calc_confusion_matrix(weighted_distances: np.array, k=10) -> np.array:
         confusion_matrix = np.full((19, 19), 0)
         for i in range(380):
             indexes = range(380)
-            sorted_distances = sorted(zip(distance_matrix[i], indexes))
+            sorted_distances = sorted(zip(weighted_distances[i], indexes))
 
             true_class = int(i / 20)
             predicted_class = [int(index / 20) for _, index in sorted_distances]
@@ -53,7 +47,6 @@ class ConfusionMatrixPlotter:
             confusion_matrix[true_class] = confusion_matrix[true_class] + confusion_row
 
         confusion_matrix = confusion_matrix / (k * 20)
-        print('overall accuracy:', np.mean(confusion_matrix.diagonal()))
         return confusion_matrix
 
 

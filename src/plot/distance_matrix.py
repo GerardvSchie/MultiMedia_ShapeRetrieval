@@ -30,7 +30,7 @@ class DistanceMatrixPlotter:
     @staticmethod
     def plot_weighted_distances(distances: Distances, weights: np.array) -> None:
         weighted_distances = distances.weighted_distances(weights)
-        file_path = os.path.join(PLOT_DISTANCES_DIR, 'weighted', str(weights).replace(' ', '_') + '.png')
+        file_path = os.path.join(PLOT_DISTANCES_DIR, 'weighted', WEIGHT_VECTOR_STR.replace(' ', '_') + '.png')
         DistanceMatrixPlotter.plot_and_save_heatmap(file_path, 'Weighted distances', weighted_distances)
 
     @staticmethod

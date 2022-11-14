@@ -35,7 +35,7 @@ class CustomFeatureDatabaseQuerier:
         vectors = np.array([descriptors.to_list() for descriptors in shape_values])
 
         vectors = vectors * WEIGHT_VECTOR
-        query_descriptors = query_descriptors * WEIGHT_VECTOR
+        query_descriptors = query_descriptors * DESCRIPTOR_WEIGHT_VECTOR
 
         relative_vectors = vectors - query_descriptors
         distances = np.linalg.norm(relative_vectors, axis=1)

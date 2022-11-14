@@ -27,5 +27,8 @@ class Distances:
         matrix_copy = deepcopy(self.matrix)
         multiplication_matrix = np.repeat(np.repeat(weights, 380), 380).reshape((-1, 380, 380))
         matrix_copy = matrix_copy * multiplication_matrix
-        distances = np.linalg.norm(matrix_copy, axis=0)
-        return distances
+
+        scalar_distances = np.linalg.norm(matrix_copy[:len(Descriptors.NAMES), :, :], axis=0)
+        histogram_distances = np.sum(matrix_copy[len(Descriptors.NAMES):, :, :], axis=0)
+
+        return scalar_distances + histogram_distances
