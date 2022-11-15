@@ -11,7 +11,19 @@ from src.util.configs import *
 
 
 class Shape:
-    def __init__(self, shape_path: str, load_geometries: bool = False):
+    """Shape object contains information about the plots
+
+    :param self.features: The single-value features of the shape
+    :param self.descriptors: Descriptors, composed of applying a formula on te features
+    :param self.geometries: Class containing the 3D objects of the shape
+    :param self.properties: Properties of the shape, which are histograms saved in vectors
+    """
+    def __init__(self, shape_path: str, load_geometries: bool = False) -> None:
+        """
+
+        :param shape_path: Path of the shape object
+        :param load_geometries: Whether the 3D geometries need to get loaded in
+        """
         if not os.path.exists(shape_path):
             logging.error(f"Shape file at path {os.path.abspath(shape_path)} does not exist!")
             raise Exception("Path does not exist")
@@ -80,16 +92,23 @@ class Shape:
 
         o3d.io.write_triangle_mesh(path, self.geometries.mesh)
 
-    def save_pcd(self, path: str):
+    def save_pcd(self, path: str) -> None:
+        """Saves point cloud in pcd file
+
+        :param path: Path of the output ful
+        """
         if not self.geometries.point_cloud:
             logging.error(f"User tried to save point cloud whilst it doesnt exist")
             return
 
+        # Point cloud 
         if not path.endswith('.pcd'):
             logging.warning(f'Wrong extension, use ".pcd" instead of {path.split(".")[-1]}')
             return
 
+        # Warn when file will be overriden
         if os.path.exists(path):
             logging.debug(f"File at path {path} already existed")
 
+        # Writes point cloud to file
         o3d.io.write_point_cloud(path, self.geometries.point_cloud)

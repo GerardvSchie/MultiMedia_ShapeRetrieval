@@ -1,7 +1,3 @@
-import numpy as np
-import os
-import matplotlib.pyplot as plt
-
 from src.object.properties import Properties
 from src.object.shape import Shape
 from src.plot.util import *
@@ -25,10 +21,13 @@ def plot_property(shape_list: [Shape], property_name: str, x_label: str):
 
 
 def save_property_plot(category: str, property_name: str, x_label: str):
-    set_params()
+    plt.rc('xtick', labelsize=BIGGER_SIZE)  # font-size of the tick labels
+    plt.rc('ytick', labelsize=BIGGER_SIZE)  # font-size of the tick labels
+    plt.rc('axes', labelsize=BIGGER_SIZE)  # font-size of the x and y labels
     plt.title(property_name.upper() + ' distribution ' + category,
-              fontdict={'fontsize': BIGGER_SIZE})
+              fontdict={'fontsize': BIGGER_SIZE * 1.7})
+
     plt.ylabel('Percentage of samples')
     plt.xlabel(x_label)
-    plt.ylim(0, 1)
+    plt.ylim(0, 0.5)
     io.save_plt(os.path.join(PLOT_PROPERTIES_DIR, property_name, f'{category}.png'))

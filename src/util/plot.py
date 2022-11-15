@@ -39,7 +39,7 @@ def plot_features(feature_list: [ShapeFeatures], databasePaths: [str]):
     # Choose a backend for matplotlib
     matplotlib.use('Agg')
     # Create folder for the plots
-    src.util.io.create_dir("plots")
+    os.makedirs("plots", exist_ok=True)
 
     # print(testPath)
     # print(testOriginalVertices)

@@ -2,15 +2,14 @@ import os
 import logging
 
 
-def create_dir(dir_path: str):
-    exists = os.path.exists(dir_path)
-    if not exists:
-        os.makedirs(dir_path)
+def check_working_dir() -> None:
+    """Sanity check to verify script is ran from the correct directory"""
 
-
-def check_working_dir():
+    # Checks for both src and app folder in current directory
     src_exists = os.path.exists("src")
     app_exists = os.path.exists("app")
+
+    # Raise exception if the script is not ran from the correct directory
     if not src_exists or not app_exists:
         logging.critical("Script is ran from the wrong directory\n"
                          "Could not find ./src or ./app directory.\n"

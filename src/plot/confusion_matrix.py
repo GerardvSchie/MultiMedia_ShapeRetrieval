@@ -1,10 +1,5 @@
 import matplotlib.pyplot as plt
 
-from plot.distance_matrix import DistanceMatrixPlotter
-
-from src.object.shape import Shape
-from src.object.descriptors import Descriptors
-from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
 from src.util.configs import *
 from src.object.distances import Distances
 from src.database.util import *
@@ -13,8 +8,14 @@ import src.plot.util as util
 
 
 class ConfusionMatrixPlotter:
+    """Class which creates a plot for the confusionmatrix"""
     @staticmethod
     def plot(distances: Distances, k=10) -> None:
+        """
+
+        :param distances:
+        :param k: The number of items to retrieve
+        """
         weighted_distance_matrix = distances.weighted_distances(WEIGHT_VECTOR)
         confusion_matrix = ConfusionMatrixPlotter.calc_confusion_matrix(weighted_distance_matrix, k)
         accuracy = np.mean(confusion_matrix.diagonal())
