@@ -14,6 +14,8 @@ from widget.tab.normalized_descriptors_table_tab_widget import NormalizedDescrip
 from widget.tab.query_tab_widget import QueryTabWidget
 from widget.tab.shape_features_tab_widget import ShapeFeaturesTabWidget
 
+from widget.tab.performance_tab_widget import PerformanceTabWidget
+
 
 class TabWidget(QTabWidget):
     def __init__(self):
@@ -44,6 +46,8 @@ class TabWidget(QTabWidget):
         self.query_widget = QueryTabWidget()
         self.tsne_widget = TsneCanvasTabWidget()
 
+        self.performance_widget = PerformanceTabWidget()
+
         # Add the tabs
         self.addTab(self.viewer_widget, "Mesh inspect")
         self.addTab(self.normalization_widget, "Normalize mesh")
@@ -53,6 +57,8 @@ class TabWidget(QTabWidget):
         self.addTab(self.normalized_descriptors_table_widget, "Normalized descriptors table")
         self.addTab(self.query_widget, "Query")
         self.addTab(self.tsne_widget, "t-SNE")
+
+        self.addTab(self.performance_widget, "Performance")
 
         # Set current widget
         self.setCurrentWidget(self.tsne_widget)
