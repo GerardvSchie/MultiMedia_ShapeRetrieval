@@ -27,7 +27,7 @@ def print_results(accuracy: float, weight_vector: np.array) -> None:
     :param accuracy: Accuracy of the guesses
     :param weight_vector: Weight vector used to produce the accuracy
     """
-    print('accuracy:', accuracy, 'vector', weight_vector)
+    print('accuracy:', accuracy, 'vector', str(weight_vector).replace('\n', ''))
 
 
 def hand_selected(distances: Distances) -> None:
@@ -153,7 +153,7 @@ def main():
 
     # Test the various methods
     hand_selected(distances)
-    hyperparameter_tuning(distances)
+    # hyperparameter_tuning(distances)
 
     best_vector = np.array([1.3, 0.3, 1.6, 0.8, 1.3, 0.1, 0.6, 0.4, 0.2, 0., 0., 0., 0., 0.])
     best_vector = np.array(
@@ -165,6 +165,15 @@ def main():
     best_vector = np.array(
         [1.0013151, 0.30078011, 1.44363058, 0.88030667, 0.97392208, 0.13535301, 0.53812947, 0.44469075, 0.14004997,
          4.97262054, 3.5104284, 1.80775629, 8.25943989, 7.6972006])
+
+    best_vector = np.array(
+        [1.0013151, 0.30078011, 1.44363058, 0.88030667, 0.97392208, 0.13535301, 0.53812947, 0.44469075, 0.14004997,
+         4.97262054, 3.5104284, 1.80775629, 8.25943989, 9.6972006])
+
+    # After fixing the range of A3
+    best_vector = np.array([1.17440188, 0.29713889, 1.64954493, 1.07265445, 1.13989037, 0.14093051, 0.58413028,
+                            0.48224995, 0.1261543, 5.01591765, 3.75394319, 2.01307203, 7.63732949, 9.87755763])
+
     local_search(distances, best_vector)
 
 

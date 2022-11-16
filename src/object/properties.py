@@ -16,7 +16,7 @@ class Properties:
         "d2": np.sqrt(3),
         "d3": 1,
         "d4": np.cbrt(1 / 3),
-        "a3": 1,
+        "a3": np.pi,
     }
 
     def __init__(self) -> None:

@@ -30,7 +30,7 @@ class ShapePropertyExtractor:
         d2 = ShapePropertyExtractor.calc_D2(vn[indices_meshgrid[:, 0]], vn[indices_meshgrid[:, 1]])
         shape.properties.d2 = ShapePropertyExtractor.create_and_normalize_hist(d2, Properties.MAX['d2'])
 
-        # D3
+        # # D3
         indices = np.random.choice(len(vn), 600, replace=False)
         arr = np.meshgrid(indices[:200], indices[200:400], indices[400:])
         indices_meshgrid = np.array(arr).T.reshape(-1, 3)
@@ -47,6 +47,7 @@ class ShapePropertyExtractor:
         abcd_indices_meshgrid = np.array(abcd_indices).T.reshape(-1, 4)
         d4 = ShapePropertyExtractor.calc_D4(vn[abcd_indices_meshgrid[:, 0]], vn[abcd_indices_meshgrid[:, 1]], vn[abcd_indices_meshgrid[:, 2]], vn[abcd_indices_meshgrid[:, 3]])
         shape.properties.d4 = ShapePropertyExtractor.create_and_normalize_hist(d4, Properties.MAX['d4'])
+
         return True
 
     @staticmethod
