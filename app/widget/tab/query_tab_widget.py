@@ -15,7 +15,6 @@ from src.util.configs import *
 
 
 class QueryTabWidget(QWidget):
-    NR_RESULTS = 5
     RESULTS_PER_ROW = 5
 
     def __init__(self):
@@ -37,7 +36,7 @@ class QueryTabWidget(QWidget):
         self.query_result_widgets: [QueryResultWidget] = []
 
         grid_layout = QGridLayout()
-        for i in range(QueryTabWidget.NR_RESULTS):
+        for i in range(NR_RESULTS):
             query_widget = QueryResultWidget(f'Result {i+1}', self.settings)
             self.query_result_widgets.append(query_widget)
             grid_layout.addWidget(query_widget, int(i / QueryTabWidget.RESULTS_PER_ROW), i % QueryTabWidget.RESULTS_PER_ROW, 1, 1)
@@ -64,14 +63,13 @@ class QueryTabWidget(QWidget):
         ShapeFeatureExtractor.extract_all_shape_features(normalized_shape)
         compute_descriptors(normalized_shape)
 
-        # Dummy query
         queried_shape_paths, distances = self.querier.query_descriptor(normalized_shape.descriptors)
+        # Dummy query
         # queried_shape_paths, distances = ['data\\LabeledDB_new\\Airplane\\61\\refined.ply'] * QueryTabWidget.NR_RESULTS, range(1, 100)
 
         for query_index in range(len(self.query_result_widgets)):
             query_result_widget = self.query_result_widgets[query_index]
-            shape_descriptors = self.pipeline.shape_descriptors[queried_shape_paths[query_index]]
-            query_result_widget.load_shape_from_path(queried_shape_paths[query_index], distances[query_index], shape_descriptors)
+            query_result_widget.load_shape_from_path(queried_shape_paths[query_index], distances[query_index])
 
     def save_shape(self, file_path: str):
         pass

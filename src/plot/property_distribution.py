@@ -21,6 +21,7 @@ def plot_property(shape_list: [Shape], property_name: str, x_label: str):
 
 
 def save_property_plot(category: str, property_name: str, x_label: str):
+    set_params()
     plt.rc('xtick', labelsize=BIGGER_SIZE)  # font-size of the tick labels
     plt.rc('ytick', labelsize=BIGGER_SIZE)  # font-size of the tick labels
     plt.rc('axes', labelsize=BIGGER_SIZE)  # font-size of the x and y labels

@@ -40,13 +40,12 @@ class CustomFeatureDatabaseQuerier:
         relative_vectors = vectors - query_descriptors
         distances = np.linalg.norm(relative_vectors, axis=1)
 
-        sorted_tuples = [(y, x) for x, y in sorted(zip(distances, shape_paths))]
-        top_k = sorted_tuples[:8]
+        sorted_tuples = [(y, x) for x, y in sorted(zip(distances, shape_paths))][:NR_RESULTS]
 
-        top_k_paths = [path for path, _ in top_k]
-        top_k_distances = [distance for _, distance in top_k]
+        sorted_paths = [path for path, _ in sorted_tuples]
+        sorted_distances = [distance for _, distance in sorted_tuples]
 
-        return top_k_paths, top_k_distances
+        return sorted_paths, sorted_distances
 
 
 class DatabaseQuerier:

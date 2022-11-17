@@ -137,85 +137,12 @@ def add_shape_properties(shape_list: [Shape], path: str) -> None:
             shape.properties = properties_data[shape.geometries.path]
 
 
-def save_state(shape_list: [Shape], recomputed_features: bool, recomputed_descriptors: bool, recomputed_properties: bool) -> None:
-    """Saves the state (computed features, descriptors, and properties) to files in the database
-
-    :param shape_list: List of shapes containing the information for the database
-    :param recomputed_features: Whether any features have been updated/computed
-    :param recomputed_descriptors: Whether any descriptors have been updated/computed
-    :param recomputed_properties: Whether any properties have been updated/computed
-    """
-    # Write the features to the database
-    if recomputed_features:
-        FeatureDatabaseWriter.write_features(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_FEATURES_FILENAME))
-
-    # Save recomputed descriptors to database and recompute
-    if recomputed_descriptors:
-        FeatureDatabaseWriter.write_descriptors(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
-        normalized_shape_list = normalize_descriptors(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
-
-        # Add properties to compute scalar and histogram features
-        for index in range(len(normalized_shape_list)):
-            normalized_shape_list[index].properties = shape_list[index].properties
-
-        # Recompute distance matrix on normalized descriptors and save to file
-        distances = calc_distances(normalized_shape_list)
-        distances.save(os.path.join(DATABASE_DIR, DATABASE_DISTANCES_FILENAME))
-
-        # Reduce dimension on t-sne on weighted vectors
-        dimensionality_reduction(normalized_shape_list)
-
-    # If any properties got recomputed then write them to database and normalize it
-    if recomputed_properties:
-        FeatureDatabaseWriter.write_properties(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME))
-        normalize_properties(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME))
-
-
-def plot(shape_list: [Shape], recomputed_features: bool, recomputed_descriptors: bool, recomputed_properties: bool, recompute_plots: bool = False) -> None:
-    """Create the plots of different aspects of the shape, only if they have been updated
-
-    :param shape_list: List of shapes containing the information to plot
-    :param recomputed_features: Whether any features have been updated/computed
-    :param recomputed_descriptors: Whether any descriptors have been updated/computed
-    :param recomputed_properties: Whether any properties have been updated/computed
-    :param recompute_plots: Override boolean to recompute plots even if no value got updated
-    """
-    if recomputed_features or recompute_plots:
-        FeatureDistributionPlotter.plot_features(PLOT_REFINED_FEATURES_DIR, [shape.features for shape in shape_list])
-
-    # Replot descriptors
-    if recomputed_descriptors or recompute_plots:
-        DescriptorDistributionPlotter.plot_descriptors(PLOT_REFINED_DESCRIPTORS_DIR, [shape.descriptors for shape in shape_list])
-        normalized_descriptors = FeatureDatabaseReader.read_descriptors(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
-        DescriptorDistributionPlotter.plot_descriptors(PLOT_NORMALIZED_DESCRIPTORS_DIR, list(normalized_descriptors.values()))
-
-    # Distance + confusion matrix plots
-    if recomputed_descriptors or recomputed_properties or recompute_plots:
-        distances = Distances(os.path.join(DATABASE_DIR, DATABASE_DISTANCES_FILENAME))
-        DistanceMatrixPlotter.plot_distances(distances)
-
-        # Calculate confusion matrices for different values of k
-        ConfusionMatrixPlotter.plot(distances, k=5)
-        ConfusionMatrixPlotter.plot(distances, k=10)
-        ConfusionMatrixPlotter.plot(distances, k=20)
-
-    # t-SNE plot
-    if recomputed_descriptors or recompute_plots:
-        plot_tsne()
-
-    # Plot distributions for each shape category in histograms
-    if recomputed_properties or recompute_plots or True:
-        plot_property(shape_list, 'd1', 'Distance to center')
-        plot_property(shape_list, 'd1', 'Distance to center')
-        plot_property(shape_list, 'd2', 'Distance between two vertices')
-        plot_property(shape_list, 'd3', 'Area of triangle')
-        plot_property(shape_list, 'd4', 'Volume of tetrahedron')
-        plot_property(shape_list, 'a3', 'Angle between 3 vertices')
-
-
 def process_database(recompute_plots: bool) -> ([Shape], bool, bool, bool):
-    """Performs feature extraction, normalization and creates a few plots
+    """Performs feature extraction, normalization and creates a few plots where needed
+    Also, writes intermediate results of features, descriptors
 
+    :param recompute_plots: Whether it should recompute plots
+    :return: List of shapes, and which part of the data has been recomputed
     """
     # Compute offline features
     shape_list = read_original_shapes()
@@ -293,6 +220,82 @@ def process_database(recompute_plots: bool) -> ([Shape], bool, bool, bool):
     recomputed_properties = any(recomputed_properties)
 
     return shape_list, recomputed_features, recomputed_descriptors, recomputed_properties
+
+
+def save_state(shape_list: [Shape], recomputed_features: bool, recomputed_descriptors: bool, recomputed_properties: bool) -> None:
+    """Saves the state (computed features, descriptors, and properties) to files in the database
+
+    :param shape_list: List of shapes containing the information for the database
+    :param recomputed_features: Whether any features have been updated/computed
+    :param recomputed_descriptors: Whether any descriptors have been updated/computed
+    :param recomputed_properties: Whether any properties have been updated/computed
+    """
+    # Write the features to the database
+    if recomputed_features:
+        FeatureDatabaseWriter.write_features(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_FEATURES_FILENAME))
+
+    # Save recomputed descriptors to database and recompute
+    if recomputed_descriptors:
+        FeatureDatabaseWriter.write_descriptors(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
+        normalized_shape_list = normalize_descriptors(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
+
+        # Add properties to compute scalar and histogram features
+        for index in range(len(normalized_shape_list)):
+            normalized_shape_list[index].properties = shape_list[index].properties
+
+        # Recompute distance matrix on normalized descriptors and save to file
+        distances = calc_distances(normalized_shape_list)
+        distances.save(os.path.join(DATABASE_DIR, DATABASE_DISTANCES_FILENAME))
+
+        # Reduce dimension on t-sne on weighted vectors
+        dimensionality_reduction(normalized_shape_list)
+
+    # If any properties got recomputed then write them to database and normalize it
+    if recomputed_properties:
+        FeatureDatabaseWriter.write_properties(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME))
+        normalize_properties(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME))
+
+
+def plot(shape_list: [Shape], recomputed_features: bool, recomputed_descriptors: bool, recomputed_properties: bool, recompute_plots: bool = False) -> None:
+    """Create the plots of different aspects of the shape, only if they have been updated
+
+    :param shape_list: List of shapes containing the information to plot
+    :param recomputed_features: Whether any features have been updated/computed
+    :param recomputed_descriptors: Whether any descriptors have been updated/computed
+    :param recomputed_properties: Whether any properties have been updated/computed
+    :param recompute_plots: Override boolean to recompute plots even if no value got updated
+    """
+    if recomputed_features or recompute_plots:
+        FeatureDistributionPlotter.plot_features(PLOT_REFINED_FEATURES_DIR, [shape.features for shape in shape_list])
+
+    # Replot descriptors
+    if recomputed_descriptors or recompute_plots:
+        DescriptorDistributionPlotter.plot_descriptors(PLOT_REFINED_DESCRIPTORS_DIR, [shape.descriptors for shape in shape_list])
+        normalized_descriptors = FeatureDatabaseReader.read_descriptors(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
+        DescriptorDistributionPlotter.plot_descriptors(PLOT_NORMALIZED_DESCRIPTORS_DIR, list(normalized_descriptors.values()))
+
+    # Distance + confusion matrix plots
+    if recomputed_descriptors or recomputed_properties or recompute_plots or True:
+        distances = Distances(os.path.join(DATABASE_DIR, DATABASE_DISTANCES_FILENAME))
+        DistanceMatrixPlotter.plot_distances(distances)
+
+        # Calculate confusion matrices for different values of k
+        ConfusionMatrixPlotter.plot(distances, k=5)
+        ConfusionMatrixPlotter.plot(distances, k=10)
+        ConfusionMatrixPlotter.plot(distances, k=20)
+
+    # t-SNE plot
+    if recomputed_descriptors or recompute_plots:
+        plot_tsne()
+
+    # Plot distributions for each shape category in histograms
+    if recomputed_properties or recompute_plots:
+        plot_property(shape_list, 'd1', 'Distance to center')
+        plot_property(shape_list, 'd1', 'Distance to center')
+        plot_property(shape_list, 'd2', 'Distance between two vertices')
+        plot_property(shape_list, 'd3', 'Area of triangle')
+        plot_property(shape_list, 'd4', 'Volume of tetrahedron')
+        plot_property(shape_list, 'a3', 'Angle between 3 vertices')
 
 
 def main() -> None:

@@ -1,16 +1,8 @@
 import matplotlib.pyplot as plt
-from pyemd import emd
-from tqdm import tqdm
-from scipy.stats import entropy
-from scipy.spatial.distance import jensenshannon
 
 import src.plot.io as io
 import src.plot.util as util
 from src.object.distances import Distances
-from src.object.shape import Shape
-from src.object.descriptors import Descriptors
-from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
-from src.object.properties import Properties
 from src.util.configs import *
 from src.database.util import *
 
@@ -22,23 +14,24 @@ class DistanceMatrixPlotter:
             distances_matrix_slice = distances.matrix[i]
             distances_matrix_slice = np.abs(distances_matrix_slice)
             file_path = os.path.join(PLOT_DESCRIPTORS_DISTANCES_DIR, Distances.NAMES[i].replace(' ', '_') + '.png')
-            DistanceMatrixPlotter.plot_and_save_heatmap(file_path, Distances.NAMES[i], distances_matrix_slice)
+            DistanceMatrixPlotter.plot_and_save_heatmap(file_path, Distances.NAMES[i] + 'dissimilarity', distances_matrix_slice)
 
-        DistanceMatrixPlotter.plot_weighted_distances(distances, np.ones(len(Distances.NAMES)))
-        DistanceMatrixPlotter.plot_weighted_distances(distances, WEIGHT_VECTOR)
+        DistanceMatrixPlotter.plot_weighted_distances(distances, np.ones(len(Distances.NAMES)), 'Distances without weights')
+        DistanceMatrixPlotter.plot_weighted_distances(distances, WEIGHT_VECTOR, 'Distances using weights')
 
     @staticmethod
-    def plot_weighted_distances(distances: Distances, weights: np.array) -> None:
+    def plot_weighted_distances(distances: Distances, weights: np.array, title: str) -> None:
         weighted_distances = distances.weighted_distances(weights)
-        file_path = os.path.join(PLOT_DISTANCES_DIR, 'weighted', WEIGHT_VECTOR_STR.replace(' ', '_') + '.png')
-        DistanceMatrixPlotter.plot_and_save_heatmap(file_path, 'Weighted distances', weighted_distances)
+        file_name = str(np.round(weights, 2)).replace(' ', '_') + '.png'
+        file_path = os.path.join(PLOT_DISTANCES_DIR, 'weighted', file_name)
+        DistanceMatrixPlotter.plot_and_save_heatmap(file_path, title, weighted_distances)
 
     @staticmethod
     def plot_and_save_heatmap(plot_path: str, title: str, matrix: np.ndarray) -> None:
         fig, ax = plt.subplots()
 
         mat = ax.matshow(matrix, cmap='magma')
-        plt.title(title.replace('_', ' ').capitalize() + ' dissimilarity', fontdict={'fontsize': util.BIGGER_SIZE})
+        plt.title(title.replace('_', ' ').capitalize(), fontdict={'fontsize': util.BIGGER_SIZE})
         DistanceMatrixPlotter.set_ticks_and_labels(ax)
 
         util.set_params_minus_formatter()

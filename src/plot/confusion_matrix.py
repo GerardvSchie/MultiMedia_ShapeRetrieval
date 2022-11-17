@@ -155,7 +155,7 @@ def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
     for i in range(data.shape[0]):
         for j in range(data.shape[1]):
             kw.update(color=textcolors[int(im.norm(data[i, j]) > threshold)])
-            if data[i, j] == 1:
+            if data[i, j] == 1.0:
                 str_data = '1.'
             elif data[i, j] == 0:
                 str_data = '.00'

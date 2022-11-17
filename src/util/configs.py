@@ -48,3 +48,6 @@ PLOT_DESCRIPTORS_DISTANCES_DIR = os.path.join(PLOT_DISTANCES_DIR, 'descriptors')
 PLOT_OUTLIERS_DIR = os.path.join(PLOT_DIR, 'outliers')
 PLOT_PROPERTIES_DIR = os.path.join(PLOT_DIR, 'properties')
 PLOT_CONFUSION_MATRICES = os.path.join(PLOT_DIR, 'confusion_matrices')
+
+# Query results
+NR_RESULTS = 10

@@ -83,9 +83,12 @@ def calc_emd_distance_matrix(shape_list: [Shape], attribute: str) -> np.ndarray:
         arr1 = shape_1.properties.__getattribute__(attribute)
         for shape_2 in shape_list:
             val = emd(arr1, shape_2.properties.__getattribute__(attribute), distance_matrix)
-            result_matrix[i, j] = val
+            result_matrix[i, j] += val
+            result_matrix[j, i] += val
             j += 1
         i += 1
+
+    result_matrix = result_matrix / 2
 
     return result_matrix
 
