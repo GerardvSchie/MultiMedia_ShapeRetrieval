@@ -225,7 +225,7 @@ def plot(shape_list: [Shape], recomputed_features: bool, recomputed_descriptors:
         DescriptorDistributionPlotter.plot_descriptors(PLOT_NORMALIZED_DESCRIPTORS_DIR, list(normalized_descriptors.values()))
 
     # Distance + confusion matrix plots
-    if recomputed_descriptors or recomputed_properties or recompute_plots or True:
+    if recomputed_descriptors or recomputed_properties or recompute_plots:
         distances = Distances(os.path.join(DATABASE_DIR, DATABASE_DISTANCES_FILENAME))
         DistanceMatrixPlotter.plot_distances(distances)
 

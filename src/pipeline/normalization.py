@@ -79,6 +79,8 @@ class Normalizer:
         np.fill_diagonal(flipping_rotation_matrix, fi)
         shape.geometries.point_cloud.rotate(R=flipping_rotation_matrix)
         shape.geometries.mesh.rotate(R=flipping_rotation_matrix)
+        if np.linalg.det(flipping_rotation_matrix) < 0:
+            shape.geometries.mesh.triangles = o3d.utility.Vector3iVector(np.flip(np.asarray(shape.geometries.mesh.triangles), axis=1))
 
     @staticmethod
     def compute_fi(pcd: o3d.geometry.PointCloud):
