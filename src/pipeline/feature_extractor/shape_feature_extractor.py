@@ -79,10 +79,15 @@ class ShapeFeatureExtractor:
             return False
 
         if shape.geometries.path.__contains__('LabeledDB_new'):
-            shape.geometries.path.split(os.pathsep)
             arr = path_to_array(shape.geometries.path)
             class_index = np.where(arr == 'LabeledDB_new')[0][0] + 1
             shape.features.true_class = arr[class_index]
+            return True
+        elif shape.geometries.path.__contains__('Princeton_benchmark'):
+            arr = path_to_array(shape.geometries.path)
+            class_index = np.where(arr == 'Princeton_benchmark')[0][0] + 3
+            pieces = arr[class_index].split('_')
+            shape.features.true_class = " ".join(pieces[1:]).capitalize()
             return True
         else:
             logging.warning('Could not extract class from')
