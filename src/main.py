@@ -36,7 +36,7 @@ import src.util.logger as logger
 
 from src.object.distances import Distances
 from src.pipeline.feature_extractor.shape_properties_extractor import ShapePropertyExtractor
-from src.pipeline.compute_distances import calc_distances
+from src.pipeline.compute_distances import calc_distance_matrix
 from src.plot.tsne import plot_tsne
 from src.pipeline.compute_tsne import dimensionality_reduction
 from src.plot.property_distribution import plot_property
@@ -46,11 +46,9 @@ from src.plot.descriptor_distribution import DescriptorDistributionPlotter
 from src.plot.distance_matrix import DistanceMatrixPlotter
 from src.pipeline.compute_descriptors import compute_descriptors
 from src.controller.geometries_controller import GeometriesController
-from src.object.shape import Shape
 from src.pipeline.feature_extractor.shape_feature_extractor import ShapeFeatureExtractor
 from src.database.writer import FeatureDatabaseWriter
-from src.database.reader import FeatureDatabaseReader
-from src.util.io import check_working_dir
+from src.util.io import *
 from src.pipeline.normalization import Normalizer
 from src.plot.feature_distribution import FeatureDistributionPlotter
 from src.plot.confusion_matrix import ConfusionMatrixPlotter
@@ -87,54 +85,6 @@ def read_original_shapes() -> [Shape]:
 
     # Return list of shape objects
     return shape_list
-
-
-def add_shape_features(shape_list: [Shape], path: str) -> None:
-    """Adds the features to the shape from the database
-
-    :param shape_list: List of shapes to load in features for
-    :param path: Path to the database
-    """
-    # Read database
-    features_data = FeatureDatabaseReader.read_features(path)
-
-    # Loop through all the shapes
-    for shape in shape_list:
-        # Populate features by entry in the database if found
-        if shape.geometries.path in features_data:
-            shape.features = features_data[shape.geometries.path]
-
-
-def add_shape_descriptors(shape_list: [Shape], path: str) -> None:
-    """Adds the descriptors to the shape from a descriptor database
-
-    :param shape_list: List of shapes to populate with descriptors
-    :param path: Path to the descriptor database to load
-    """
-    # Read database
-    descriptors_data = FeatureDatabaseReader.read_descriptors(path)
-
-    # Loop through all shapes
-    for shape in shape_list:
-        # Populate descriptor if present in the database
-        if shape.geometries.path in descriptors_data:
-            shape.descriptors = descriptors_data[shape.geometries.path]
-
-
-def add_shape_properties(shape_list: [Shape], path: str) -> None:
-    """Adds the shape properties from the database if the file is present
-
-    :param shape_list: List of shapes to load the properties of
-    :param path: Path to the database which contains the properties (histgram bins)
-    """
-    # Load the properties data
-    properties_data = FeatureDatabaseReader.read_properties(path)
-
-    # Loop through each of the shapes
-    for shape in shape_list:
-        # Populate the properties if the path to the shape is present in database
-        if shape.geometries.path in properties_data:
-            shape.properties = properties_data[shape.geometries.path]
 
 
 def process_database(recompute_plots: bool) -> ([Shape], bool, bool, bool):
@@ -244,7 +194,7 @@ def save_state(shape_list: [Shape], recomputed_features: bool, recomputed_descri
             normalized_shape_list[index].properties = shape_list[index].properties
 
         # Recompute distance matrix on normalized descriptors and save to file
-        distances = calc_distances(normalized_shape_list)
+        distances = calc_distance_matrix(normalized_shape_list)
         distances.save(os.path.join(DATABASE_DIR, DATABASE_DISTANCES_FILENAME))
 
         # Reduce dimension on t-sne on weighted vectors

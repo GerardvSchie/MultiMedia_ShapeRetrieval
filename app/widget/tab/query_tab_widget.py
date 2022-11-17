@@ -2,6 +2,7 @@ from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGridLayout
 from PyQt6.QtGui import QWindow
 
 from app.widget.query_result_widget import QueryResultWidget
+from pipeline.feature_extractor.shape_properties_extractor import ShapePropertyExtractor
 from src.database.querier import CustomFeatureDatabaseQuerier
 from src.object.settings import Settings
 
@@ -26,7 +27,10 @@ class QueryTabWidget(QWidget):
         self.settings_widget = SettingsWidget(self.settings)
         self.pipeline = NormalizationPipeline()
         # self.querier = DatabaseQuerier(os.path.join(DATABASE_REFINED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
-        self.querier = CustomFeatureDatabaseQuerier(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
+        self.querier = CustomFeatureDatabaseQuerier(
+            os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME),
+            os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME)
+        )
 
         # Load widget
         self.query_scene_widget = VisualizationWidget(self.settings)
@@ -57,15 +61,17 @@ class QueryTabWidget(QWidget):
         self.setLayout(layout)
 
     def load_shape_from_path(self, file_path: str):
-        # Load the shapes
+        # Load + normalize shape
         self.query_scene_widget.load_shape_from_path(file_path)
         normalized_shape = self.pipeline.normalize_shape(file_path)
+
+        # Extract data
         ShapeFeatureExtractor.extract_all_shape_features(normalized_shape)
         compute_descriptors(normalized_shape)
+        ShapePropertyExtractor.shape_propertizer(normalized_shape)
 
-        queried_shape_paths, distances = self.querier.query_descriptor(normalized_shape.descriptors)
-        # Dummy query
-        # queried_shape_paths, distances = ['data\\LabeledDB_new\\Airplane\\61\\refined.ply'] * QueryTabWidget.NR_RESULTS, range(1, 100)
+        # Compute the top X shapes
+        queried_shape_paths, distances = self.querier.calc_distances_row(normalized_shape)
 
         for query_index in range(len(self.query_result_widgets)):
             query_result_widget = self.query_result_widgets[query_index]

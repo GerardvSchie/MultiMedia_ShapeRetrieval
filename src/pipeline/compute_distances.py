@@ -10,21 +10,20 @@ from src.object.descriptors import Descriptors
 from src.util.configs import *
 
 
-def calc_distances(shape_list: [Shape]) -> Distances:
+def calc_distance_matrix(shape_list: [Shape]) -> Distances:
     distances = Distances()
 
-    # Handle descriptors
-    descriptor_vectors = np.array([shape.descriptors.to_list() for shape in shape_list])
-    calc_descriptor_distances(descriptor_vectors, distances)
-
-    # Handle properties
+    # Handle descriptors and property distances
+    calc_descriptor_distances(shape_list, distances)
     calc_property_distances(shape_list, distances)
 
     return distances
 
 
-def calc_descriptor_distances(vectors: np.array, distances: Distances) -> None:
+def calc_descriptor_distances(shape_list: [Shape], distances: Distances) -> None:
+    vectors = np.array([shape.descriptors.to_list() for shape in shape_list])
     distance_matrix: np.ndarray = np.zeros(shape=(NR_SHAPES, NR_SHAPES, len(Descriptors.NAMES)))
+
     for index in range(NR_SHAPES):
         relative_vectors = vectors - vectors[index]
         distance_matrix[index] = relative_vectors
@@ -47,7 +46,19 @@ def calc_property_distances(shape_list: [Shape], distances: Distances) -> None:
 
 
 def calc_emd_distance_matrix(shape_list: [Shape], attribute: str) -> np.ndarray:
+    result_matrix = np.full((NR_SHAPES, NR_SHAPES), 0.0)
+
+    i = 0
+    for shape in tqdm(shape_list):
+        result_matrix[i] = calc_emd_distance_row(shape_list, shape, attribute)
+        i += 1
+
+    return result_matrix
+
+
+def calc_emd_distance_row(shape_list: [Shape], shape: Shape, attribute: str) -> np.ndarray:
     n = Properties.NR_BINS
+
     # Uniform
     # distance_matrix = np.full((n, n), 1.0)
 
@@ -75,22 +86,17 @@ def calc_emd_distance_matrix(shape_list: [Shape], attribute: str) -> np.ndarray:
     # abs_diff[abs_diff < 0.2] = 0.0
     # distance_matrix = abs_diff.reshape(n, n)
 
-    result_matrix = np.full((NR_SHAPES, NR_SHAPES), 0.0)
+    result_row = np.full(NR_SHAPES, 0.0)
     # result_matrix = np.zeros((NR_SHAPES, NR_SHAPES), dtype=float)
     i = 0
+    query_arr = shape.properties.__getattribute__(attribute)
     for shape_1 in tqdm(shape_list):
-        j = 0
-        arr1 = shape_1.properties.__getattribute__(attribute)
-        for shape_2 in shape_list:
-            val = emd(arr1, shape_2.properties.__getattribute__(attribute), distance_matrix)
-            result_matrix[i, j] += val
-            result_matrix[j, i] += val
-            j += 1
+        arr1 = shape_1.proparrerties.__getattribute__(attribute)
+        val = emd(arr1, query_arr, distance_matrix)
+        result_row[i] = val
         i += 1
 
-    result_matrix = result_matrix / 2
-
-    return result_matrix
+    return result_row
 
 
 def calc_entropy(shape_dict: dict[str, Shape], attribute: str) -> np.ndarray:

@@ -30,7 +30,10 @@ class PerformanceTabWidget(QWidget):
 
         # We have 2 DatabaseQueriers in querier.py.
         # self.querier = DatabaseQuerier(os.path.join(DATABASE_REFINED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
-        self.querier = CustomFeatureDatabaseQuerier(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
+        self.querier = CustomFeatureDatabaseQuerier(
+            os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME),
+            os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME)
+        )
 
         # Load widget
         self.query_scene_widget = VisualizationWidget(self.settings)

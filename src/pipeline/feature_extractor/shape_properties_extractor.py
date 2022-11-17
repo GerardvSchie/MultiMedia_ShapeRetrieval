@@ -24,8 +24,8 @@ class ShapePropertyExtractor:
 
         # D2
         indices = np.random.choice(len(vn), 4000, replace=False)
-        indices_meshgrid = np.meshgrid(indices[:2000], indices[2000:])
-        indices_meshgrid = np.array(indices_meshgrid).T.reshape(-1, 2)
+        arr = np.meshgrid(indices[:2000], indices[2000:])
+        indices_meshgrid = np.array(arr).T.reshape(-1, 2)
         d2 = ShapePropertyExtractor.calc_d2(vn[indices_meshgrid[:, 0]], vn[indices_meshgrid[:, 1]])
         shape.properties.d2 = ShapePropertyExtractor.create_and_normalize_hist(d2, Properties.MAX['d2'])
 
@@ -42,8 +42,8 @@ class ShapePropertyExtractor:
 
         # D4 source range: https://math.stackexchange.com/questions/975968/the-maximum-volume-of-tetrahedron
         indices = np.random.choice(len(vn), 200, replace=False)
-        abcd_indices = np.meshgrid(indices[:50], indices[50:100], indices[100:150], indices[150:])
-        abcd_indices_meshgrid = np.array(abcd_indices).T.reshape(-1, 4)
+        arr = np.meshgrid(indices[:50], indices[50:100], indices[100:150], indices[150:])
+        abcd_indices_meshgrid = np.array(arr).T.reshape(-1, 4)
         d4 = ShapePropertyExtractor.calc_d4(vn[abcd_indices_meshgrid[:, 0]], vn[abcd_indices_meshgrid[:, 1]], vn[abcd_indices_meshgrid[:, 2]], vn[abcd_indices_meshgrid[:, 3]])
         shape.properties.d4 = ShapePropertyExtractor.create_and_normalize_hist(d4, Properties.MAX['d4'])
 
