@@ -1,3 +1,8 @@
+"""
+This file contains global configurations for the application
+General settings, weights, and paths are included
+"""
+
 import os
 import numpy as np
 

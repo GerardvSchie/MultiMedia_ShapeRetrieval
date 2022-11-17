@@ -203,7 +203,6 @@ def save_state(shape_list: [Shape], recomputed_features: bool, recomputed_descri
     # If any properties got recomputed then write them to database and normalize it
     if recomputed_properties:
         FeatureDatabaseWriter.write_properties(shape_list, os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME))
-        normalize_properties(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME))
 
 
 def plot(shape_list: [Shape], recomputed_features: bool, recomputed_descriptors: bool, recomputed_properties: bool, recompute_plots: bool = False) -> None:

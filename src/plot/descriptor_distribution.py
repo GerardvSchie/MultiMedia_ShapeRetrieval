@@ -8,16 +8,19 @@ from src.plot.util import histogram_plot
 class DescriptorDistributionPlotter:
     @staticmethod
     def plot_descriptors(plot_dir: str, data: [Descriptors]):
+        """Plots all the descriptors in histograms
+
+        :param plot_dir: Directory to save the plots in
+        :param data: Descriptor data
+        """
         for name in Descriptors.NAMES:
-            DescriptorDistributionPlotter.numerical_feature(plot_dir, data, [name], name.replace('_', ' ').capitalize())
+            data = [item.__getattribute__(name) for item in data]
 
-    @staticmethod
-    def numerical_feature(plot_dir: str, data: [Descriptors], feature_names: [str], title: str):
-        for feature_name in feature_names:
-            data = [item.__getattribute__(feature_name) for item in data]
+            # Plot path and title
+            plot_path = os.path.join(plot_dir, name.lower() + '.png')
+            title = name.replace('_', ' ').capitalize()
+            plot_title = f'Shape {title.lower()} distribution'
 
-        plot_path = os.path.join(plot_dir, feature_names[-1].lower() + '.png')
-        plot_title = f'Shape {title.lower()} distribution'
-        x_label = title
-        y_label = 'Percentage of shapes'
-        histogram_plot(plot_path, data, plot_title, x_label, y_label, np.min(data))
+            # Create histogram plot
+            histogram_plot(plot_path, data, plot_title, x_label=title, y_label='Percentage of shapes',
+                           min_range=np.min(data))

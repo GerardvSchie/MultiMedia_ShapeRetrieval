@@ -11,41 +11,56 @@ class ConfusionMatrixPlotter:
     """Class which creates a plot for the confusionmatrix"""
     @staticmethod
     def plot(distances: Distances, k=10) -> None:
-        """
+        """Plots the confusion matrix
 
-        :param distances:
-        :param k: The number of items to retrieve
+        :param distances: Distances to compute the confusion matrix with
+        :param k: The number of items to retrieve and compute confusion matrix over
         """
+        # Compute confusion matrix and get the accuracy
         weighted_distance_matrix = distances.weighted_distances(WEIGHT_VECTOR)
         confusion_matrix = ConfusionMatrixPlotter.calc_confusion_matrix(weighted_distance_matrix, k)
         accuracy = np.mean(confusion_matrix.diagonal())
 
+        # Makes confusion matrix large enough to read
         fig, ax = plt.subplots(figsize=(6, 6))
         im = heatmap(confusion_matrix, CATEGORIES, CATEGORIES, ax=ax, cmap="Blues")
-        texts = annotate_heatmap(im, valfmt=".{x:.0f}")
+        annotate_heatmap(im, valfmt=".{x:.0f}")
 
+        # Super title is better centered
         fig.tight_layout()
         plt.suptitle(f'Confusion matrix (k={k})', fontdict={'size': util.BIGGER_SIZE})
 
+        # Save plot to path
         io.save_plt(os.path.join(PLOT_CONFUSION_MATRICES, f'k={k}_acc={accuracy:.3f}_{WEIGHT_VECTOR_STR}.png'))
 
     @staticmethod
     def calc_confusion_matrix(weighted_distances: np.array, k=10) -> np.array:
+        """Computes the confusion matrix and normalizes it
+
+        :param weighted_distances: Distances where weights have been applied
+        :param k: Number of items to retrieve
+        :return: The confusion matrix, which is normalized
+        """
+        # Row/column for each category
         confusion_matrix = np.full((19, 19), 0)
+
+        # Get the 'confusion' for each shape
         for i in range(380):
             indexes = range(380)
             sorted_distances = sorted(zip(weighted_distances[i], indexes))
 
+            # True and predicted class
             true_class = int(i / 20)
             predicted_class = [int(index / 20) for _, index in sorted_distances]
 
+            # Gathers the predictions over the categories
             confusion_row = np.bincount(predicted_class[:k])
             confusion_row = np.append(confusion_row, np.zeros(19 - len(confusion_row)))
 
-            # reshaped_correct_class = np.array(correct_class).reshape(-1, 20)
-            # confusion_row = np.sum(reshaped_correct_class, axis=1)
+            # Append predictions to the classes
             confusion_matrix[true_class] = confusion_matrix[true_class] + confusion_row
 
+        # Normalize confusion matrix
         confusion_matrix = confusion_matrix / (k * 20)
         return confusion_matrix
 

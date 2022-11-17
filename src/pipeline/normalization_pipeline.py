@@ -9,7 +9,7 @@ from src.util.configs import *
 
 class NormalizationPipeline:
     def __init__(self):
-        # Load all shape features
+        """Load all shape features and descriptors in case they are already computed"""
         self.shape_features = FeatureDatabaseReader.read_features_paths([
             os.path.join(DATABASE_ORIGINAL_DIR, DATABASE_FEATURES_FILENAME),
             os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_FEATURES_FILENAME)
@@ -19,6 +19,11 @@ class NormalizationPipeline:
             os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_DESCRIPTORS_FILENAME))
 
     def normalize_shape(self, path: str) -> Shape:
+        """Normalize a single shape
+
+        :param path: Path of the shape to normalize
+        :return: Normalized shape
+        """
         # Create shape object
         shape = Shape(os.path.relpath(path))
 

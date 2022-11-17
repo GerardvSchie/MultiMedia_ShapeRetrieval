@@ -11,6 +11,11 @@ from src.util.configs import *
 
 
 def calc_distance_matrix(shape_list: [Shape]) -> Distances:
+    """Calculates the distance matrix
+
+    :param shape_list: List of shapes of which the distances are computed
+    :return: The computed distances
+    """
     distances = Distances()
 
     # Handle descriptors and property distances
@@ -21,6 +26,11 @@ def calc_distance_matrix(shape_list: [Shape]) -> Distances:
 
 
 def calc_descriptor_distances(shape_list: [Shape], distances: Distances) -> None:
+    """Calculates the distances for each descriptor in an N x N matrix
+
+    :param shape_list: List of shapes of which the distances are computed
+    :param distances: Contains matrix with distances of each descriptor
+    """
     vectors = np.array([shape.descriptors.to_list() for shape in shape_list])
     distance_matrix: np.ndarray = np.zeros(shape=(NR_SHAPES, NR_SHAPES, len(Descriptors.NAMES)))
 
@@ -28,12 +38,18 @@ def calc_descriptor_distances(shape_list: [Shape], distances: Distances) -> None
         relative_vectors = vectors - vectors[index]
         distance_matrix[index] = relative_vectors
 
+    # Each descriptor is a slice in the matrix
     transposed_distance_matrices = np.transpose(distance_matrix, (2, 0, 1))
     for i in range(len(Descriptors.NAMES)):
         distances.matrix[i] = transposed_distance_matrices[i]
 
 
 def calc_property_distances(shape_list: [Shape], distances: Distances) -> None:
+    """Calculates the distances between the shapes
+
+    :param shape_list: List of shapes of which the distances are computed
+    :param distances: Contains matrix with distances of descriptors and properties to save to
+    """
     distance_matrix: np.ndarray = np.zeros(shape=(len(Properties.NAMES), NR_SHAPES, NR_SHAPES))
 
     j = 0
@@ -41,6 +57,7 @@ def calc_property_distances(shape_list: [Shape], distances: Distances) -> None:
         distance_matrix[j] = calc_emd_distance_matrix(shape_list, property_name)
         j += 1
 
+    # Fill slice
     for j in range(len(Properties.NAMES)):
         distances.matrix[len(Descriptors.NAMES) + j] = distance_matrix[j]
 
@@ -100,6 +117,12 @@ def calc_emd_distance_row(shape_list: [Shape], shape: Shape, attribute: str) -> 
 
 
 def calc_entropy(shape_dict: dict[str, Shape], attribute: str) -> np.ndarray:
+    """Calculates the entropy between all shapes
+
+    :param shape_dict: Contains all values to compute the entropy of
+    :param attribute: Attribute to compute the entropy of
+    :return: Slice of distances
+    """
     result_matrix = np.full((len(shape_dict), len(shape_dict)), 0.0)
     i = 0
     for path_i in tqdm(shape_dict):

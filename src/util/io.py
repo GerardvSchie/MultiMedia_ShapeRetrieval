@@ -7,7 +7,6 @@ from src.util.configs import *
 
 def check_working_dir() -> None:
     """Sanity check to verify script is ran from the correct directory"""
-
     # Checks for both src and app folder in current directory
     src_exists = os.path.exists("src")
     app_exists = os.path.exists("app")

@@ -148,11 +148,16 @@ def local_search(distances: Distances, initial_vector: np.array) -> None:
 
 
 def main():
+    """Main method for hyperparameter tuning and local search
+    Tries to optimize accuracy of the query
+    """
     # Get the distances for each component
     distances = Distances(os.path.join(DATABASE_DIR, DATABASE_DISTANCES_FILENAME))
 
     # Test the various methods
     hand_selected(distances)
+
+    # Hyperparameter tuning takes a long time to execute
     # hyperparameter_tuning(distances)
 
     best_vector = np.array([1.3, 0.3, 1.6, 0.8, 1.3, 0.1, 0.6, 0.4, 0.2, 0., 0., 0., 0., 0.])

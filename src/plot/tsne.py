@@ -9,14 +9,19 @@ from src.database.util import CATEGORIES
 import src.plot.util as util
 
 
-def plot_tsne():
+def plot_tsne() -> None:
+    """Plots t-SNE on a scatter plot"""
     _, ax = plt.subplots()
     plot_tsne_on_ax(ax)
     io.save_plt(os.path.join(PLOT_DIR, 't-SNE', WEIGHT_VECTOR_STR.replace(' ', '_') + '.png'))
 
 
 # Inspiration source: https://stackoverflow.com/questions/14777066/matplotlib-discrete-colorbar
-def plot_tsne_on_ax(ax):
+def plot_tsne_on_ax(ax) -> None:
+    """Creates a scatterplot of t-SNE coordinates in the database
+
+    :param ax: Axes to plot the t-SNE graph on
+    """
     # Load coordinates of the plot
     path = os.path.join(DATABASE_DIR, DATABASE_TSNE_FILENAME)
     if not os.path.exists(path):
