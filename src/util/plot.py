@@ -5,7 +5,6 @@ from src.object.features.shape_features import ShapeFeatures
 import src.plot.io
 
 from src.util.configs import *
-from database.reader import dataPaths
 
 # Python can't convert variable names to string.
 CLASSES = 'classes'
