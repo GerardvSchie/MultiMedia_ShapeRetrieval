@@ -3,7 +3,7 @@ from PyQt6.QtGui import QWindow
 
 from app.widget.query_result_widget import QueryResultWidget
 from src.pipeline.feature_extractor.shape_properties_extractor import ShapePropertyExtractor
-from src.database.querier import CustomFeatureDatabaseQuerier
+from src.database.custom_querier import CustomQuerier
 from src.object.settings import Settings
 
 from app.widget.util import color_widget, create_header_label
@@ -16,7 +16,7 @@ from src.util.configs import *
 
 
 class QueryTabWidget(QWidget):
-    RESULTS_PER_ROW = 5
+    RESULTS_PER_ROW = 6
 
     def __init__(self):
         super(QueryTabWidget, self).__init__()
@@ -27,7 +27,7 @@ class QueryTabWidget(QWidget):
         self.settings_widget = SettingsWidget(self.settings)
         self.pipeline = NormalizationPipeline()
         # self.querier = DatabaseQuerier(os.path.join(DATABASE_REFINED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
-        self.querier = CustomFeatureDatabaseQuerier(
+        self.querier = CustomQuerier(
             os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME),
             os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME)
         )

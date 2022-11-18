@@ -5,7 +5,7 @@ from app.widget.util import color_widget, create_header_label
 from app.widget.settings_widget import SettingsWidget
 from app.widget.visualization_widget import VisualizationWidget
 
-from src.database.querier import CustomFeatureDatabaseQuerier
+from src.database.custom_querier import CustomQuerier
 from src.object.settings import Settings
 from src.object.shape import Shape
 from src.pipeline.compute_descriptors import compute_descriptors
@@ -31,7 +31,7 @@ class PerformanceTabWidget(QWidget):
 
         # We have 2 DatabaseQueriers in querier.py.
         # self.querier = DatabaseQuerier(os.path.join(DATABASE_REFINED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
-        self.querier = CustomFeatureDatabaseQuerier(
+        self.querier = CustomQuerier(
             os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME),
             os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME)
         )
