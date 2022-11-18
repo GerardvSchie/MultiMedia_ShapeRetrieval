@@ -1,10 +1,9 @@
 import logging
+import traceback
+import sys
 
 from PyQt6 import QtCore
 from PyQt6.QtCore import QRunnable, pyqtSlot
-
-import traceback
-import sys
 
 from app.util.worker_signals import WorkerSignals
 

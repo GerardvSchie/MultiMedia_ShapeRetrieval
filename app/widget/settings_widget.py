@@ -130,15 +130,3 @@ class SettingsWidget(QWidget):
     def _on_show_axes(self, state):
         self.settings.show_axes = state == 2
         self.apply_settings()
-
-    # def _on_material_color(self, color):
-    #     self.settings.base_color = [
-    #         color.red, color.green, color.blue, color.alpha
-    #     ]
-    #     self.settings.apply_material = True
-    #     self._apply()
-    #
-    # def _on_point_size(self, size):
-    #     self.settings.render_mode.point_size = int(size)
-    #     self.settings.apply_material = True
-    #     self._apply()

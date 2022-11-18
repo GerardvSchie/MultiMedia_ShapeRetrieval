@@ -16,6 +16,7 @@ from app.gui.main_window import MainWindow
 
 
 def main():
+    """Create the app and show the GUI"""
     app = QtWidgets.QApplication(sys.argv)
     form = MainWindow()
     form.setWindowTitle('Multimedia Retrieval')
@@ -26,6 +27,7 @@ def main():
 
 
 if __name__ == '__main__':
+    """Initializes other things and start the application"""
     logger.initialize()
     matplotlib.use('Qt5Agg')
     check_working_dir()

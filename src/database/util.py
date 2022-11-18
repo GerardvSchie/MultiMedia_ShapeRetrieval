@@ -2,13 +2,19 @@ import numpy as np
 
 
 def read_np_array(array_str: str) -> np.array:
+    """Reads an array string and converts it to a numpy array
+
+    :param array_str: String with the array
+    :return: A numpy array
+    """
+    # It was already an array
     if type(array_str) is np.ndarray:
         return array_str
     # Contains strings
     if array_str.__contains__("'"):
         arr = array_str[2:-2].split("\' \'")
         return np.array(arr)
-    # Just an int array
+    # A numeric array, cast to float
     else:
         array_str = array_str.strip()
         arr = array_str[1:-1].strip().split()

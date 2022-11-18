@@ -1,5 +1,6 @@
 from PyQt6.QtGui import QFont
 
+# Font settings
 FONT_NAME: str = "Arial"
 FONT: QFont = QFont(FONT_NAME)
 

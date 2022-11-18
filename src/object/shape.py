@@ -19,7 +19,7 @@ class Shape:
     :param self.properties: Properties of the shape, which are histograms saved in vectors
     """
     def __init__(self, shape_path: str, load_geometries: bool = False) -> None:
-        """
+        """Create a shape
 
         :param shape_path: Path of the shape object
         :param load_geometries: Whether the 3D geometries need to get loaded in
@@ -40,7 +40,11 @@ class Shape:
         if load_geometries:
             GeometriesController.load_all_from_file(self.geometries)
 
-    def set_new_ply_path(self, new_path):
+    def set_new_ply_path(self, new_path: str) -> None:
+        """Sets new path, and it resets all the features, descriptors, geometries, and propeties
+
+        :param new_path: New path to replace it with
+        """
         if not os.path.exists(new_path):
             logging.error(f"Shape file at path {os.path.abspath(new_path)} does not exist!")
             raise Exception("Path does not exist")
@@ -54,7 +58,12 @@ class Shape:
         self.properties: Properties = Properties()
 
     @staticmethod
-    def convert_to_ply(path) -> str:
+    def convert_to_ply(path: str) -> str:
+        """Converts *.off file to a *.ply file
+
+        :param path: Existing path
+        :return: New path to the ply file
+        """
         dir_path, file_name = os.path.split(path)
 
         # If the name of the file is one of these, then we assume its created by the program itself
@@ -78,18 +87,25 @@ class Shape:
         return new_file_path
 
     # Saves the mesh to the given file path
-    def save_ply(self, path):
+    def save_ply(self, path: str) -> None:
+        """Write mesh to a *.ply file
+
+        :param path: Path to save it to
+        """
         if not self.geometries.mesh:
             logging.error(f"User tried to save whilst there is no mesh")
             return
 
+        # Name wrong if it isn't ending with ply
         if not path.endswith('.ply'):
             logging.warning(f'Wrong extension, use ".ply" instead of {path.split(".")[-1]}')
             return
 
+        # Log if it will be overwritten
         if os.path.exists(path):
             logging.debug(f"File at path {path} already existed")
 
+        # Write to file
         o3d.io.write_triangle_mesh(path, self.geometries.mesh)
 
     def save_pcd(self, path: str) -> None:

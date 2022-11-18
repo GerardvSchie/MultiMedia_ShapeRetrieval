@@ -11,9 +11,23 @@ from src.object.settings import Settings
 
 
 class VisualizationWidget(QWidget):
+    """
+    Visualization widget work with states, a current state and a desired state
+    If the two states do not match the actions are taken to resolve the difference
+
+    Example: If the desired state shows a convex hull and the current state does not
+    It resolves it by adding the convex hull mesh object to the scene
+    """
     def __init__(self, settings: Settings, mesh_mode=False, convex_hull_mode=False, silhouette_mode=False):
+        """Create the visualization widget and the handler.
+        Contains current settings and desired settings
+
+        :param settings: Current settings the widget should have
+        :param mesh_mode: Whether it must keep showing the mesh
+        :param convex_hull_mode: Whether it must keep showing a convex hull
+        :param silhouette_mode: Whether it remains showing a silhouette
+        """
         super(VisualizationWidget, self).__init__()
-        # Trying to set aspect ratio
         self.setMinimumSize(400, 400)
 
         # Trying to set aspect ratio through size policy
@@ -32,81 +46,88 @@ class VisualizationWidget(QWidget):
         self.convex_hull_mode = convex_hull_mode
         self.silhouette_mode = silhouette_mode
 
+        # Create relevant handlers and objects and update the scene
         self._axes = GeometriesController.get_coordinate_axes()
-
         self.vis: open3d.visualization.Visualizer = o3d.visualization.Visualizer()
 
         # Visible=False so it does not open separate window for a moment
         self.vis.create_window(visible=False)
         self.hwnd = win32gui.FindWindowEx(0, 0, None, "Open3D")
-
         self.focusWidget()
         self.update_widget()
 
-    def closeEvent(self, *args, **kwargs):
+    def closeEvent(self, *args, **kwargs) -> None:
+        """Close the widget"""
         self.vis.close()
         self.vis.destroy_window()
 
-    # Part of the scene, what is in the window
-    def load_shape_from_path(self, path):
+    def load_shape_from_path(self, path) -> None:
+        """Create shape object from path and show it in the scene
+
+        :param path: Path of the shape to load
+        """
         self.load_shape(Shape(path, load_geometries=True))
 
-    # Part of the scene, what is in the window
-    def load_shape(self, shape):
+    def load_shape(self, shape) -> None:
+        """Load shape object into
+
+        :param shape: Shape to load into the scene
+        """
         # Clear geometries and update state
         self.clear()
 
         # Load shape + the geometries needed for GUI drawing
         self.shape = shape
-
         GeometriesController.calculate_gui_geometries(self.shape.geometries)
 
-        # Compute normals
+        # Compute normals of point cloud and mesh
         GeometriesController.calculate_mesh_normals(self.shape.geometries, True)
         GeometriesController.calculate_point_cloud_normals(self.shape.geometries, True)
 
+        # Paint mesh based on whether the silhouette needs to be shown
         if self.desired_settings.show_silhouette:
             self.shape.geometries.mesh.paint_uniform_color((0, 0, 0))
         else:
             self.shape.geometries.mesh.paint_uniform_color(self.desired_settings.mesh_color)
             self.current_settings.mesh_color = self.desired_settings.mesh_color
+
+        # Update scene
         self.update_widget()
 
-    def clear(self):
+    def clear(self) -> None:
+        """Clear the shapes from the scene and update the settings"""
         self.vis.clear_geometries()
         self.current_settings.clear_meshes()
 
-    def start_vis(self):
+    def start_vis(self) -> None:
+        """Run the visualization window"""
         self.vis.run()
 
-    def update_vis(self):
+    def update_vis(self) -> None:
+        """Updates the scene"""
         self.vis.poll_events()
         self.vis.update_renderer()
 
-    def update_view(self):
-        # View is already correct
+    def update_view(self) -> None:
+        """Update view point of the camera in the scene"""
         view_control: o3d.visualization.ViewControl = self.vis.get_view_control()
         ref_view = view_control.convert_to_pinhole_camera_parameters()
         print('-----')
         print('extrinsic', ref_view.extrinsic)
         print('intrinsic', ref_view.intrinsic)
 
-    def update_widget(self):
-        # Cannot update widget further if there is no shape
+    def update_widget(self) -> None:
+        """Update the widget and all the state differences whether to show mesh, point cloud etc.
+
+        Works with state difference, if currently the mesh is not in the scene
+        And scene settings indicate the mesh is in the scene then the state difference resolver will add the mesh
+        """
+        # Cannot update widget if there is no shape
         if not self.shape:
             return
 
-        # Set render options
-        render_option: o3d.visualization.RenderOption = self.vis.get_render_option()
-        render_option.mesh_show_wireframe = self.desired_settings.show_wireframe and not self.desired_settings.show_silhouette and not self.silhouette_mode
-        render_option.point_show_normal = self.desired_settings.show_normals
-        render_option.light_on = not self.desired_settings.show_silhouette and not self.silhouette_mode
-        render_option.point_size = self.desired_settings.point_size
-        if self.desired_settings.show_silhouette or self.silhouette_mode:
-            render_option.background_color = [255] * 3
-        else:
-            render_option.background_color = self.desired_settings.background_color
-
+        # Update render options and set the color
+        self.update_render_options()
         self._resolve_mesh_color_difference(self.current_settings.mesh_color, self.desired_settings.mesh_color)
 
         # Handle each different type of visualization
@@ -124,17 +145,49 @@ class VisualizationWidget(QWidget):
         self.current_settings.update(self.desired_settings)
         self.vis.update_renderer()
 
-    def _resolve_mesh_color_difference(self, old_color, new_color):
+    def update_render_options(self) -> None:
+        """Sets the render options"""
+        render_option: o3d.visualization.RenderOption = self.vis.get_render_option()
+
+        # Wireframe settings
+        render_option.mesh_show_wireframe = self.desired_settings.show_wireframe and not self.desired_settings.show_silhouette and not self.silhouette_mode
+
+        # Point cloud
+        render_option.point_show_normal = self.desired_settings.show_normals
+        render_option.point_size = self.desired_settings.point_size
+
+        # Silhouette
+        render_option.light_on = not self.desired_settings.show_silhouette and not self.silhouette_mode
+        if self.desired_settings.show_silhouette or self.silhouette_mode:
+            render_option.background_color = [255] * 3
+        else:
+            render_option.background_color = self.desired_settings.background_color
+
+    def _resolve_mesh_color_difference(self, old_color: [float], new_color: [float]) -> None:
+        """Resolves a mesh color difference
+
+        :param old_color: Current color of the mesh
+        :param new_color: Color to change to
+        :return:
+        """
+        # The current color is already correct
         if old_color == new_color:
             return
 
+        # Silhouette does not change the mesh color
         if self.current_settings.show_silhouette or self.silhouette_mode:
             return
 
         self.shape.geometries.mesh.paint_uniform_color(self.desired_settings.mesh_color)
         self.vis.update_geometry(self.shape.geometries.mesh)
 
-    def _resolve_geometry_state_difference(self, old_state, new_state, geometry):
+    def _resolve_geometry_state_difference(self, old_state: bool, new_state: bool, geometry: o3d.geometry) -> None:
+        """Resolves state difference in geometry, whether the geometry needs to be shown or hidden
+
+        :param old_state: Whether the mesh is shown currently
+        :param new_state: Whether the desired state is to show the mesh
+        :param geometry: Geometry to add or remove from the scene
+        """
         if not geometry:
             logging.warning("Trying to update a geometry that is not present")
             return
@@ -150,7 +203,13 @@ class VisualizationWidget(QWidget):
         else:
             self.vis.remove_geometry(geometry)
 
-    def _resolve_silhouette_state_difference(self, old_state, new_state):
+    def _resolve_silhouette_state_difference(self, old_state: bool, new_state: bool) -> None:
+        """When the desired state is different from the current state
+        Paints shape uniform black color when the silhouette mode is on
+
+        :param old_state: Whether current state of the visualization widget is on silhouette mode
+        :param new_state: Whether to enable silhouette mode
+        """
         # No difference of state to resolve
         if old_state == new_state:
             return

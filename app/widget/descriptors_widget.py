@@ -7,6 +7,7 @@ from app.layout.grid_layout import GridLayout
 
 class DescriptorsWidget(QWidget):
     def __init__(self):
+        """Widget containing descriptor information about the shape"""
         super(DescriptorsWidget, self).__init__()
         color_widget(self, [180, 50, 122])
         self.setMaximumHeight(130)
@@ -27,7 +28,11 @@ class DescriptorsWidget(QWidget):
         layout.add_row("Eccentricity:", [self.eccentricity_value_label])
         self.setLayout(layout)
 
-    def update_widget(self, descriptors: Descriptors):
+    def update_widget(self, descriptors: Descriptors) -> None:
+        """Update widget with new descriptor data
+
+        :param descriptors: Descriptors data
+        """
         self.surface_area_value_label.setText('{0:.6}'.format(descriptors.surface_area))
         self.compactness_value_label.setText('{0:.6}'.format(descriptors.compactness))
         self.rectangularity_value_label.setText('{0:.6}'.format(descriptors.rectangularity))

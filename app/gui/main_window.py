@@ -8,6 +8,7 @@ from app.util.font import FONT
 
 class MainWindow(QMainWindow):
     def __init__(self):
+        """Creates the main window"""
         super(MainWindow, self).__init__()
         self.setFont(QFont(FONT))
 
@@ -20,4 +21,5 @@ class MainWindow(QMainWindow):
 
     # Need to close the Open3D handlers separately
     def closeEvent(self, *args, **kwargs):
+        """Close the tab widget first"""
         self.tab_widget.closeEvent(*args, **kwargs)

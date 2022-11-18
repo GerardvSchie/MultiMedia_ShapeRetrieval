@@ -1,26 +1,22 @@
 import logging
 import math
-import time
-
 import open3d as o3d
 import numpy as np
-from numpy.linalg import norm
 
 from src.object.features.mesh_features import MeshFeatures
 
 
 class MeshFeatureExtractor:
     @staticmethod
-    def extract_convex_hull_features(mesh: o3d.geometry.TriangleMesh, mesh_features: MeshFeatures, force_recompute=False) -> bool:
-        if not mesh:
-            logging.warning("Cannot extract any features without mesh")
-            return False
-
-        return MeshFeatureExtractor.extract_features(mesh, mesh_features, force_recompute)
-
-    @staticmethod
     # Only extract the features that are not yet set with values in the shape
     def extract_features(mesh: o3d.geometry.TriangleMesh, mesh_features: MeshFeatures, force_recompute=False) -> bool:
+        """Extract all mesh features, this could also be a convex hull
+
+        :param mesh: Mesh to
+        :param mesh_features:
+        :param force_recompute:
+        :return: The features to c
+        """
         if not mesh:
             logging.warning("Cannot extract any features without mesh")
             return False
@@ -36,6 +32,13 @@ class MeshFeatureExtractor:
 
     @staticmethod
     def number_of_vertices(mesh: o3d.geometry.TriangleMesh, mesh_features: MeshFeatures, force_recompute=False) -> bool:
+        """Get the number of vertices of the given mesh
+
+        :param mesh: Mesh to compute the number of vertices of
+        :param mesh_features: Object to save the result in
+        :param force_recompute: Whether to force recomputing this feature
+        :return: Whether the feature got recomputed
+        """
         if mesh_features.nr_vertices and not force_recompute:
             return False
 
@@ -50,6 +53,13 @@ class MeshFeatureExtractor:
 
     @staticmethod
     def number_of_faces(mesh: o3d.geometry.TriangleMesh, mesh_features: MeshFeatures, force_recompute=False) -> bool:
+        """Get the number of faces of the given mesh
+
+        :param mesh: Mesh to compute the number of cells of
+        :param mesh_features: Object to save the result in
+        :param force_recompute: Whether to force recomputing this feature
+        :return: Whether the feature got recomputed
+        """
         if mesh_features.nr_faces and not force_recompute:
             return False
 
@@ -64,9 +74,17 @@ class MeshFeatureExtractor:
 
     @staticmethod
     def calculate_surface_area(mesh: o3d.geometry.TriangleMesh, mesh_features: MeshFeatures, force_recompute=False) -> bool:
+        """Get the total surface area of the mesh
+
+        :param mesh: Mesh to compute the surface area of
+        :param mesh_features: Object to save the result in
+        :param force_recompute: Whether to force recomputing this feature
+        :return: Whether the feature got recomputed
+        """
         if not math.isinf(mesh_features.surface_area) and not force_recompute:
             return False
 
+        # Can only compute if mesh is loaded
         if mesh:
             surface_area = mesh.get_surface_area()
         else:
@@ -78,6 +96,13 @@ class MeshFeatureExtractor:
 
     @staticmethod
     def calculate_volume(mesh: o3d.geometry.TriangleMesh, mesh_features: MeshFeatures, force_recompute=False) -> bool:
+        """Get the total volume of the mesh, uses numpy to speed up calculations compared to Open3D
+
+        :param mesh: Mesh to compute the volume of
+        :param mesh_features: Object to save the result in
+        :param force_recompute: Whether to force recomputing this feature
+        :return: Whether the feature got recomputed
+        """
         if not math.isinf(mesh_features.volume) and not force_recompute:
             return False
 
@@ -94,36 +119,25 @@ class MeshFeatureExtractor:
         return True
 
     @staticmethod
-    def np_surface_area(mesh: o3d.geometry.TriangleMesh) -> float:
-        data = []
-        points = np.asarray(mesh.vertices)
-        for triangle in mesh.triangles:
-            a = points[triangle[0]]
-            b = points[triangle[1]]
-            c = points[triangle[2]]
-            data.append([a, b, c])
-
-        data = np.array(data)
-        vecsAB = data[:, 0] - data[:, 1]
-        vecsAC = data[:, 0] - data[:, 2]
-
-        dots = np.cross(vecsAB, vecsAC)
-        norm = np.linalg.norm(dots, axis=1)
-        area = np.sum(norm) / 2
-        return area
-
-    @staticmethod
     def np_volume(mesh: o3d.geometry.TriangleMesh) -> float:
+        """Use numpy to compute the volume of the triangle mesh
+        Is faster than the Open3D method and does not require the mesh to be watertight
+
+        :param mesh: Mesh to compute the volume of
+        :return: The total volume of the mesh
+        """
         data = []
         points = np.asarray(mesh.vertices)
+
+        # Fill each entry in data with the triangle coordinates
         for triangle in mesh.triangles:
             a = points[triangle[0]]
             b = points[triangle[1]]
             c = points[triangle[2]]
             data.append([a, b, c])
 
+        # Compute the volume of the cell with the 4th vertex at the origin
         data = np.array(data)
-
         crosses = np.cross(data[:, 0], data[:, 1])
         form = crosses * data[:, 2]
         volume = np.abs(np.sum(form)) / 6

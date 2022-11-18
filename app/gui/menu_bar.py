@@ -1,5 +1,3 @@
-import logging
-
 from PyQt6.QtWidgets import QMenuBar, QFileDialog
 from PyQt6.QtGui import QAction, QKeySequence
 from PyQt6.QtWidgets import QApplication
@@ -7,7 +5,11 @@ from PyQt6.QtWidgets import QApplication
 
 # Source: https://www.pythonguis.com/tutorials/pyqt6-actions-toolbars-menus/
 class MenuBar(QMenuBar):
-    def __init__(self, menu: QMenuBar):
+    def __init__(self, menu: QMenuBar) -> None:
+        """Create menu bar and create the dropdowns
+
+        :param menu: Menubar object to add the actions to
+        """
         super(MenuBar, self).__init__()
         self.tab_widget = None
 
@@ -19,9 +21,11 @@ class MenuBar(QMenuBar):
         self.initialize_shape_menu()
 
     def connect_tab_widget(self, tab_widget):
+        """Connect tab to the menu bar to call the actions on"""
         self.tab_widget = tab_widget
 
-    def initialize_file_menu(self):
+    def initialize_file_menu(self) -> None:
+        """Initialize dropdown menu"""
         self.file_menu = self.menu.addMenu("&File")
 
         # Open file
@@ -52,7 +56,8 @@ class MenuBar(QMenuBar):
         exit_action.triggered.connect(QApplication.instance().quit)
         self.file_menu.addAction(exit_action)
 
-    def initialize_shape_menu(self):
+    def initialize_shape_menu(self) -> None:
+        """Initiates dropdown menu to load shape"""
         self.shape_menu = self.menu.addMenu("&Shapes")
 
         # Load airplane shape
@@ -82,37 +87,45 @@ class MenuBar(QMenuBar):
         self.shape_menu.addAction(load_glasses_action)
 
     def open_file_action(self):
+        """Action to open a file"""
         file_filter = "Triangle mesh files (*.ply *.off)"
         file_name, _ = QFileDialog.getOpenFileName(self, "Open shape", "data/LabeledDB_new", file_filter)
 
         if file_name:
             self.tab_widget.load_shape_from_path(file_name)
 
-    def save_shape_action(self):
+    def save_shape_action(self) -> None:
+        """Action to save the shape"""
         file_filter = "Triangle mesh files (*.ply *.off)"
         file_name, _ = QFileDialog.getSaveFileName(self, "Save mesh file", "data", file_filter)
 
         if file_name:
             self.tab_widget.save_shape(file_name)
 
-    def export_image_action(self):
+    def export_image_action(self) -> None:
+        """Export current tab to an image"""
         file_filter = "Image file (*.png *.jpg)"
         file_name, _ = QFileDialog.getSaveFileName(self, "Save Image", "images", file_filter)
 
         if file_name:
             self.tab_widget.export_image_action(file_name)
 
-    def open_airplane_shape_1(self):
+    def open_airplane_shape_1(self) -> None:
+        """Opens an airplane shape using path"""
         self.tab_widget.load_shape_from_path("data/LabeledDB_new/Airplane/61.off")
 
-    def open_airplane_shape_2(self):
+    def open_airplane_shape_2(self) -> None:
+        """Opens an airplane shape using path"""
         self.tab_widget.load_shape_from_path("data/LabeledDB_new/Airplane/65.off")
 
-    def open_chair_shape(self):
+    def open_chair_shape(self) -> None:
+        """Opens a chair shape using path"""
         self.tab_widget.load_shape_from_path("data/LabeledDB_new/Chair/101.off")
 
-    def open_cup_shape(self):
+    def open_cup_shape(self) -> None:
+        """Opens a cup shape using path"""
         self.tab_widget.load_shape_from_path("data/LabeledDB_new/Cup/21.off")
 
     def open_glasses_shape(self):
+        """Opens a glasses shape using path"""
         self.tab_widget.load_shape_from_path("data/LabeledDB_new/Glasses/41.off")

@@ -7,6 +7,7 @@ from app.widget.visualization_widget import VisualizationWidget
 
 class QueryResultWidget(QWidget):
     def __init__(self, title, settings):
+        """Create query widget with the distance under it"""
         super(QueryResultWidget, self).__init__()
         color_widget(self, [255, 122, 122])
 
@@ -27,7 +28,13 @@ class QueryResultWidget(QWidget):
         layout.addWidget(self.distance_label)
         self.setLayout(layout)
 
-    def load_shape_from_path(self, file_path: str, distance: float):
+    def load_shape_from_path(self, file_path: str, distance: float) -> None:
+        """Loads the shape from path and set the distance
+
+        :param file_path: Path to load
+        :param distance: Distance to the query shape
+        """
+        # Clear scene, load shape and update distance text
         self.scene_widget.clear()
         self.scene_widget.load_shape_from_path(file_path)
         self.scene_widget.update_widget()

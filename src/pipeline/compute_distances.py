@@ -63,6 +63,12 @@ def calc_property_distances(shape_list: [Shape], distances: Distances) -> None:
 
 
 def calc_emd_distance_matrix(shape_list: [Shape], attribute: str) -> np.ndarray:
+    """Calculates the earths mover distance of all the shapes and saves it to a matrix
+
+    :param shape_list: List of shapes to calculate the EMD of
+    :param attribute: The histogram feature to compute the EMD for
+    :return: The distances between the shapes
+    """
     result_matrix = np.full((NR_SHAPES, NR_SHAPES), 0.0)
 
     i = 0
@@ -74,6 +80,13 @@ def calc_emd_distance_matrix(shape_list: [Shape], attribute: str) -> np.ndarray:
 
 
 def calc_emd_distance_row(shape_list: [Shape], shape: Shape, attribute: str) -> np.ndarray:
+    """Gets the EMD for a list of shapes compared to the given shape
+
+    :param shape_list: List of shapes to compute EMD for
+    :param shape: Query shape which is h
+    :param attribute: Attribute to calculate the EMD over
+    :return: The row in the EMD distance matrix
+    """
     n = Properties.NR_BINS
 
     # Uniform
@@ -138,8 +151,16 @@ def calc_entropy(shape_dict: dict[str, Shape], attribute: str) -> np.ndarray:
 
 
 def calc_jensen_shannon(shape_dict: dict[str, Shape], attribute: str) -> np.ndarray:
+    """Calculates the jensen shannon distances between all shapes in the shape dictionary
+
+    :param shape_dict: The collection of shapes to compute the distances of
+    :param attribute: Attribute name to compute the distance of
+    :return: Matrix of distances using jensen
+    """
     result_matrix = np.full((len(shape_dict), len(shape_dict)), 0.0)
     i = 0
+
+    # Loop through each shape combination
     for path_i in tqdm(shape_dict):
         j = 0
         arr1 = shape_dict[path_i].properties.__getattribute__(attribute)
@@ -153,8 +174,16 @@ def calc_jensen_shannon(shape_dict: dict[str, Shape], attribute: str) -> np.ndar
 
 
 def calc_euclidian_distance(shape_dict: dict[str, Shape], attribute: str) -> np.ndarray:
+    """Computes the euclidian distance of all the shapes
+
+    :param shape_dict: The collection of shapes to compute the distances of
+    :param attribute: Attribute name to compute the distance of
+    :return: Matrix of the euclidean distances
+    """
     result_matrix = np.full((len(shape_dict), len(shape_dict)), 0.0)
     i = 0
+
+    # Loop through each shape combination
     for path_i in tqdm(shape_dict):
         j = 0
         arr1 = shape_dict[path_i].properties.__getattribute__(attribute)

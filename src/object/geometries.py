@@ -3,6 +3,7 @@ import open3d as o3d
 
 class Geometries:
     def __init__(self, path: str):
+        """Sets all geometries to none, only get computed in GUI or when it is required for feature extraction"""
         self.path: str = path
 
         self.mesh: o3d.geometry.TriangleMesh = None

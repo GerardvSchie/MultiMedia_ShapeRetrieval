@@ -15,6 +15,7 @@ class ShapeFeatures:
     ]
 
     def __init__(self) -> None:
+        """Initiates all the shape features with dummy variables"""
         self.true_class: str = ""
         self.mesh_is_watertight: bool = None
         self.diameter: float = math.inf
@@ -28,12 +29,20 @@ class ShapeFeatures:
         # 2D features
         self.silhouette_features = SilhouetteFeatures()
 
-    def to_list(self):
+    def to_list(self) -> [object]:
+        """Convert all attributes to list format
+
+        :return: List representation of the shape features
+        """
         return [self.__getattribute__(name) for name in ShapeFeatures.NAMES[:3]] +\
             self.mesh_features.to_list() + self.convex_hull_features.to_list() +\
             self.axis_aligned_bounding_box_features.to_list() + self.normalization_features.to_list()
 
-    def from_list(self, params: [object]):
+    def from_list(self, params: [object]) -> None:
+        """Parses the parameters from a list
+
+        :param params: Fill shape features using the
+        """
         assert len(ShapeFeatures.NAMES) == len(params)
 
         self.true_class = params[0]
