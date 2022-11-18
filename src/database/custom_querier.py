@@ -70,7 +70,7 @@ class CustomQuerier:
         # Get distances and paths
         distances = scalar_distances + histogram_distances
         sorted_tuples = [(y, x) for x, y in sorted(zip(distances, deepcopy(self.paths)))]
-        sorted_tuples = sorted_tuples[:NR_RESULTS]
+        sorted_tuples = sorted_tuples[:NR_ITEMS_PER_CATEGORY]
 
         # Sorted paths and distances
         sorted_paths = [path for path, _ in sorted_tuples]
@@ -103,9 +103,7 @@ class CustomQuerier:
         relative_vectors = relative_vectors * DESCRIPTOR_WEIGHT_VECTOR
         distances = np.linalg.norm(relative_vectors, axis=1)
 
-        # Sort the paths based on distance
-        shape_paths = deepcopy(self.paths)
-        sorted_tuples = [(y, x) for x, y in sorted(zip(distances, shape_paths))][:NR_RESULTS]
+        sorted_tuples = [(y, x) for x, y in sorted(zip(distances, shape_paths))][:NR_ITEMS_PER_CATEGORY]
 
         # Separate paths and distances and return it
         sorted_paths = [path for path, _ in sorted_tuples]
