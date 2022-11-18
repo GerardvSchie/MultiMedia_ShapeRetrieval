@@ -113,7 +113,7 @@ class PerformanceTabWidget(QWidget):
 
         # In LabeledDB, we know there are 19 classes, each with 20 Shapes.
         #numberOfShapesPerClass = NR_RESULTS
-        numberOfShapesPerClass = 20
+        numberOfShapesPerClass = NR_ITEMS_PER_CATEGORY
 
         # The retrieved Shapes are our positives.
         # Any Shapes (of the same class or in entire database?) not returned are our negatives.

@@ -59,7 +59,7 @@ class CustomFeatureDatabaseQuerier:
 
         distances = scalar_distances + histogram_distances
         sorted_tuples = [(y, x) for x, y in sorted(zip(distances, deepcopy(self.paths)))]
-        sorted_tuples = sorted_tuples[:NR_RESULTS]
+        sorted_tuples = sorted_tuples[:NR_ITEMS_PER_CATEGORY]
 
         sorted_paths = [path for path, _ in sorted_tuples]
         sorted_distances = [distance for _, distance in sorted_tuples]
@@ -83,7 +83,7 @@ class CustomFeatureDatabaseQuerier:
         relative_vectors = vectors - query_descriptors
         distances = np.linalg.norm(relative_vectors, axis=1)
 
-        sorted_tuples = [(y, x) for x, y in sorted(zip(distances, shape_paths))][:NR_RESULTS]
+        sorted_tuples = [(y, x) for x, y in sorted(zip(distances, shape_paths))][:NR_ITEMS_PER_CATEGORY]
 
         sorted_paths = [path for path, _ in sorted_tuples]
         sorted_distances = [distance for _, distance in sorted_tuples]
