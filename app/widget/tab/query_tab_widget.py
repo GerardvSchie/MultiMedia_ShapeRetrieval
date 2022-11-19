@@ -2,6 +2,7 @@ from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGridLayout
 from PyQt6.QtGui import QWindow
 
 from app.widget.query_result_widget import QueryResultWidget
+from database.knn_querier import KNNQuerier
 from src.pipeline.feature_extractor.shape_properties_extractor import ShapePropertyExtractor
 from src.database.custom_querier import CustomQuerier
 from src.object.settings import Settings
@@ -18,7 +19,7 @@ from src.util.configs import *
 class QueryTabWidget(QWidget):
     RESULTS_PER_ROW = 6
 
-    def __init__(self):
+    def __init__(self, use_custom_querier: bool = True):
         super(QueryTabWidget, self).__init__()
         color_widget(self, [0, 255, 0])
 
@@ -26,11 +27,17 @@ class QueryTabWidget(QWidget):
         self.settings: Settings = Settings()
         self.settings_widget = SettingsWidget(self.settings)
         self.pipeline = NormalizationPipeline()
-        # self.querier = DatabaseQuerier(os.path.join(DATABASE_REFINED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
-        self.querier = CustomQuerier(
-            os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME),
-            os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME)
-        )
+
+        if use_custom_querier:
+            self.querier = CustomQuerier(
+                os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME),
+                os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME)
+            )
+        else:
+            self.querier = KNNQuerier(
+                os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME)  #,
+                # os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME)
+            )
 
         # Load widget
         self.query_scene_widget = VisualizationWidget(self.settings)

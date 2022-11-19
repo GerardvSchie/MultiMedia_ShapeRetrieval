@@ -3,6 +3,7 @@ from PyQt6.QtGui import QWindow
 
 from app.widget.util import color_widget, create_header_label
 from app.widget.visualization_widget import VisualizationWidget
+from util.font import LARGE_BOLD_FONT
 
 
 class QueryResultWidget(QWidget):
@@ -16,6 +17,7 @@ class QueryResultWidget(QWidget):
         # Load widget
         self.scene_widget = VisualizationWidget(self.settings)
         self.distance_label = create_header_label("Distance: -")
+        self.distance_label.setFont(LARGE_BOLD_FONT)
 
         # Capture scene widget into a window
         window = QWindow.fromWinId(self.scene_widget.hwnd)
