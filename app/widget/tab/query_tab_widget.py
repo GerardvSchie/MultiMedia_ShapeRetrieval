@@ -17,7 +17,7 @@ from src.util.configs import *
 
 
 class QueryTabWidget(QWidget):
-    RESULTS_PER_ROW = 6
+    RESULTS_PER_ROW = 5
 
     def __init__(self, use_custom_querier: bool = True):
         super(QueryTabWidget, self).__init__()

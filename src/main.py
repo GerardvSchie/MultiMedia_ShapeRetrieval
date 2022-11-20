@@ -232,7 +232,7 @@ def plot(shape_list: [Shape], recomputed_features: bool, recomputed_descriptors:
         normalized_descriptors = FeatureDatabaseReader.read_descriptors(os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME))
         DescriptorDistributionPlotter.plot_descriptors(PLOT_NORMALIZED_DESCRIPTORS_DIR, list(normalized_descriptors.values()))
 
-    # Distance + confusion matrix plots
+    # Distance + confusion matrix plots for custom query method
     if recomputed_descriptors or recomputed_properties or recompute_plots:
         distances = Distances(os.path.join(DATABASE_DIR, DATABASE_DISTANCES_FILENAME))
         DistanceMatrixPlotter.plot_distances(distances)
@@ -241,6 +241,15 @@ def plot(shape_list: [Shape], recomputed_features: bool, recomputed_descriptors:
         ConfusionMatrixPlotter.plot(distances, k=5)
         ConfusionMatrixPlotter.plot(distances, k=10)
         ConfusionMatrixPlotter.plot(distances, k=20)
+
+    # Distance + confusion matrix plots for KNN metric
+    if recomputed_descriptors or recomputed_properties or recompute_plots:
+        distances = Distances(os.path.join(DATABASE_DIR, DATABASE_KNN_DISTANCES_FILENAME))
+
+        # Calculate confusion matrices for different values of k
+        ConfusionMatrixPlotter.plot(distances, k=5, knn_mode=True)
+        ConfusionMatrixPlotter.plot(distances, k=10, knn_mode=True)
+        ConfusionMatrixPlotter.plot(distances, k=20, knn_mode=True)
 
     # t-SNE plot
     if recomputed_descriptors or recompute_plots:

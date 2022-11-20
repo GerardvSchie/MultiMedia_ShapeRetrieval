@@ -64,4 +64,4 @@ PLOT_PROPERTIES_DIR = os.path.join(PLOT_DIR, 'properties')
 PLOT_CONFUSION_MATRICES = os.path.join(PLOT_DIR, 'confusion_matrices')
 
 # Query results
-NR_RESULTS = 12
+NR_RESULTS = 10
