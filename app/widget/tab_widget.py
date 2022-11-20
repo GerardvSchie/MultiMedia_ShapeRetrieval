@@ -42,7 +42,8 @@ class TabWidget(QTabWidget):
         self.features_table_widget = FeaturesTableTabWidget()
         self.descriptors_table_widget = DescriptorsTableTabWidget()
         self.normalized_descriptors_table_widget = NormalizedDescriptorsTableTabWidget()
-        self.query_widget = QueryTabWidget()
+        self.custom_query_widget = QueryTabWidget(True)
+        self.knn_query_widget = QueryTabWidget(False)
         self.tsne_widget = TsneCanvasTabWidget()
         self.performance_widget = PerformanceTabWidget()
 
@@ -53,7 +54,8 @@ class TabWidget(QTabWidget):
         self.addTab(self.features_table_widget, "Features table")
         self.addTab(self.descriptors_table_widget, "Descriptors table")
         self.addTab(self.normalized_descriptors_table_widget, "Normalized descriptors table")
-        self.addTab(self.query_widget, "Query")
+        self.addTab(self.custom_query_widget, "Custom query")
+        self.addTab(self.knn_query_widget, "KNN query")
         self.addTab(self.tsne_widget, "t-SNE")
         self.addTab(self.performance_widget, "Performance")
 

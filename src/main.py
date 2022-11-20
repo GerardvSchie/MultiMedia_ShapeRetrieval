@@ -24,6 +24,8 @@ import os
 from tqdm import tqdm
 import sys
 import matplotlib
+import shutil
+
 
 # For VSCode: fix ModuleNotFoundError when importing.
 directoryContainingCurrentFile = os.path.dirname(__file__)
@@ -34,14 +36,14 @@ sys.path.append(repoDirectory)
 
 import src.util.logger as logger
 
+from src.plot.util import set_params_minus_formatter
 from src.object.distances import Distances
 from src.pipeline.feature_extractor.shape_properties_extractor import ShapePropertyExtractor
-from src.pipeline.compute_distances import calc_distance_matrix
+from src.pipeline.compute_distances import calc_distance_matrix_emd, calc_distance_matrix_knn
 from src.plot.tsne import plot_tsne
 from src.pipeline.compute_tsne import dimensionality_reduction
 from src.plot.property_distribution import plot_property
 from src.pipeline.normalize_descriptors import normalize_descriptors
-from src.pipeline.normalize_properties import normalize_properties
 from src.plot.descriptor_distribution import DescriptorDistributionPlotter
 from src.plot.distance_matrix import DistanceMatrixPlotter
 from src.pipeline.compute_descriptors import compute_descriptors
@@ -53,6 +55,8 @@ from src.pipeline.normalization import Normalizer
 from src.plot.feature_distribution import FeatureDistributionPlotter
 from src.plot.confusion_matrix import ConfusionMatrixPlotter
 from src.util.configs import *
+from src.pipeline.remeshing import Remesher
+from src.plot.triangle_area import TriangleAreaPlotter
 
 
 def read_original_shapes() -> [Shape]:
@@ -194,8 +198,12 @@ def save_state(shape_list: [Shape], recomputed_features: bool, recomputed_descri
             normalized_shape_list[index].properties = shape_list[index].properties
 
         # Recompute distance matrix on normalized descriptors and save to file
-        distances = calc_distance_matrix(normalized_shape_list)
+        distances = calc_distance_matrix_emd(normalized_shape_list)
         distances.save(os.path.join(DATABASE_DIR, DATABASE_DISTANCES_FILENAME))
+
+        # Also compute the distances for knn, using euclidian distance for all of that
+        distances = calc_distance_matrix_knn(normalized_shape_list)
+        distances.save(os.path.join(DATABASE_DIR, DATABASE_KNN_DISTANCES_FILENAME))
 
         # Reduce dimension on t-sne on weighted vectors
         dimensionality_reduction(normalized_shape_list)
@@ -214,6 +222,7 @@ def plot(shape_list: [Shape], recomputed_features: bool, recomputed_descriptors:
     :param recomputed_properties: Whether any properties have been updated/computed
     :param recompute_plots: Override boolean to recompute plots even if no value got updated
     """
+    # Plot the features after normalization
     if recomputed_features or recompute_plots:
         FeatureDistributionPlotter.plot_features(PLOT_REFINED_FEATURES_DIR, [shape.features for shape in shape_list])
 
@@ -237,6 +246,31 @@ def plot(shape_list: [Shape], recomputed_features: bool, recomputed_descriptors:
     if recomputed_descriptors or recompute_plots:
         plot_tsne()
 
+    # Plot the triangle area before and after remeshing
+    # category, number = 'Vase', 361
+    category, number = 'Octopus', 125
+    triangle_area_path = os.path.join('plots', 'cell_area')
+    before_path = os.path.join(triangle_area_path, f'{number}_before.png')
+    after_path = os.path.join(triangle_area_path, f'{number}_after.png')
+
+    if (not os.path.exists(before_path) and os.path.exists(after_path)) or recompute_plots or True:
+        shape = Shape(os.path.join('data', 'LabeledDB_new', category, f'{number}.off'))
+        GeometriesController.set_mesh_from_file(shape.geometries)
+        shape.geometries.point_cloud = shape.geometries.mesh.sample_points_poisson_disk(NR_VERTICES, seed=0)
+        Normalizer.normalize_shape(shape)
+
+        # After normalization plot before vs after triangle
+        TriangleAreaPlotter.plot_triangle_area(before_path, 'Cell area distribution of original mesh', shape.geometries)
+        shape.geometries.mesh = None
+        GeometriesController.calculate_point_cloud_normals(shape.geometries)
+        Remesher.reconstruct_mesh(shape)
+        TriangleAreaPlotter.plot_triangle_area(after_path, 'Cell area distribution of uniform sampling',
+                                               shape.geometries)
+
+        # Save shape to a dummy file to visualize later, directory removed so new original.ply is created
+        shutil.rmtree(os.path.join('data', 'dummy'), ignore_errors=True)
+        shape.save_ply(os.path.join('data', 'dummy.ply'))
+
     # Plot distributions for each shape category in histograms
     if recomputed_properties or recompute_plots:
         plot_property(shape_list, 'd1', 'Distance to center')
@@ -253,6 +287,8 @@ def main() -> None:
     logger.initialize()
     check_working_dir()
     matplotlib.use('agg')
+    # Set the sizes of the labels
+    set_params_minus_formatter()
 
     # Hardcoded recompute plots
     recompute_plots = False

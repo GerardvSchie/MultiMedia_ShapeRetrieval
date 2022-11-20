@@ -49,7 +49,7 @@ class DistanceMatrixPlotter:
         plt.title(title.replace('_', ' ').capitalize(), fontdict={'fontsize': util.BIGGER_SIZE})
         DistanceMatrixPlotter.set_ticks_and_labels(ax)
 
-        # Make larger fontsize
+        # Make larger font size
         util.set_params_minus_formatter()
         plt.tight_layout()
 

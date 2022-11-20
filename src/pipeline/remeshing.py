@@ -1,19 +1,16 @@
 import open3d as o3d
 import numpy as np
-# import pymeshfix
 import os
 import pymeshfix
 
 from src.controller.geometries_controller import GeometriesController
 from src.object.shape import Shape
 
-# from pymeshfix import _meshfix
-
 
 class Remesher:
     @staticmethod
     def remesh_shape(shape: Shape):
-        shape.geometries.point_cloud: o3d.geometry.PointCloud = shape.geometries.mesh.sample_points_poisson_disk(10000)
+        shape.geometries.point_cloud = shape.geometries.mesh.sample_points_poisson_disk(10000)
         shape.geometries.mesh.create_from_point_cloud_poisson(shape.geometries.point_cloud)
 
     @staticmethod
@@ -35,26 +32,12 @@ class Remesher:
         GeometriesController.set_mesh_from_file(shape.geometries, True)
         shape.geometries.mesh.remove_duplicated_vertices()
 
-    # @staticmethod
-    # def merge_boundaries(shape: Shape):
-    #     tin = _meshfix.PyTMesh()
-    #     tin.load_file(shape.geometries.path)
-    #     # tin = pymeshfix.PyTMesh()
-    #     # tin.load_file(shape.geometries.path)
-    #
-    #     print('Nr: Boundaries', tin.boundaries())
-    #     tin.join_closest_components()
-    #
-    #     new_path = os.path.join(os.path.split(shape.geometries.path)[0], 'merged.ply')
-    #     shape.geometries.path = new_path
-    #     tin.save_file(new_path)
-
     @staticmethod
     def reconstruct_mesh(shape: Shape):
         radii = [0.005, 0.01, 0.02, 0.04]
         GeometriesController.calculate_point_cloud_normals(shape.geometries, True)
         shape.geometries.mesh = \
-            shape.geometries.mesh.create_from_point_cloud_ball_pivoting(shape.geometries.point_cloud, o3d.utility.DoubleVector(radii))
+            o3d.geometry.TriangleMesh().create_from_point_cloud_ball_pivoting(shape.geometries.point_cloud, o3d.utility.DoubleVector(radii))
 
     @staticmethod
     def remove_small_meshes(shape: Shape):

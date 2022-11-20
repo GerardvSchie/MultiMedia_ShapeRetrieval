@@ -1,4 +1,3 @@
-import os
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -9,9 +8,11 @@ from src.object.geometries import Geometries
 
 class TriangleAreaPlotter:
     @staticmethod
-    def plot_triangle_area(geometry: Geometries) -> None:
+    def plot_triangle_area(path: str, title: str, geometry: Geometries) -> None:
         """Compute the area of the triangles and create a histogram plot
 
+        :param path: Path to save the plot to
+        :param title: Title of the plot
         :param geometry: Mesh to plot the cell area for
         """
         data = []
@@ -28,13 +29,13 @@ class TriangleAreaPlotter:
 
         # Plot histogram of cell surface area
         n = len(data)
-        _, bins, patches = plt.hist(data, bins=int(np.sqrt(n)) + 1, weights=np.full(n, 1 / n))
+        _, bins, patches = plt.hist(data, bins=int(np.sqrt(n)) + 1, weights=np.full(n, 1 / n), range=(0, max(data)))
 
         # Set titles and parameters
         util.set_params()
-        plt.title(f'Shape cell area distribution', fontdict={'fontsize': util.BIGGER_SIZE})
-        plt.xlabel(f'Cell area')
-        plt.ylabel('Percentage of triangles')
+        plt.title(title, fontdict={'fontsize': util.BIGGER_SIZE})
+        plt.xlabel(f'Cell surface area')
+        plt.ylabel('Percentage of cells')
 
         # Save plot
-        io.save_plt(os.path.join('plots', 'cell_area', 'plot.png'))
+        io.save_plt(path)

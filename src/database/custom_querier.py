@@ -75,6 +75,7 @@ class CustomQuerier:
         # Sorted paths and distances
         sorted_paths = [path for path, _ in sorted_tuples]
         sorted_distances = [distance for _, distance in sorted_tuples]
+        print('paths of custom query in order:', sorted_paths)
 
         return sorted_paths, sorted_distances
 

@@ -1,58 +1,28 @@
-Heatmap:
-https://matplotlib.org/stable/gallery/images_contours_and_fields/image_annotated_heatmap.html#sphx-glr-gallery-images-contours-and-fields-image-annotated-heatmap-py
+# Multimedia retrieval 
+This is a multimedia retrieval system, which takes a query shape and returns similar shapes from the database.
+Use alt and control with the mouse to move the shape. It uses Open3D to render the shapes.
 
-Embed in PyQt:
-https://github.com/isl-org/Open3D/discussions/4668
+## How to run the project
+The full application only works on Windows. I have verified with PyCharm that the script can run.
+Please install all the packages from the requirements.txt located on the same layer as this readme.
 
-Put qml into widget:
-https://stackoverflow.com/questions/59828470/how-use-qml-drawer-with-qt-widgets
-https://github.com/eyllanesc/stackoverflow/blob/master/questions/59828470/main.py
+Then run the main.py in src for the offline part.
+Or run main.py in the app folder for the GUI
 
-
-https://github.com/isl-org/Open3D/issues/2063
-
-Open3D github repository:
-
-## Compute bary-center of object
-Geometry.GetCenter()
-Geometry3D::ComputeCenter(points)
-
-```c++
-Eigen::Vector3d Geometry3D::ComputeCenter(
-        const std::vector<Eigen::Vector3d>& points) const {
-    Eigen::Vector3d center(0, 0, 0);
-    if (points.empty()) {
-        return center;
-    }
-    center = std::accumulate(points.begin(), points.end(), center);
-    center /= double(points.size());
-    return center;
-}
+Important: Run from the repository root like this. It will indicate with a warning if it is done incorrectly
+```commandline
+python3 src/main.py
 ```
 
-Camera viewpoint:
-https://github.com/isl-org/Open3D/issues/1553
+or
 
-Faster iteration:
-https://numpy.org/doc/stable/reference/arrays.nditer.html
+```commandline
+python3 app/main.py
+```
 
-Random points:
-https://stackoverflow.com/questions/14262654/numpy-get-random-set-of-rows-from-2d-array
+## Other notes
+Please be aware that querying takes a long time since the convex hull etc. is computed for the shapes.
+It didn't take more than 30 seconds on my system, but maybe some large shapes will slow it down substantially
 
-Angle:
-https://stackoverflow.com/questions/35176451/python-code-to-calculate-angle-between-three-point-using-their-3d-coordinates
-
-Performance:
-https://mmas.github.io/python-image-processing-libraries-performance-opencv-scipy-scikit-image
-
-Alternatives for pywin32?:
-https://stackoverflow.com/questions/373020/finding-the-current-active-window-in-mac-os-x-using-python
-https://pypi.org/project/PyGetWindow/
-https://developer.apple.com/documentation/appkit/nsworkspace#//apple_ref/occ/instm/NSWorkspace/frontmostApplication
-
-Sample points on mesh uniformly fast:
-https://github.com/isl-org/Open3D/issues/2062
-
-Relay keypresses to open3d:
-https://github.com/matplotlib/matplotlib/issues/707
-https://github.com/isl-org/Open3D/blob/master/cpp/open3d/visualization/visualizer/Visualizer.cpp
+The paths are printed to the command line after the query has been performed if it would take too long. 
+They are in the correct ordering and can then be used in the ply viewer tab.
