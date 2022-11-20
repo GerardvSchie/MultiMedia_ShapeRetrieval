@@ -57,7 +57,7 @@ class TabWidget(QTabWidget):
         self.addTab(self.custom_query_widget, "Custom query")
         self.addTab(self.knn_query_widget, "KNN query")
         self.addTab(self.tsne_widget, "t-SNE")
-        self.addTab(self.performance_widget, "Performance")
+        #self.addTab(self.performance_widget, "Performance")
 
         # Set current widget
         self.setCurrentWidget(self.tsne_widget)

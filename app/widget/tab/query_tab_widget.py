@@ -2,7 +2,7 @@ from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGridLayout
 from PyQt6.QtGui import QWindow
 
 from app.widget.query_result_widget import QueryResultWidget
-from database.knn_querier import KNNQuerier
+from src.database.knn_querier import KNNQuerier
 from src.pipeline.feature_extractor.shape_properties_extractor import ShapePropertyExtractor
 from src.database.custom_querier import CustomQuerier
 from src.object.settings import Settings
