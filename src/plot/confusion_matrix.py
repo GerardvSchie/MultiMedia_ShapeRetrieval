@@ -18,7 +18,7 @@ class ConfusionMatrixPlotter:
         """
         # Compute confusion matrix and get the accuracy
         weighted_distance_matrix = distances.weighted_distances(WEIGHT_VECTOR)
-        confusion_matrix = ConfusionMatrixPlotter.calc_confusion_matrix(weighted_distance_matrix, k)
+        confusion_matrix, accuracy_matrix, rOC = ConfusionMatrixPlotter.calc_confusion_matrix(weighted_distance_matrix, k)
         accuracy = np.mean(confusion_matrix.diagonal())
 
         # Makes confusion matrix large enough to read
@@ -33,6 +33,33 @@ class ConfusionMatrixPlotter:
         # Save plot to path
         io.save_plt(os.path.join(PLOT_CONFUSION_MATRICES, f'k={k}_acc={accuracy:.3f}_{WEIGHT_VECTOR_STR}.png'))
 
+
+
+        # Makes accuracy matrix large enough to read
+        fig1, ax1 = plt.subplots(figsize=(6, 6))
+        im1 = heatmap(accuracy_matrix, CATEGORIES, CATEGORIES, ax=ax1, cmap="Blues")
+        annotate_heatmap(im1, valfmt=".{x:.0f}")
+
+        # Super title is better centered
+        fig1.tight_layout()
+        plt.suptitle(f'Accuracy matrix (k={k})', fontdict={'size': util.BIGGER_SIZE})
+
+        # Save plot of measure values separately
+        io.save_plt(os.path.join(PLOT_ACCURACY_MATRICES, f'k={k}_acc={np.mean(accuracy_matrix.diagonal()) :.3f}_{WEIGHT_VECTOR_STR}.png'))
+
+
+        # Create ROC graph
+        xCoord, yCoord = zip(*rOC)
+
+        plt.plot(xCoord, yCoord)
+        plt.title('ROC')
+        plt.xlabel('Sensitivity')
+        plt.xlim([0, 1])
+        plt.ylabel('Specificity')
+        plt.ylim([0, 1])
+        #plt.show()
+        plt.savefig(f'ROC TEST (k = {k}).png')
+
     @staticmethod
     def calc_confusion_matrix(weighted_distances: np.array, k=10) -> np.array:
         """Computes the confusion matrix and normalizes it
@@ -43,6 +70,27 @@ class ConfusionMatrixPlotter:
         """
         # Row/column for each category
         confusion_matrix = np.full((19, 19), 0)
+
+        # Confusion matrix that uses the accuracy measure.
+        accuracy_matrix = np.full((NR_CATEGORIES, NR_CATEGORIES), 0.0)
+        #accuracy_per_class = np.full(NR_CATEGORIES, 0.0)
+
+        rOC = []
+
+
+        testQueryShape = -1
+
+        #testQueryShape = 0      # airplane 1
+        #testQueryShape = 1      # airplane test
+        #testQueryShape = 4      # airplane 2
+        #testQueryShape = 120    # Chair 1
+        testK = 10
+
+        totalTPTN = 0
+        totalAccuracy = 0
+
+        allTPTN = []
+        allAccuracy = []
 
         # Get the 'confusion' for each shape
         for i in range(380):
@@ -57,12 +105,159 @@ class ConfusionMatrixPlotter:
             confusion_row = np.bincount(predicted_class[:k])
             confusion_row = np.append(confusion_row, np.zeros(19 - len(confusion_row)))
 
+            # TP, FP, TN, FN
+            truePos, falsePos, trueNeg, falseNeg = [0, 0, 0, 0]
+
+            # Query class and returned shape class match        ->  TP
+            truePos = confusion_row[true_class]
+
+            assert(0 <= truePos <= 20)
+
+            # Query class and returned shape class don't match  ->  FP
+            # (Any positive values in the row are FP's, but rather than looking at all these values, we can just subtract the TP from k)
+            falsePos = k - truePos
+
+            # Class of shape not returned by query and query class match        ->  FN
+
+            # FN:
+            # Size of the class of the query minus the number of true positives A.K.A.
+            # The number of shapes in the database having label C(Query) - TP. 
+            falseNeg = NR_ITEMS_PER_CATEGORY - truePos
+
+            # TP + FN
+            # Relevant items are all the correct Shapes for the query, correct shapes may be incorrectly labeled.
+            c = truePos + falseNeg
+
+            # All items in the database
+            d = NR_SHAPES
+
+            # Class of shape not returned by query and query class don't match  ->  TN
+            # We have 380 shapes and 20 items per class.
+            # This means that we have 360 true negatives per class, but we can mislabel a TN as a FP
+            trueNeg = d - NR_ITEMS_PER_CATEGORY - falsePos
+
+            assert(truePos + falsePos + trueNeg + falseNeg == d)
+
+
+            # Accuracy = (TP + TN) / total items
+            #accuracy = (truePos + trueNeg) / NR_SHAPES
+            accuracy = (truePos + trueNeg) / d
+
+            accuracy_matrix[true_class, true_class] += accuracy
+
+
+            sensitivity = truePos / c
+            specificity = trueNeg / (d - c)
+
+
+            # Check to see if sensitivity and specificity are correctly calculated.
+            val1 = falseNeg / (truePos + falseNeg)
+            val2 = 1 - sensitivity
+            val3 = falsePos / (falsePos + trueNeg)
+            val4 = 1 - specificity
+
+            diff1 = abs(val1 - val2)
+            diff2 = abs(val3 - val4)
+
+            #print(f'{val1} =?= {val2} --> diff = {diff1}')
+            #print(f'{val3} =?= {val4} --> diff = {diff2}')
+            assert(diff1 < 0.000001)
+            assert(diff2 < 0.000001)
+
+            # Add 'coordinates' to ROC.
+            rOC.append((sensitivity, specificity))
+
+
+            # Some other measure values to compare with.
+            precision = truePos / (truePos + falsePos)
+            recall = truePos / (truePos + falseNeg)
+
+            assert(recall == sensitivity)
+
+            totalTPTN += (truePos + trueNeg)
+            totalAccuracy += accuracy
+
+            allTPTN.append((truePos + trueNeg))
+            allAccuracy.append(accuracy)
+
+            if (testQueryShape == i):
+                print(f'\ntrue_class (class of the query shape):\n{true_class}')
+                #print(f'predicted_class (class of the shapes derived from the returned results):\n{predicted_class}')
+
+                print(f'\nconfusion_row created from predicted_class with k = {k} (each class of the first k shapes as integers):\n{predicted_class[:k]}')
+                print(f'\nconfusion_row (append is needed to make it a vector of 19 elements, bincount stops if the remaining elements are 0):\n{confusion_row}')
+
+                #print(f'\nconfusion_matrix:\n{confusion_matrix}')
+                #print(f'\nconfusion_matrix[true_class]:\n{confusion_matrix[true_class]}')
+                #prin()
+
             # Append predictions to the classes
             confusion_matrix[true_class] = confusion_matrix[true_class] + confusion_row
 
+            if (testQueryShape == i):
+                #print(f'\nconfusion_matrix[true_class] (after adding current confusion row):\n{confusion_matrix[true_class]}')
+
+                print(f'\ntruePos = {truePos}')
+                print(f'falsePos = {falsePos}')
+                print(f'\ntrueNeg = {trueNeg}')
+                print(f'falseNeg = {falseNeg}')
+
+                print(f'\naccuracy = {accuracy}')
+                print("accuracy = {:.0%}".format(accuracy))
+
+
+                print(f'\nsensitivity = {sensitivity}')
+                print(f'{truePos} / ({truePos} + {falseNeg}) = {truePos} / {c}?')
+                print(f'specificity = {specificity}')
+                print(f'{trueNeg} / ({falsePos} + {trueNeg}) = {trueNeg} / ({d} - {c})?')
+
+                print(f'rOC:\n{rOC}')
+
+                print(f'precision:\n{precision}')
+                print(f'recall:\n{recall}')
+                
+                #prin()
+
+
+        #print(f'confusion_matrix (before normalization):\n{confusion_matrix}')
+
         # Normalize confusion matrix
         confusion_matrix = confusion_matrix / (k * 20)
-        return confusion_matrix
+
+        #print(f'confusion_matrix (after normalization):\n{confusion_matrix}')
+
+
+        #print(f'Normalization value = ({k} * 20)')
+
+        #print(f'\ntotalTPTN = {totalTPTN}')
+        #print(f'totalTPTN (normalized) = {totalTPTN / (k * 20)}')
+
+        #print("\ntotalAccuracy = {:.0%}".format(totalAccuracy))
+        #print("totalAccuracy (normalized) = {:.0%}".format(totalAccuracy / (k * 20)))
+
+        #print(f'\nallTPTN ({len(allTPTN)} elements):\n{allTPTN}')
+        #print(f'\nallTPTN mean = {np.mean(allTPTN)}')
+        #print(f'allTPTN mean / 380 = {np.mean(allTPTN) / NR_SHAPES}')
+
+        #print(f'\nallAccuracy ({len(allAccuracy)} elements):\n{allAccuracy}')
+        #print(f'allAccuracy mean = {np.mean(allAccuracy)}')
+        #print(f'allAccuracy mean / 380 = {np.mean(allAccuracy) / NR_SHAPES}')
+
+        #print(f'\naccuracy_per_class (before normalization):\n{accuracy_per_class}')
+        #print(f'\naccuracy_matrix (before normalization):\n{accuracy_matrix}')
+
+        # Normalize accuracy of each class (different than confusion because we are only interested in the average accuracy per class)
+        #accuracy_per_class /= (k * 20)
+        #accuracy_per_class /= NR_ITEMS_PER_CATEGORY
+
+        accuracy_matrix /= NR_ITEMS_PER_CATEGORY
+
+        #print(f'\naccuracy_per_class (after normalization):\n{accuracy_per_class}')
+        #print(f'\n{accuracy_matrix} (after normalization):\n{accuracy_matrix}')
+
+        print("Overall accuracy = {:.0%}".format(np.mean(accuracy_matrix.diagonal())))
+
+        return confusion_matrix, accuracy_matrix, rOC
 
 
 def heatmap(data, row_labels, col_labels, ax=None,
