@@ -33,6 +33,7 @@ def calc_distance_matrix_knn(shape_list: [Shape]) -> Distances:
     :return: The computed distances
     """
     distances = Distances()
+    distances.matrix = np.full((len(Descriptors.NAMES) + len(Properties.NAMES) * 20, 380, 380), np.inf)
 
     # Handle descriptors and property distances
     calc_descriptor_distances(shape_list, distances)
@@ -97,10 +98,11 @@ def calc_property_distances_knn(shape_list: [Shape], distances: Distances) -> No
         property_combinations = vectors[combinations]
         relative_properties = property_combinations[:, 0] - property_combinations[:, 1]
         relative_properties_matrix = relative_properties.reshape(380, 380, -1)
-        euclidian_distances = np.linalg.norm(relative_properties_matrix, axis=2)
+        # euclidian_distances = np.linalg.norm(relative_properties_matrix, axis=2)
 
         # Set values to distances matrix
-        distances.matrix[len(Descriptors.NAMES) + j] = euclidian_distances
+        for i in range(20):
+            distances.matrix[len(Descriptors.NAMES) + j * 20 + i] = relative_properties_matrix[:, :, i]
         j += 1
 
 

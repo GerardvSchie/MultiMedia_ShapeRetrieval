@@ -17,7 +17,7 @@ from src.util.configs import *
 
 
 class QueryTabWidget(QWidget):
-    RESULTS_PER_ROW = 6
+    RESULTS_PER_ROW = 5
 
     def __init__(self, use_custom_querier: bool = True):
         super(QueryTabWidget, self).__init__()
@@ -35,8 +35,8 @@ class QueryTabWidget(QWidget):
             )
         else:
             self.querier = KNNQuerier(
-                os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME)  #,
-                # os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME)
+                os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_NORMALIZED_DESCRIPTORS_FILENAME),
+                os.path.join(DATABASE_NORMALIZED_DIR, DATABASE_PROPERTIES_FILENAME)
             )
 
         # Load widget

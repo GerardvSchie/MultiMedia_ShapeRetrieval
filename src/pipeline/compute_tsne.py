@@ -1,6 +1,7 @@
 import warnings
 from sklearn.manifold import TSNE
 
+from src.object.distances import Distances
 from src.util.configs import *
 from src.object.shape import Shape
 
@@ -21,16 +22,12 @@ def dimensionality_reduction(normalized_shape_list: [Shape]) -> None:
         properties_vectors.append(shape.properties.to_list())
 
     paths = np.array(paths)
-    descriptor_vectors = np.array(descriptor_vectors) * KNN_DESCRIPTOR_WEIGHT_VECTOR
+    descriptor_vectors = np.array(descriptor_vectors)
 
     # Property weights
-    repeated_knn_weights = np.repeat(KNN_PROPERTIES_WEIGHT_VECTOR, 380).reshape(-1, 380).T
-    repeated_knn_weights = np.repeat(repeated_knn_weights, 20, axis=1).reshape(380, 5, 20)
-    properties_vectors = np.array(properties_vectors) * repeated_knn_weights
-    property_vectors_columns = properties_vectors.reshape(380, -1)
-
-    # Complete vectors
-    vectors = np.hstack([descriptor_vectors, property_vectors_columns])
+    properties_vectors = np.array(properties_vectors).reshape(380, -1)
+    vectors = np.hstack([descriptor_vectors, properties_vectors])
+    vectors *= KNN_WEIGHT_VECTOR
 
     # Learn model based on data and save the x and y coordinates to file
     with warnings.catch_warnings():

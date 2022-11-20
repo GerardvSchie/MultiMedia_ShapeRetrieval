@@ -10,14 +10,18 @@ import src.plot.util as util
 class ConfusionMatrixPlotter:
     """Class which creates a plot for the confusionmatrix"""
     @staticmethod
-    def plot(distances: Distances, k=10) -> None:
+    def plot(distances: Distances, k=10, knn_mode: bool=False) -> None:
         """Plots the confusion matrix
 
         :param distances: Distances to compute the confusion matrix with
         :param k: The number of items to retrieve and compute confusion matrix over
+        :param knn_mode: Compute the knn distance matrix
         """
         # Compute confusion matrix and get the accuracy
-        weighted_distance_matrix = distances.weighted_distances(WEIGHT_VECTOR)
+        if knn_mode:
+            weighted_distance_matrix = distances.weighted_knn_distances(KNN_WEIGHT_VECTOR)
+        else:
+            weighted_distance_matrix = distances.weighted_distances(WEIGHT_VECTOR)
         confusion_matrix = ConfusionMatrixPlotter.calc_confusion_matrix(weighted_distance_matrix, k)
         accuracy = np.mean(confusion_matrix.diagonal())
 
@@ -31,7 +35,10 @@ class ConfusionMatrixPlotter:
         plt.suptitle(f'Confusion matrix (k={k})', fontdict={'size': util.BIGGER_SIZE})
 
         # Save plot to path
-        io.save_plt(os.path.join(PLOT_CONFUSION_MATRICES, f'k={k}_acc={accuracy:.3f}_{WEIGHT_VECTOR_STR}.png'))
+        prefix = ""
+        if knn_mode:
+            prefix = "knn_"
+        io.save_plt(os.path.join(PLOT_CONFUSION_MATRICES, f'{prefix}k={k}_acc={accuracy:.3f}_{WEIGHT_VECTOR_STR}.png'))
 
     @staticmethod
     def calc_confusion_matrix(weighted_distances: np.array, k=10) -> np.array:

@@ -2,6 +2,7 @@ from copy import deepcopy
 import random
 from tqdm import tqdm
 
+from src.object.descriptors import Descriptors
 from src.plot.confusion_matrix import ConfusionMatrixPlotter
 from src.object.distances import Distances
 from src.util.configs import *
@@ -24,12 +25,15 @@ def compute_accuracy(distances: Distances, weight_vector: np.array, knn_mode: bo
     return float(accuracy)
 
 
-def print_results(accuracy: float, weight_vector: np.array) -> None:
+def print_results(accuracy: float, weight_vector: np.array, knn_mode: bool) -> None:
     """Prints results in standard format
 
     :param accuracy: Accuracy of the guesses
     :param weight_vector: Weight vector used to produce the accuracy
     """
+    if knn_mode:
+        weight_vector = np.append(weight_vector[:len(Descriptors.NAMES)], weight_vector[len(Descriptors.NAMES)::20])
+
     print('accuracy:', accuracy, 'vector', str(weight_vector).replace('\n', ''))
 
 
@@ -113,6 +117,7 @@ def local_search(distances: Distances, initial_vector: np.array, knn_mode: bool)
     """
     best_vector = initial_vector
     best_accuracy = compute_accuracy(distances, initial_vector, knn_mode)
+    print_results(best_accuracy, best_vector, knn_mode)
 
     # Perform 5000 iterations during local search
     iteration = 0
@@ -121,11 +126,22 @@ def local_search(distances: Distances, initial_vector: np.array, knn_mode: bool)
         # So we do not change the original vector
         weight_vector = deepcopy(best_vector)
 
-        # Between +-10% for each component
-        nr_picks = min(int(iterations_without_improvement / 100) + 1, len(Distances.NAMES))
-        indexes = np.random.choice(range(len(Distances.NAMES)), nr_picks, replace=False)
-        for i in indexes:
-            weight_vector[i] *= (1 + random.uniform(-0.2, 0.2))
+        if knn_mode:
+            # Between +-20% for each component
+            nr_picks = min(int(iterations_without_improvement / 100) + 1, len(Distances.NAMES))
+            indexes = np.random.choice(range(len(Distances.NAMES)), nr_picks, replace=False)
+            for i in indexes:
+                if i < len(Descriptors.NAMES):
+                    weight_vector[i] *= (1 + random.uniform(-0.2, 0.2))
+                else:
+                    prop_index = i - len(Descriptors.NAMES)
+                    new_weight = (1 + random.uniform(-0.2, 0.2))
+                    weight_vector[len(Descriptors.NAMES)+prop_index*20:len(Descriptors.NAMES)+prop_index*20+20] *= new_weight
+        else:
+            nr_picks = min(int(iterations_without_improvement / 100) + 1, len(Distances.NAMES))
+            indexes = np.random.choice(range(len(Distances.NAMES)), nr_picks, replace=False)
+            for i in indexes:
+                weight_vector[i] *= (1 + random.uniform(-0.2, 0.2))
 
         # Get accuracy of new vector
         accuracy = compute_accuracy(distances, weight_vector, knn_mode)
@@ -143,7 +159,7 @@ def local_search(distances: Distances, initial_vector: np.array, knn_mode: bool)
 
     # Print out best results
     print('Best results after local search:')
-    print_results(best_accuracy, best_vector)
+    print_results(best_accuracy, best_vector, knn_mode)
     # best accuracy: 0.6702631578947369 vector [1.3 0.3 1.6 0.8 1.3 0.1 0.6 0.4 0.2 0.  0.  0.  0.  0. ]
 
     # accuracy: 0.6815789473684211 vector [ 1.17440188  0.29713889  1.64954493  1.07265445  1.13989037  0.14093051  0.58413028  0.4734819   0.1261543   5.01591765  3.70181446  2.01307203  7.08781804 10.51297132]
@@ -160,7 +176,7 @@ def main(knn_mode: bool):
         distances = Distances(os.path.join(DATABASE_DIR, DATABASE_DISTANCES_FILENAME))
 
     # Test the various methods
-    hand_selected(distances, knn_mode)
+    # hand_selected(distances, knn_mode)
 
     # Hyperparameter tuning takes a long time to execute
     # hyperparameter_tuning(distances, knn_mode)
@@ -183,6 +199,7 @@ def main(knn_mode: bool):
     if knn_mode:
         best_vector = KNN_WEIGHT_VECTOR
         # accuracy: 0.7107894736842105 vector [ 1.00914947  0.50335688  1.69586111  1.34745224  1.82110232  0.10521264  0.60581433  0.325439    0.11662168  2.69578308  3.08456191  0.96369678  1.7059177  15.38864842]
+        # accuracy: 0.7115789473684211 vector [ 1.0679994   0.50335688  1.69586111  1.34745224  1.82110232  0.08439354  0.60581433  0.31439092  0.12781485  2.73128787  2.73128787  2.73128787  2.73128787  2.73128787  2.73128787  2.73128787  2.73128787  2.73128787  2.73128787  2.73128787  2.73128787  2.73128787  2.73128787  2.73128787  2.73128787  2.73128787  2.73128787  2.73128787  2.73128787  3.08456191  3.08456191  3.08456191  3.08456191  3.08456191  3.08456191  3.08456191  3.08456191  3.08456191  3.08456191  3.08456191  3.08456191  3.08456191  3.08456191  3.08456191  3.08456191  3.08456191  3.08456191  3.08456191  3.08456191  0.96369678  0.96369678  0.96369678  0.96369678  0.96369678  0.96369678  0.96369678  0.96369678  0.96369678  0.96369678  0.96369678  0.96369678  0.96369678  0.96369678  0.96369678  0.96369678  0.96369678  0.96369678  0.96369678  0.96369678  1.7059177   1.7059177   1.7059177  1.7059177   1.7059177   1.7059177   1.7059177   1.7059177   1.7059177  1.7059177   1.7059177   1.7059177   1.7059177   1.7059177   1.7059177  1.7059177   1.7059177   1.7059177   1.7059177   1.7059177  15.38864842 15.38864842 15.38864842 15.38864842 15.38864842 15.38864842 15.38864842 15.38864842 15.38864842 15.38864842 15.38864842 15.38864842 15.38864842 15.38864842 15.38864842 15.38864842 15.38864842 15.38864842 15.38864842 15.38864842]
     else:
         best_vector = np.array([1.17440188, 0.29713889, 1.64954493, 1.07265445, 1.13989037, 0.14093051, 0.58413028,
                                 0.48224995, 0.1261543, 5.01591765, 3.75394319, 2.01307203, 7.63732949, 9.87755763])
