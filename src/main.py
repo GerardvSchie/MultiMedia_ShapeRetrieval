@@ -39,7 +39,7 @@ import src.util.logger as logger
 from src.plot.util import set_params_minus_formatter
 from src.object.distances import Distances
 from src.pipeline.feature_extractor.shape_properties_extractor import ShapePropertyExtractor
-from src.pipeline.compute_distances import calc_distance_matrix
+from src.pipeline.compute_distances import calc_distance_matrix_emd, calc_distance_matrix_knn
 from src.plot.tsne import plot_tsne
 from src.pipeline.compute_tsne import dimensionality_reduction
 from src.plot.property_distribution import plot_property
@@ -198,8 +198,12 @@ def save_state(shape_list: [Shape], recomputed_features: bool, recomputed_descri
             normalized_shape_list[index].properties = shape_list[index].properties
 
         # Recompute distance matrix on normalized descriptors and save to file
-        distances = calc_distance_matrix(normalized_shape_list)
+        distances = calc_distance_matrix_emd(normalized_shape_list)
         distances.save(os.path.join(DATABASE_DIR, DATABASE_DISTANCES_FILENAME))
+
+        # Also compute the distances for knn, using euclidian distance for all of that
+        distances = calc_distance_matrix_knn(normalized_shape_list)
+        distances.save(os.path.join(DATABASE_DIR, DATABASE_KNN_DISTANCES_FILENAME))
 
         # Reduce dimension on t-sne on weighted vectors
         dimensionality_reduction(normalized_shape_list)

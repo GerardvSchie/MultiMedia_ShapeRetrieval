@@ -13,7 +13,7 @@ def plot_tsne() -> None:
     """Plots t-SNE on a scatter plot"""
     _, ax = plt.subplots()
     plot_tsne_on_ax(ax)
-    io.save_plt(os.path.join(PLOT_DIR, 't-SNE', WEIGHT_VECTOR_STR.replace(' ', '_') + '.png'))
+    io.save_plt(os.path.join(PLOT_DIR, 't-SNE', KNN_WEIGHT_VECTOR_STR.replace(' ', '_') + '.png'))
 
 
 # Inspiration source: https://stackoverflow.com/questions/14777066/matplotlib-discrete-colorbar

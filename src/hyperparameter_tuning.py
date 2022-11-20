@@ -1,6 +1,5 @@
 from copy import deepcopy
 import random
-
 from tqdm import tqdm
 
 from src.plot.confusion_matrix import ConfusionMatrixPlotter
@@ -8,14 +7,18 @@ from src.object.distances import Distances
 from src.util.configs import *
 
 
-def compute_accuracy(distances: Distances, weight_vector: np.array) -> float:
+def compute_accuracy(distances: Distances, weight_vector: np.array, knn_mode: bool) -> float:
     """Computes accuracy of the guesses using the weights
 
     :param distances: Distances of each slice
     :param weight_vector: Weight that is assigned to each distance
     :return: Accuracy of the guesses using k=10
     """
-    weighted_distances = distances.weighted_distances(weight_vector)
+    if not knn_mode:
+        weighted_distances = distances.weighted_distances(weight_vector)
+    else:
+        weighted_distances = distances.weighted_knn_distances(weight_vector)
+
     confusion_matrix = ConfusionMatrixPlotter.calc_confusion_matrix(weighted_distances, k=10)
     accuracy = np.mean(confusion_matrix.diagonal())
     return float(accuracy)
@@ -30,14 +33,15 @@ def print_results(accuracy: float, weight_vector: np.array) -> None:
     print('accuracy:', accuracy, 'vector', str(weight_vector).replace('\n', ''))
 
 
-def hand_selected(distances: Distances) -> None:
+def hand_selected(distances: Distances, knn_mode: bool) -> None:
     """Use manually selected weight vector and show the accuracy
 
     :param distances: Distances of each index in vector
+    :param knn_mode: Whether to strictly use euclidian distances
     """
     # Doesn't use the properties
     selected_vector = np.array([1.5, 0.4, 1.3, 0.3, 1.7, 0., 0.2, 0.1, 0.5, 0., 0., 0., 0., 0.])
-    accuracy = compute_accuracy(distances, selected_vector)
+    accuracy = compute_accuracy(distances, selected_vector, knn_mode)
     print_results(accuracy, selected_vector)
 
 
@@ -100,65 +104,66 @@ def hyperparameter_tuning(distances: Distances) -> None:
     print_results(best_accuracy, best_vector)
 
 
-def local_search(distances: Distances, initial_vector: np.array) -> None:
+def local_search(distances: Distances, initial_vector: np.array, knn_mode: bool) -> None:
     """Adjust vector automatically by adjusting weights of the components
 
     :param distances: Contains matrix that contains distance of each component of the vector
     :param initial_vector: Initial state to perform local search from
+    :param knn_mode: Strictly uses euclidian distance
     """
     best_vector = initial_vector
-    best_accuracy = compute_accuracy(distances, initial_vector)
+    best_accuracy = compute_accuracy(distances, initial_vector, knn_mode)
 
     # Perform 5000 iterations during local search
     iteration = 0
+    iterations_without_improvement = 0
     while iteration < 5000:
         # So we do not change the original vector
         weight_vector = deepcopy(best_vector)
 
         # Between +-10% for each component
-        for i in range(len(Distances.NAMES)):
-            weight_vector[i] *= (1 + random.uniform(-0.1, 0.1))
+        nr_picks = min(int(iterations_without_improvement / 100) + 1, len(Distances.NAMES))
+        indexes = np.random.choice(range(len(Distances.NAMES)), nr_picks, replace=False)
+        for i in indexes:
+            weight_vector[i] *= (1 + random.uniform(-0.2, 0.2))
 
         # Get accuracy of new vector
-        accuracy = compute_accuracy(distances, weight_vector)
+        accuracy = compute_accuracy(distances, weight_vector, knn_mode)
 
         # If better, update best solution
         if accuracy > best_accuracy:
             best_accuracy = accuracy
             best_vector = weight_vector
             print_results(best_accuracy, best_vector)
+            iterations_without_improvement = 0
 
         # Next iteration
         iteration += 1
+        iterations_without_improvement += 1
 
     # Print out best results
     print('Best results after local search:')
     print_results(best_accuracy, best_vector)
     # best accuracy: 0.6702631578947369 vector [1.3 0.3 1.6 0.8 1.3 0.1 0.6 0.4 0.2 0.  0.  0.  0.  0. ]
 
-    # accuracy: 0.6763157894736843 vector [1.0013151  0.30078011 1.44363058 0.88030667 0.97392208 0.13535301 0.53812947 0.44469075 0.14004997 0.         0.         0. 0.         0.        ] iteration 1739
-    # accuracy: 0.6860526315789474 vector [0.84946192 0.52634137 0.97686527 0.8570737  0.79787693 0.09474074 0.41083903 0.27356298 0.10522074 5.22630039 5.67574125 2.65753931 7.66481085 5.37005448] iteration 210
-    # accuracy: 0.6897368421052632 vector [1.53671594 0.36237169 1.46250151 1.24950136 1.35252345 0.1534592 0.62359625 0.53501483 0.13396279 4.97262054 3.5104284  1.80775629 8.25943989 7.6972006 ]
-
-    # accuracy: 0.6926315789473684 vector [0.59957526 0.41485836 1.14837189 0.8737181  1.17632872 0.12859756 0.43187859 0.30701326 0.20125682 4.3040526  2.40889516 1.39163004 6.64441423 9.02004084] iteration 909
-    # accuracy: 0.6926315789473685 vector [0.63760714 0.42292345 1.22216305 0.9573012  1.11486596 0.13102545 0.39686013 0.31734303 0.21730884 4.40158501 2.6044959  1.5177154 6.24597882 8.3256162 ] iteration 1042
-    # accuracy: 0.6928947368421052 vector [0.58423243 0.40810507 1.25033164 0.95827973 1.12384264 0.13254815 0.4053965  0.29668712 0.19888426 4.63333763 2.43744218 1.39672426 6.66946949 8.05046796] iteration 1110
-    # accuracy: 0.6931578947368421 vector [0.59073971 0.41892132 1.15142093 0.8846405  1.06883754 0.12974587 0.42166752 0.27647947 0.20706151 4.31139582 2.53083674 1.34090725 6.81671266 8.77233668] iteration 1197
-    # accuracy: 0.6939473684210526 vector [0.63526925 0.44627614 1.22175252 0.90124816 1.15243963 0.13149682 0.44591687 0.25190178 0.19053711 4.0382616  2.35425451 1.45513358 7.05197262 9.24651963] iteration 1301
+    # accuracy: 0.6815789473684211 vector [ 1.17440188  0.29713889  1.64954493  1.07265445  1.13989037  0.14093051  0.58413028  0.4734819   0.1261543   5.01591765  3.70181446  2.01307203  7.08781804 10.51297132]
 
 
-def main():
+def main(knn_mode: bool):
     """Main method for hyperparameter tuning and local search
     Tries to optimize accuracy of the query
     """
     # Get the distances for each component
-    distances = Distances(os.path.join(DATABASE_DIR, DATABASE_DISTANCES_FILENAME))
+    if knn_mode:
+        distances = Distances(os.path.join(DATABASE_DIR, DATABASE_KNN_DISTANCES_FILENAME))
+    else:
+        distances = Distances(os.path.join(DATABASE_DIR, DATABASE_DISTANCES_FILENAME))
 
     # Test the various methods
-    hand_selected(distances)
+    hand_selected(distances, knn_mode)
 
     # Hyperparameter tuning takes a long time to execute
-    # hyperparameter_tuning(distances)
+    # hyperparameter_tuning(distances, knn_mode)
 
     best_vector = np.array([1.3, 0.3, 1.6, 0.8, 1.3, 0.1, 0.6, 0.4, 0.2, 0., 0., 0., 0., 0.])
     best_vector = np.array(
@@ -175,12 +180,17 @@ def main():
         [1.0013151, 0.30078011, 1.44363058, 0.88030667, 0.97392208, 0.13535301, 0.53812947, 0.44469075, 0.14004997,
          4.97262054, 3.5104284, 1.80775629, 8.25943989, 9.6972006])
 
-    # After fixing the range of A3
-    best_vector = np.array([1.17440188, 0.29713889, 1.64954493, 1.07265445, 1.13989037, 0.14093051, 0.58413028,
-                            0.48224995, 0.1261543, 5.01591765, 3.75394319, 2.01307203, 7.63732949, 9.87755763])
+    if knn_mode:
+        best_vector = KNN_WEIGHT_VECTOR
+        # accuracy: 0.7107894736842105 vector [ 1.00914947  0.50335688  1.69586111  1.34745224  1.82110232  0.10521264  0.60581433  0.325439    0.11662168  2.69578308  3.08456191  0.96369678  1.7059177  15.38864842]
+    else:
+        best_vector = np.array([1.17440188, 0.29713889, 1.64954493, 1.07265445, 1.13989037, 0.14093051, 0.58413028,
+                                0.48224995, 0.1261543, 5.01591765, 3.75394319, 2.01307203, 7.63732949, 9.87755763])
 
-    local_search(distances, best_vector)
+    local_search(distances, best_vector, knn_mode)
 
+
+#accuracy: 0.7071052631578948 vector [ 1.26871346  0.4905116   2.07605749  1.1932621   1.74392193  0.13197155  0.52970982  0.37158661  0.12136592  4.29253166  3.16317135  1.23314089  1.50789865 10.01651088]
 
 if __name__ == '__main__':
-    main()
+    main(knn_mode=True)

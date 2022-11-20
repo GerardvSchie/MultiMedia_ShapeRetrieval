@@ -10,8 +10,8 @@ from src.object.descriptors import Descriptors
 from src.util.configs import *
 
 
-def calc_distance_matrix(shape_list: [Shape]) -> Distances:
-    """Calculates the distance matrix
+def calc_distance_matrix_emd(shape_list: [Shape]) -> Distances:
+    """Calculates the distance matrix using emd distance for histograms
 
     :param shape_list: List of shapes of which the distances are computed
     :return: The computed distances
@@ -20,7 +20,23 @@ def calc_distance_matrix(shape_list: [Shape]) -> Distances:
 
     # Handle descriptors and property distances
     calc_descriptor_distances(shape_list, distances)
-    calc_property_distances(shape_list, distances)
+    calc_property_distances_emd(shape_list, distances)
+
+    return distances
+
+
+def calc_distance_matrix_knn(shape_list: [Shape]) -> Distances:
+    """Calculates the distance matrix using euclidian distance for the entire vector
+    This is for usage in KNN searching
+
+    :param shape_list: List of shapes of which the distances are computed
+    :return: The computed distances
+    """
+    distances = Distances()
+
+    # Handle descriptors and property distances
+    calc_descriptor_distances(shape_list, distances)
+    calc_property_distances_knn(shape_list, distances)
 
     return distances
 
@@ -44,7 +60,7 @@ def calc_descriptor_distances(shape_list: [Shape], distances: Distances) -> None
         distances.matrix[i] = transposed_distance_matrices[i]
 
 
-def calc_property_distances(shape_list: [Shape], distances: Distances) -> None:
+def calc_property_distances_emd(shape_list: [Shape], distances: Distances) -> None:
     """Calculates the distances between the shapes
 
     :param shape_list: List of shapes of which the distances are computed
@@ -54,12 +70,38 @@ def calc_property_distances(shape_list: [Shape], distances: Distances) -> None:
 
     j = 0
     for property_name in Properties.NAMES:
-        distance_matrix[j] = calc_emd_distance_matrix(shape_list, property_name)
+        for index in range(NR_SHAPES):
+            distance_matrix[j] = calc_emd_distance_matrix(shape_list, property_name)
         j += 1
 
     # Fill slice
     for j in range(len(Properties.NAMES)):
         distances.matrix[len(Descriptors.NAMES) + j] = distance_matrix[j]
+
+
+def calc_property_distances_knn(shape_list: [Shape], distances: Distances) -> None:
+    """Calculates the distances between the shapes
+
+    :param shape_list: List of shapes of which the distances are computed
+    :param distances: Contains matrix with distances of descriptors and properties to save to
+    """
+    j = 0
+    for property_name in Properties.NAMES:
+        # Fill
+        vectors: np.ndarray = np.zeros(shape=(NR_SHAPES, 20))
+        for i in range(len(shape_list)):
+            vectors[i] = shape_list[i].properties.__getattribute__(property_name)
+
+        # Create all combinations
+        combinations = np.array(np.meshgrid(np.arange(NR_SHAPES), np.arange(NR_SHAPES))).T.reshape(-1, 2)
+        property_combinations = vectors[combinations]
+        relative_properties = property_combinations[:, 0] - property_combinations[:, 1]
+        relative_properties_matrix = relative_properties.reshape(380, 380, -1)
+        euclidian_distances = np.linalg.norm(relative_properties_matrix, axis=2)
+
+        # Set values to distances matrix
+        distances.matrix[len(Descriptors.NAMES) + j] = euclidian_distances
+        j += 1
 
 
 def calc_emd_distance_matrix(shape_list: [Shape], attribute: str) -> np.ndarray:

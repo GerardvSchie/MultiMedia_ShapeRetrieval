@@ -50,3 +50,23 @@ class Distances:
         histogram_distances = np.sum(matrix_copy[len(Descriptors.NAMES):, :, :], axis=0)
 
         return scalar_distances + histogram_distances
+
+    def weighted_knn_distances(self, weights: np.array) -> np.array:
+        """Compute the distance with weights to each part of the vector
+        The histogram distances are summed whilst Euclidian distance is used for elementary features
+
+        :param weights: Weights, which must have teh same length
+        :return: The distances using the weight vector
+        """
+        assert len(weights) == self.matrix.shape[0]
+
+        # Use weights on copy of the matrix
+        matrix_copy = deepcopy(self.matrix)
+        multiplication_matrix = np.repeat(np.repeat(weights, 380), 380).reshape((-1, 380, 380))
+        matrix_copy = matrix_copy * multiplication_matrix
+
+        # Compute distance and add the two
+        euclidian_distances = np.linalg.norm(matrix_copy, axis=0)
+
+        return euclidian_distances
+
